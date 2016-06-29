@@ -8,13 +8,12 @@ import java.lang.reflect.InvocationHandler;
 
 public class RxInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
+    private static final InvocationHandler handler = new RxInvocationHandler();
+
     @Override
     public InvocationHandler create(Invocable method) {
-        if(Observable.class.isAssignableFrom(method.getRawResponseType())) {
-            return new RxInvocationHandler();
-        } else {
-            return null;
-        }
+        boolean isRx = Observable.class.isAssignableFrom(method.getRawResponseType());
+        return isRx ? handler : null;
     }
 
 }

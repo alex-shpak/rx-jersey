@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
-public class RxJerseyFeature implements Feature {
+public final class RxJerseyFeature implements Feature {
 
     @Override
     public boolean configure(FeatureContext context) {
