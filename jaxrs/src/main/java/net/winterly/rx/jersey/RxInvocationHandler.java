@@ -1,4 +1,4 @@
-package net.winterly.rx.jersey.feature;
+package net.winterly.rx.jersey;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
