@@ -1,14 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group 'com.github.alex-shpak'
+group 'com.github.alex-shpak.rx-jersey'
 version '0.1.0'
 
 dependencies {
-    compile "org.glassfish.jersey.core:jersey-server:$jerseyVersion"
-    compile "io.reactivex:rxjava:$rxJavaVersion"
-
-    testCompile "junit:junit:$junitVersion"
+    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    compile project(":jaxrs")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

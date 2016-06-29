@@ -10,7 +10,7 @@ repositories {
 ```
 ```groovy
 dependencies {
-    compile 'com.github.alex-shpak:rx-jersey:0.1.0'
+    compile 'com.github.alex-shpak.rx-jersey:jaxrs:0.1.0'
 }
 ```
 
@@ -26,8 +26,8 @@ dependencies {
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.github.alex-shpak</groupId>
-        <artifactId>rx-jersey</artifactId>
+        <groupId>com.github.alex-shpak.rx-jersey</groupId>
+        <artifactId>jaxrs</artifactId>
         <version>0.1.0</version>
     </dependency>
 </dependencies>

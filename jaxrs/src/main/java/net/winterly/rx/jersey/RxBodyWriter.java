@@ -1,4 +1,4 @@
-package net.winterly.rx.jersey.feature;
+package net.winterly.rx.jersey;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import rx.Observable;
