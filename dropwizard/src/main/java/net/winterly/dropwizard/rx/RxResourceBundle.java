@@ -1,4 +1,4 @@
-package net.winterly.rx.dropwizard;
+package net.winterly.dropwizard.rx;
 
 import io.dropwizard.Bundle;
 import io.dropwizard.setup.Bootstrap;
