@@ -1,30 +1,9 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 
 group 'com.github.alex-shpak.rx-jersey'
-version '0.2.0'
+version rxJerseyVersion
 
 dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile project(":jaxrs")
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
-compileJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
 }

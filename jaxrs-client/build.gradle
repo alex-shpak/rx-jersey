@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+group 'com.github.alex-shpak.rx-jersey'
+version rxJerseyVersion
+
+dependencies {
+    compile "org.glassfish.jersey.ext:jersey-proxy-client:$jerseyVersion"
+    compile "org.glassfish.jersey.ext.rx:jersey-rx-client-rxjava:$jerseyVersion"
+    compile "io.reactivex:rxjava:$rxJavaVersion"
+}
