@@ -26,7 +26,11 @@ public class RemoteResolver implements InjectionResolver<Remote> {
             return rxWebTarget;
         }
 
-        return WebResourceFactoryPatched.newResource(type, rxWebTarget);
+        if(type.isInterface()) {
+            return WebResourceFactoryPatched.newResource(type, rxWebTarget);
+        }
+
+        throw new IllegalStateException(String.format("Can't find proper injection for %s", type));
     }
 
     @Override
@@ -36,6 +40,6 @@ public class RemoteResolver implements InjectionResolver<Remote> {
 
     @Override
     public boolean isMethodParameterIndicator() {
-        return true;
+        return false;
     }
 }
