@@ -4,6 +4,7 @@ import org.glassfish.jersey.message.MessageBodyWorkers;
 import rx.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -17,7 +18,7 @@ import java.lang.reflect.Type;
 public class RxBodyReader implements MessageBodyReader<Object> {
 
     @Inject
-    private javax.inject.Provider<MessageBodyWorkers> workers;
+    private Provider<MessageBodyWorkers> workers;
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -27,20 +28,20 @@ public class RxBodyReader implements MessageBodyReader<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        final Type actualTypeArgument = actual(genericType);
-        final MessageBodyReader reader = workers.get().getMessageBodyReader((Class) actualTypeArgument, genericType, annotations, mediaType);
+        final Class actualTypeArgument = actual(genericType);
+        final MessageBodyReader reader = workers.get().getMessageBodyReader(actualTypeArgument, genericType, annotations, mediaType);
 
-        return reader.readFrom((Class) actualTypeArgument, genericType, annotations, mediaType, httpHeaders, entityStream);
+        return reader.readFrom(actualTypeArgument, genericType, annotations, mediaType, httpHeaders, entityStream);
     }
 
     private static Class raw(Type genericType) {
-        ParameterizedType parameterizedType = (ParameterizedType) genericType;
+        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
         return (Class) parameterizedType.getRawType();
     }
 
-    private static Type actual(Type genericType) {
+    private static Class actual(Type genericType) {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return actualGenericType.getActualTypeArguments()[0];
+        return (Class) actualGenericType.getActualTypeArguments()[0];
     }
 
 }
