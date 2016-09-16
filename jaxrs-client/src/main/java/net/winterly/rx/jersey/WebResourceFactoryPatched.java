@@ -39,7 +39,7 @@ package net.winterly.rx.jersey;
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Changed: Added call to Rx invoker to support RxJava @Alex Shpak
+ * Portions Copyright 2016 Alex Shpak"
  */
 
 import org.glassfish.jersey.client.rx.RxInvocationBuilder;
@@ -284,8 +284,8 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             }
         }
 
-        RxWebTarget<RxObservableInvoker> rxWebTarget = (RxWebTarget<RxObservableInvoker>) newTarget;
-        RxInvocationBuilder<RxObservableInvoker> builder = rxWebTarget.request()
+        RxWebTarget<RxObservableInvoker> rxWebTarget = (RxWebTarget<RxObservableInvoker>) newTarget; // Portions Copyright 2016 Alex Shpak"
+        RxInvocationBuilder<RxObservableInvoker> builder = rxWebTarget.request() //Portions Copyright 2016 Alex Shpak"
                 .headers(headers) // this resets all headers so do this first
                 .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
 
@@ -316,9 +316,9 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             if (entityType instanceof ParameterizedType) {
                 entity = new GenericEntity(entity, entityType);
             }
-            result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType);
+            result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak"
         } else {
-            result = builder.rx().method(httpMethod, responseGenericType);
+            result = builder.rx().method(httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak"
         }
 
         return result;

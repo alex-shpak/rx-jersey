@@ -6,4 +6,5 @@ version rxJerseyVersion
 dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile project(":jaxrs")
+    compile project(":jaxrs-client")
 }

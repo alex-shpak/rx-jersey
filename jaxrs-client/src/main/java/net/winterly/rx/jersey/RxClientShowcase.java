@@ -19,20 +19,10 @@ public class RxClientShowcase {
         RxWebTarget<RxObservableInvoker> rxTarget = rxClient.target("http://localhost:8081");
 
         Resource resource = WebResourceFactoryPatched.newResource(Resource.class, rxTarget);
-
-        resource.get();
-        resource.get();
-        resource.get();
-        resource.get();
-        resource.get();
-        resource.get();
-
-        System.out.println(1);
     }
 
     @Path("/")
     interface Resource {
-
         @GET
         Observable<String> get();
     }

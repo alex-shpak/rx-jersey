@@ -4,6 +4,7 @@ import org.glassfish.jersey.message.MessageBodyWorkers;
 import rx.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -17,7 +18,7 @@ import java.lang.reflect.Type;
 public class RxBodyWriter implements MessageBodyWriter<Object> {
 
     @Inject
-    private javax.inject.Provider<MessageBodyWorkers> workers;
+    private Provider<MessageBodyWorkers> workers;
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -34,19 +35,19 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
     public void writeTo(Object entity, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
             throws IOException, WebApplicationException {
 
-        final Type actualTypeArgument = actual(genericType);
+        final Class actualTypeArgument = actual(genericType);
         final MessageBodyWriter writer = workers.get().getMessageBodyWriter(entity.getClass(), actualTypeArgument, annotations, mediaType);
 
         writer.writeTo(entity, entity.getClass(), actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
     }
 
     private static Class raw(Type genericType) {
-        ParameterizedType parameterizedType = (ParameterizedType) genericType;
+        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
         return (Class) parameterizedType.getRawType();
     }
 
-    private static Type actual(Type genericType) {
+    private static Class actual(Type genericType) {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return actualGenericType.getActualTypeArguments()[0];
+        return (Class) actualGenericType.getActualTypeArguments()[0];
     }
 }
