@@ -1,10 +1,12 @@
 package net.winterly.rx.jersey;
 
+import net.winterly.rx.jersey.inject.Remote;
+import net.winterly.rx.jersey.inject.RemoteResolver;
 import net.winterly.rx.jersey.inject.RxClientFactory;
-import net.winterly.rx.jersey.inject.RxWebTargetFactory;
+import org.glassfish.hk2.api.InjectionResolver;
+import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.rx.RxClient;
-import org.glassfish.jersey.client.rx.RxWebTarget;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Feature;
@@ -19,7 +21,7 @@ public class RxJerseyClientFeature implements Feature {
             @Override
             protected void configure() {
                 bindFactory(RxClientFactory.class).to(RxClient.class).in(Singleton.class);
-                bindFactory(RxWebTargetFactory.class).to(RxWebTarget.class);
+                bind(RemoteResolver.class).to(new TypeLiteral<InjectionResolver<Remote>>() { }).in(Singleton.class);
             }
         });
 
