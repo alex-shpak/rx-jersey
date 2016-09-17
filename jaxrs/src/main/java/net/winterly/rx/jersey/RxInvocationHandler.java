@@ -1,7 +1,6 @@
 package net.winterly.rx.jersey;
 
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import javax.ws.rs.container.AsyncResponse;
 import java.lang.reflect.InvocationHandler;
@@ -19,7 +18,7 @@ public class RxInvocationHandler implements InvocationHandler {
             //TODO: add async filters
             Observable<?> observable = (Observable) method.invoke(proxy, args);
             observable
-                    .subscribeOn(Schedulers.computation())
+                    .doOnError(throwable -> asyncResponse.get().resume(throwable))
                     .subscribe(response -> asyncResponse.get().resume(response));
         } else {
             method.invoke(proxy, args); //default invocation

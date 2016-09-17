@@ -1,8 +1,5 @@
 apply plugin: 'java'
 
-group 'com.github.alex-shpak.rx-jersey'
-version rxJerseyVersion
-
 dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile project(":jaxrs")

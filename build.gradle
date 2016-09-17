@@ -9,6 +9,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
 
+    group 'com.github.alex-shpak.rx-jersey'
+    version rxJerseyVersion
+
     compileJava {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
