@@ -17,14 +17,23 @@ public class RxInvocationHandler implements InvocationHandler {
         if(asyncResponse.isPresent()) {
             //TODO: add async filters
             Observable<?> observable = (Observable) method.invoke(proxy, args);
-            observable
-                    .doOnError(throwable -> asyncResponse.get().resume(throwable))
-                    .subscribe(response -> asyncResponse.get().resume(response));
+            observable.subscribe(
+                entity -> onNext(asyncResponse.get(), entity),
+                throwable -> onError(asyncResponse.get(), throwable)
+            );
         } else {
-            method.invoke(proxy, args); //default invocation
+            return method.invoke(proxy, args); //default invocation
         }
 
         return null;
+    }
+
+    private void onNext(AsyncResponse asyncResponse, Object entity) {
+        asyncResponse.resume(entity);
+    }
+
+    private void onError(AsyncResponse asyncResponse, Throwable throwable) {
+        asyncResponse.resume(throwable);
     }
 
     private Optional<AsyncResponse> findAsyncResponse(Object[] args) {
