@@ -1,8 +1,5 @@
 apply plugin: 'java'
 
-group 'com.github.alex-shpak.rx-jersey'
-version rxJerseyVersion
-
 dependencies {
     compile "org.glassfish.jersey.core:jersey-server:$jerseyVersion"
     compile "io.reactivex:rxjava:$rxJavaVersion"
