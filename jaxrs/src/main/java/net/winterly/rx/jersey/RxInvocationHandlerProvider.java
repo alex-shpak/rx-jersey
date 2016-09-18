@@ -1,19 +1,28 @@
 package net.winterly.rx.jersey;
 
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 import rx.Observable;
 
+import javax.inject.Inject;
 import java.lang.reflect.InvocationHandler;
 
 public class RxInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private static final InvocationHandler handler = new RxInvocationHandler();
+    @Inject
+    private ServiceLocator serviceLocator;
 
     @Override
     public InvocationHandler create(Invocable method) {
-        boolean isRx = Observable.class.isAssignableFrom(method.getRawResponseType());
-        return isRx ? handler : null;
+        if(!isRx(method)) {
+            return null;
+        }
+
+        return serviceLocator.createAndInitialize(RxInvocationHandler.class);
     }
 
+    private static boolean isRx(Invocable method) {
+        return Observable.class.isAssignableFrom(method.getRawResponseType());
+    }
 }
