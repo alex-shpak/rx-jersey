@@ -16,7 +16,6 @@ public class RxJerseyClientFeature implements Feature {
 
     @Override
     public boolean configure(FeatureContext context) {
-        context.register(RxBodyReader.class);
         context.register(new AbstractBinder() {
             @Override
             protected void configure() {
