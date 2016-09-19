@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Remote {
 
-    String value();
+    String value() default DEFAULT;
+
+    String DEFAULT = "/";
 
 }

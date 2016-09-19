@@ -22,26 +22,35 @@ public class RxBodyReader implements MessageBodyReader<Object> {
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return Observable.class.isAssignableFrom(raw(genericType));
+        return Observable.class.isAssignableFrom(type);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        final Class actualTypeArgument = actual(genericType);
-        final MessageBodyReader reader = workers.get().getMessageBodyReader(actualTypeArgument, genericType, annotations, mediaType);
+        final Type actualTypeArgument = actual(genericType);
+        final Class entityType = entityType(actualTypeArgument);
+        final MessageBodyReader reader = workers.get().getMessageBodyReader(entityType, actualTypeArgument, annotations, mediaType);
 
-        return reader.readFrom(actualTypeArgument, genericType, annotations, mediaType, httpHeaders, entityStream);
+        return reader.readFrom(entityType, actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
     }
 
-    private static Class raw(Type genericType) {
-        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
-        return (Class) parameterizedType.getRawType();
-    }
-
-    private static Class actual(Type genericType) {
+    private static Type actual(Type genericType) {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return (Class) actualGenericType.getActualTypeArguments()[0];
+        return actualGenericType.getActualTypeArguments()[0];
+    }
+
+    private static Class entityType(Type actualTypeArgument) {
+        if(actualTypeArgument instanceof Class) {
+            return (Class) actualTypeArgument;
+        }
+
+        if(actualTypeArgument instanceof ParameterizedType) {
+            ParameterizedType parameterized = (ParameterizedType) actualTypeArgument;
+            return (Class) parameterized.getRawType();
+        }
+
+        throw new IllegalStateException();
     }
 
 }

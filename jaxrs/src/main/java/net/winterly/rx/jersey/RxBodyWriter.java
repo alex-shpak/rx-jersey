@@ -35,7 +35,7 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
     public void writeTo(Object entity, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
             throws IOException, WebApplicationException {
 
-        final Class actualTypeArgument = actual(genericType);
+        final Type actualTypeArgument = actual(genericType);
         final MessageBodyWriter writer = workers.get().getMessageBodyWriter(entity.getClass(), actualTypeArgument, annotations, mediaType);
 
         writer.writeTo(entity, entity.getClass(), actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
@@ -46,8 +46,8 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
         return (Class) parameterizedType.getRawType();
     }
 
-    private static Class actual(Type genericType) {
+    private static Type actual(Type genericType) {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return (Class) actualGenericType.getActualTypeArguments()[0];
+        return actualGenericType.getActualTypeArguments()[0];
     }
 }
