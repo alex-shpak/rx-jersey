@@ -44,7 +44,6 @@ package net.winterly.rx.jersey.client;
 
 import org.glassfish.jersey.client.rx.RxInvocationBuilder;
 import org.glassfish.jersey.client.rx.RxWebTarget;
-import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 import javax.ws.rs.*;
@@ -284,8 +283,8 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             }
         }
 
-        RxWebTarget<RxObservableInvoker> rxWebTarget = (RxWebTarget<RxObservableInvoker>) newTarget; // Portions Copyright 2016 Alex Shpak"
-        RxInvocationBuilder<RxObservableInvoker> builder = rxWebTarget.request() //Portions Copyright 2016 Alex Shpak"
+        RxWebTarget rxWebTarget = (RxWebTarget) newTarget; // Portions Copyright 2016 Alex Shpak
+        RxInvocationBuilder builder = rxWebTarget.request() //Portions Copyright 2016 Alex Shpak
                 .headers(headers) // this resets all headers so do this first
                 .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
 
@@ -316,9 +315,9 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             if (entityType instanceof ParameterizedType) {
                 entity = new GenericEntity(entity, entityType);
             }
-            result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak"
+            result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak
         } else {
-            result = builder.rx().method(httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak"
+            result = builder.rx().method(httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak
         }
 
         return result;

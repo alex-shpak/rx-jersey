@@ -2,9 +2,15 @@ package net.winterly.rx.jersey.client.inject;
 
 import net.winterly.rx.jersey.client.RxBodyReader;
 import org.glassfish.hk2.api.Factory;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.rx.RxClient;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
-import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Factory to inject {@code RxClient<RxObservableInvoker>} instance. <br>
@@ -20,10 +26,14 @@ public class RxClientFactory implements Factory<RxClient> {
 
     @Override
     public RxClient provide() {
-        RxClient<RxObservableInvoker> rxClient = RxObservable.newClient();
-        rxClient.register(RxBodyReader.class);
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.connectorProvider(new GrizzlyConnectorProvider());
+        clientConfig.register(RxBodyReader.class);
 
-        return rxClient;
+        Client grizzlyClient = ClientBuilder.newClient(clientConfig);
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+
+        return RxObservable.from(grizzlyClient, executor);
     }
 
     @Override
