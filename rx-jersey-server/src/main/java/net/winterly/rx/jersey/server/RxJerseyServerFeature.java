@@ -8,7 +8,7 @@ import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
 /**
- * Feature implementation to configure RxJava support for resources <br />
+ * Feature implementation to configure RxJava support for resources <br>
  * Registers {@link RxBodyWriter} and {@link RxInvocationHandlerProvider}
  */
 public final class RxJerseyServerFeature implements Feature {

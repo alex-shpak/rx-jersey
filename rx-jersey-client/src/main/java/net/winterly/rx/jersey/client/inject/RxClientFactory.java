@@ -7,8 +7,8 @@ import org.glassfish.jersey.client.rx.rxjava.RxObservable;
 import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 
 /**
- * Factory to inject {@code RxClient<RxObservableInvoker>} instance. <br />
- * This factory will register {@link RxBodyReader} for provided client. <br />
+ * Factory to inject {@code RxClient<RxObservableInvoker>} instance. <br>
+ * This factory will register {@link RxBodyReader} for provided client. <br>
  *
  * Usage:
  * <pre>

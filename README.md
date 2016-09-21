@@ -7,7 +7,7 @@ Please report bugs and share ideas.
 
 
 ## Maven Artifact
-[https://jitpack.io/#alex-shpak/rx-jersey/0.5.1](https://jitpack.io/#alex-shpak/rx-jersey/0.5.1)
+[https://jitpack.io/#alex-shpak/rx-jersey/0.5.2](https://jitpack.io/#alex-shpak/rx-jersey/0.5.2)
 
 
 
