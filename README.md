@@ -20,7 +20,7 @@ This will register both client and server features
 ### Jersey Server
 register `RxJerseyServerFeature` in `resourceConfig`
 ```java
-reourceConfig.register(RxJerseyServerFeature.class);
+resourceConfig.register(RxJerseyServerFeature.class);
 ```
 
 Update your resource, see example:
@@ -43,7 +43,7 @@ public class HelloResource {
 ### Jersey client
 register `RxJerseyClientFeature` in `resourceConfig`
 ```java
-reourceConfig.register(RxJerseyClientFeature.class);
+resourceConfig.register(RxJerseyClientFeature.class);
 ```
 
 Update your resource, see example:
