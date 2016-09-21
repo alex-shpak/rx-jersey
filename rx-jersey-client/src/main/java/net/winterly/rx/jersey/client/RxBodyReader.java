@@ -1,4 +1,4 @@
-package net.winterly.rx.jersey;
+package net.winterly.rx.jersey.client;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import rx.Observable;
@@ -15,6 +15,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * MessageBodyReader accepting rx.Observable and routing to read entity of generic type instead
+ */
 public class RxBodyReader implements MessageBodyReader<Object> {
 
     @Inject

@@ -1,54 +1,35 @@
-### RxJava Jersey resources support
-Invocation handler and body writer for resources returning `rx.Observable`
+### RxJava Jersey resources support with dropwizard bundle
+Support of RxJava for Jersey resources and reactive proxy client and dropwizard bundle.
+Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under-the-hood.
 
-### Usage
-#### Gradle
-```groovy
-repositories {
-    maven { url "https://jitpack.io" }
-}
-```
-```groovy
-dependencies {
-    compile 'com.github.alex-shpak.rx-jersey:jaxrs:0.2.0'
-}
-```
+Please report bugs and share ideas.
 
-#### Maven
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.github.alex-shpak.rx-jersey</groupId>
-        <artifactId>jaxrs</artifactId>
-        <version>0.2.0</version>
-    </dependency>
-</dependencies>
-```
-#### Code
-Add `RxJerseyFeature` to your `resourceConfig`
+### Maven Artifact
+[https://jitpack.io/#alex-shpak/rx-jersey/0.5.0](https://jitpack.io/#alex-shpak/rx-jersey/0.5.0)
+
+
+### Dropwizard Bundle
+Add dropwizard bundle to bootstrap
 ```java
-reourceConfig.register(RxJerseyFeature.class);
-```
-Or with dropwizard
-```java
-environment.jersey().register(RxJerseyFeature.class);
+bootstrap.addBundle(new RxResourceBundle())
 ```
 
-Update your resource, see example
+This will register both client and server features
+
+
+### Jersey Server
+register `RxJerseyServerFeature` in `resourceConfig`
+```java
+reourceConfig.register(RxJerseyServerFeature.class);
+```
+
+Update your resource, see example:
 ```java
 @Path("/")
 public class HelloResource {
 
     @GET
-    public Observable<HelloEntity> getAsync(@Suspended AsyncResponse asyncResponse) {
+    public Observable<HelloEntity> getAsync() {
         return Observable.just(new HelloEntity());
     }
 
@@ -59,5 +40,27 @@ public class HelloResource {
 }
 ```
 
+### Jersey client
+register `RxJerseyClientFeature` in `resourceConfig`
+```java
+reourceConfig.register(RxJerseyClientFeature.class);
+```
+
+Update your resource, see example:
+```java
+@Path("/")
+public class HelloResource {
+
+    @Remote("http://example.com") //skip annotation value to get target from current context
+    private OtherResource remote;
+
+    @GET
+    public Observable<HelloEntity> getAsync() {
+        return remote.map( it -> new SomeEntity() );
+    }
+
+}
+```
+
 ### Licence
-[MIT](LICENCEюече)
+[MIT](LICENCE.txt)

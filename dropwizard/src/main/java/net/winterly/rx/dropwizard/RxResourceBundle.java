@@ -1,10 +1,11 @@
-package net.winterly.dropwizard.rx;
+package net.winterly.rx.dropwizard;
 
 import io.dropwizard.Bundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import net.winterly.rx.jersey.RxJerseyClientFeature;
-import net.winterly.rx.jersey.RxJerseyFeature;
+import net.winterly.rx.jersey.client.RxJerseyClientFeature;
+import net.winterly.rx.jersey.server.RxJerseyServerFeature;
+
 
 public class RxResourceBundle implements Bundle {
 
@@ -15,7 +16,7 @@ public class RxResourceBundle implements Bundle {
 
     @Override
     public void run(Environment environment) {
-        environment.jersey().register(RxJerseyFeature.class);
+        environment.jersey().register(RxJerseyServerFeature.class);
         environment.jersey().register(RxJerseyClientFeature.class);
     }
 
