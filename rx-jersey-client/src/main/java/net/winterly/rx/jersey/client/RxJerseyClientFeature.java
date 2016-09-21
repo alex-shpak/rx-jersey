@@ -1,8 +1,8 @@
-package net.winterly.rx.jersey;
+package net.winterly.rx.jersey.client;
 
-import net.winterly.rx.jersey.inject.Remote;
-import net.winterly.rx.jersey.inject.RemoteResolver;
-import net.winterly.rx.jersey.inject.RxClientFactory;
+import net.winterly.rx.jersey.client.inject.Remote;
+import net.winterly.rx.jersey.client.inject.RemoteResolver;
+import net.winterly.rx.jersey.client.inject.RxClientFactory;
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -12,6 +12,9 @@ import javax.inject.Singleton;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
+/**
+ * Feature implementation to configure RxJava support for clients
+ */
 public class RxJerseyClientFeature implements Feature {
 
     @Override
