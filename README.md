@@ -1,14 +1,17 @@
-### RxJava Jersey resources support with dropwizard bundle
-Support of RxJava for Jersey resources and reactive proxy client and dropwizard bundle.
+## RxJava Jersey resources support with dropwizard bundle
+RxJava support for Jersey resources and proxy client. Comes with dropwizard bundle.
 Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under-the-hood.
 
 Please report bugs and share ideas.
 
-### Maven Artifact
+
+
+## Maven Artifact
 [https://jitpack.io/#alex-shpak/rx-jersey/0.5.0](https://jitpack.io/#alex-shpak/rx-jersey/0.5.0)
 
 
-### Dropwizard Bundle
+
+## Dropwizard Bundle
 Add dropwizard bundle to bootstrap
 ```java
 bootstrap.addBundle(new RxResourceBundle())
@@ -17,7 +20,8 @@ bootstrap.addBundle(new RxResourceBundle())
 This will register both client and server features
 
 
-### Jersey Server
+
+## Jersey Server
 register `RxJerseyServerFeature` in `resourceConfig`
 ```java
 resourceConfig.register(RxJerseyServerFeature.class);
@@ -40,7 +44,9 @@ public class HelloResource {
 }
 ```
 
-### Jersey client
+
+
+## Jersey client
 register `RxJerseyClientFeature` in `resourceConfig`
 ```java
 resourceConfig.register(RxJerseyClientFeature.class);
@@ -62,5 +68,7 @@ public class HelloResource {
 }
 ```
 
-### Licence
+
+
+## Licence
 [MIT](LICENCE.txt)
