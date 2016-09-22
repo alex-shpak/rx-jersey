@@ -42,10 +42,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         Remote remote = injectee.getParent().getAnnotation(Remote.class);
         UriInfo uriInfo = serviceLocator.getService(UriInfo.class);
 
-        URI target = URI.create(remote.value());
-        if(target.getHost() == null) {
-            target = UriBuilder.fromUri(uriInfo.getBaseUri()).uri(target).build();
-        }
+        URI target = merge(remote.value(), uriInfo);
 
         RxWebTarget rxWebTarget = rxClient.target(target);
         Type type = injectee.getRequiredType();
@@ -62,6 +59,15 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         }
 
         throw new IllegalStateException(format("Can't find proper injection for %s", type));
+    }
+
+    public static URI merge(String value, UriInfo uriInfo) {
+        URI target = URI.create(value);
+        if(target.getHost() == null) {
+            target = UriBuilder.fromUri(uriInfo.getBaseUri()).uri(target).build();
+        }
+
+        return target;
     }
 
     @Override

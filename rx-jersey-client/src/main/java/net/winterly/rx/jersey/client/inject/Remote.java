@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Injection qualifier for proxy rx client or RxWebTarget. <br>
+ * Injection qualifier for Proxy Client or {@link org.glassfish.jersey.client.rx.RxWebTarget}. <br>
  * If annotation value contains host then value will be used as target URI for {@link org.glassfish.jersey.client.rx.RxWebTarget}
  * otherwise value will be merged with {@link UriInfo#getBaseUri()}. <br>
  * Annotation value has higher priority in merge <br><br>

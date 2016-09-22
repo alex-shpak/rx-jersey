@@ -1,13 +1,24 @@
-## RxJava Jersey resources support with dropwizard bundle
-RxJava support for Jersey resources and proxy client. Comes with dropwizard bundle.
+## Reactive Jersey feature
+RxJava support for Jersey resources and proxy client with non-blocking experience.
 Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under-the-hood.
+
+Comes with dropwizard bundle.
 
 Please report bugs and share ideas.
 
 
+## Roadmap
+-[ ] Tests coverage
+-[ ] Switchable client connectors (Grizzly/Netty)
+
+
 
 ## Maven Artifact
-[https://jitpack.io/#alex-shpak/rx-jersey/0.5.2](https://jitpack.io/#alex-shpak/rx-jersey/0.5.2)
+[https://jitpack.io/#alex-shpak/rx-jersey/0.5.3](https://jitpack.io/#alex-shpak/rx-jersey/0.5.3)
+
+```gradle
+compile "com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion"
+```
 
 
 
@@ -62,7 +73,7 @@ public class HelloResource {
 
     @GET
     public Observable<HelloEntity> getAsync() {
-        return remote.map( it -> new SomeEntity() );
+        return remote.map( it -> it.doStuff() );
     }
 
 }

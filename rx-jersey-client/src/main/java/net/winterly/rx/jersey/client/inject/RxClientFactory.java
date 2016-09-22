@@ -12,7 +12,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
 /**
- * Factory to inject {@code RxClient<RxObservableInvoker>} instance. <br>
+ * Factory to inject configured {@code RxClient<RxObservableInvoker>} instance. <br>
  * This factory will register {@link RxBodyReader} for provided client. <br>
  *
  * Usage:
@@ -39,4 +39,5 @@ public class RxClientFactory implements Factory<RxClient> {
     public void dispose(RxClient instance) {
         instance.close();
     }
+
 }
