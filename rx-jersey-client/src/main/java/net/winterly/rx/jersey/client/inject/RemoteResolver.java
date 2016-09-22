@@ -13,6 +13,8 @@ import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URI;
 
 import static java.lang.String.format;
@@ -46,24 +48,20 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         }
 
         RxWebTarget rxWebTarget = rxClient.target(target);
-        Class type = (Class) injectee.getRequiredType();
+        Type type = injectee.getRequiredType();
 
-        if(RxWebTarget.class.isAssignableFrom(type)) {
+        if(type instanceof ParameterizedType) {
             return rxWebTarget;
         }
 
-        if(type.isInterface()) {
-            return WebResourceFactoryPatched.newResource(type, rxWebTarget);
+        if(type instanceof Class) {
+            Class resource = (Class) type;
+            if(resource.isInterface()) {
+                return WebResourceFactoryPatched.newResource(resource, rxWebTarget);
+            }
         }
 
         throw new IllegalStateException(format("Can't find proper injection for %s", type));
-    }
-
-    public static void main(String[] args) {
-        URI remoteUri = UriBuilder.fromUri("okok").build();
-        remoteUri = UriBuilder.fromUri(URI.create("http://example.com/")).uri(remoteUri).build();
-
-        System.out.println(remoteUri.toString());
     }
 
     @Override
