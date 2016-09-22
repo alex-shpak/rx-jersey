@@ -8,8 +8,8 @@ Please report bugs and share ideas.
 
 
 ## Roadmap
--[ ] Tests coverage
--[ ] Switchable client connectors (Grizzly/Netty)
+- [ ] Tests coverage
+- [ ] Switchable client connectors (Grizzly/Netty)
 
 
 
