@@ -22,6 +22,7 @@ public final class RxJerseyServerFeature implements Feature {
                 bind(RxInvocationHandlerProvider.class).to(ResourceMethodInvocationHandlerProvider.class).in(Singleton.class);
             }
         });
+
         return true;
     }
 

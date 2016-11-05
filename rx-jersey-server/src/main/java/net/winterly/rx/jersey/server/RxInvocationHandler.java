@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  *
  * @see RxInvocationHandlerProvider
  */
-public class RxInvocationHandler implements InvocationHandler {
+public abstract class RxInvocationHandler implements InvocationHandler {
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -26,21 +26,18 @@ public class RxInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         final AsyncContext asyncContext = suspend();
-
-        Observable<?> observable = (Observable) method.invoke(proxy, args);
-        observable.subscribe(
-                entity -> onNext(asyncContext, entity),
-                throwable -> onError(asyncContext, throwable)
-        );
+        invokeAsync(proxy, method, args, asyncContext);
 
         return null;
     }
 
-    private void onNext(AsyncResponse asyncResponse, Object entity) {
+    protected abstract void invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable;
+
+    protected void onNext(AsyncResponse asyncResponse, Object entity) {
         asyncResponse.resume(entity);
     }
 
-    private void onError(AsyncResponse asyncResponse, Throwable throwable) {
+    protected void onError(AsyncResponse asyncResponse, Throwable throwable) {
         asyncResponse.resume(throwable);
     }
 

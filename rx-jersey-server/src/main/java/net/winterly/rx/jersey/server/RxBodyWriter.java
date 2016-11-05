@@ -2,6 +2,7 @@ package net.winterly.rx.jersey.server;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
 import rx.Observable;
+import rx.Single;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -16,7 +17,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * MessageBodyWriter accepting rx.Observable and routing to write entity of generic type instead
+ * MessageBodyWriter accepting {@link rx.Observable} or {@link rx.Single} and routing to write entity of generic type instead
  */
 public class RxBodyWriter implements MessageBodyWriter<Object> {
 
@@ -25,7 +26,8 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return Observable.class.isAssignableFrom(raw(genericType));
+        Class rawType = raw(genericType);
+        return Observable.class.isAssignableFrom(rawType) || Single.class.isAssignableFrom(rawType);
     }
 
     @Override
@@ -53,4 +55,5 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
         return actualGenericType.getActualTypeArguments()[0];
     }
+
 }
