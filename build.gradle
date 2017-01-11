@@ -14,7 +14,7 @@ subprojects {
 
     compileJava {
         setSourceCompatibility JavaVersion.VERSION_1_8
-        setSargetCompatibility JavaVersion.VERSION_1_8
+        setTargetCompatibility JavaVersion.VERSION_1_8
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {

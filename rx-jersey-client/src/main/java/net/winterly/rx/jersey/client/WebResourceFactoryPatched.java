@@ -43,11 +43,11 @@ package net.winterly.rx.jersey.client;
  */
 
 import org.glassfish.jersey.client.rx.RxInvocationBuilder;
-import org.glassfish.jersey.client.rx.RxWebTarget;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.*;
 import java.lang.annotation.Annotation;
@@ -283,8 +283,7 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             }
         }
 
-        RxWebTarget rxWebTarget = (RxWebTarget) newTarget; // Portions Copyright 2016 Alex Shpak
-        RxInvocationBuilder builder = rxWebTarget.request() //Portions Copyright 2016 Alex Shpak
+        Invocation.Builder builder = newTarget.request()
                 .headers(headers) // this resets all headers so do this first
                 .accept(accepts); // if @Produces is defined, propagate values into Accept header; empty array is NO-OP
 
@@ -310,14 +309,16 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             }
         }
 
+        WebResourceInvoker invoker = builder instanceof RxInvocationBuilder ? new WebResourceInvoker.Rx() : new WebResourceInvoker.Sync(); // Portions Copyright 2016 Alex Shpak
+
         final GenericType responseGenericType = new GenericType(method.getGenericReturnType());
         if (entity != null) {
             if (entityType instanceof ParameterizedType) {
                 entity = new GenericEntity(entity, entityType);
             }
-            result = builder.rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak
+            result = invoker.method(builder, httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak
         } else {
-            result = builder.rx().method(httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak
+            result = invoker.method(builder, httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak
         }
 
         return result;
