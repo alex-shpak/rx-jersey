@@ -75,7 +75,7 @@ public class HelloResource {
 
     @GET
     public Observable<HelloEntity> getAsync() {
-        return remote.map( it -> it.doStuff() );
+        return remote.call().map( it -> it.doStuff() );
     }
 
 }
