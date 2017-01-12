@@ -1,6 +1,6 @@
 package net.winterly.rx.jersey;
 
-import net.winterly.rx.jersey.server.filter.RxRequestInterceptor;
+import net.winterly.rx.jersey.server.spi.RxRequestInterceptor;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import rx.Observable;
@@ -32,7 +32,7 @@ public class InterceptorsTest extends RxJerseyTest {
                 .header("message", "hello")
                 .get(String.class);
 
-        assertEquals("hello", message);
+        assertEquals("intercepted", message);
     }
 
     @Path("/interceptors")
@@ -63,7 +63,9 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @Override
         protected void configure() {
-            bind(Interceptor.class).to(RxRequestInterceptor.class).in(Singleton.class);
+            bind(Interceptor.class)
+                    .to(RxRequestInterceptor.class)
+                    .in(Singleton.class);
         }
     }
 

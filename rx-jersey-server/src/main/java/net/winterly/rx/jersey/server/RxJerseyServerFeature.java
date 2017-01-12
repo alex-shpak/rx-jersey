@@ -1,7 +1,10 @@
 package net.winterly.rx.jersey.server;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
+import rx.Observable;
+import rx.Single;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Feature;
@@ -22,10 +25,18 @@ public final class RxJerseyServerFeature implements Feature {
                 bind(RxInvocationHandlerProvider.class)
                         .to(ResourceMethodInvocationHandlerProvider.class)
                         .in(Singleton.class);
+
+                bind(RxMethodDispatcherProvider.class)
+                        .to(ResourceMethodDispatcher.Provider.class)
+                        .in(Singleton.class)
+                        .ranked(1);
             }
         });
 
         return true;
     }
 
+    public static boolean isRx(Class<?> type) {
+        return Observable.class.isAssignableFrom(type) || Single.class.isAssignableFrom(type);
+    }
 }

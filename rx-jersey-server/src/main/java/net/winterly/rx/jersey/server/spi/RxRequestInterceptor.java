@@ -1,4 +1,4 @@
-package net.winterly.rx.jersey.server.filter;
+package net.winterly.rx.jersey.server.spi;
 
 import org.jvnet.hk2.annotations.Contract;
 import rx.Observable;
