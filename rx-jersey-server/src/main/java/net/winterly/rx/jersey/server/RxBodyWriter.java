@@ -1,8 +1,6 @@
 package net.winterly.rx.jersey.server;
 
 import org.glassfish.jersey.message.MessageBodyWorkers;
-import rx.Observable;
-import rx.Single;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -17,6 +15,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import static net.winterly.rx.jersey.server.RxJerseyServerFeature.isRx;
+
 /**
  * MessageBodyWriter accepting {@link rx.Observable} or {@link rx.Single} and routing to write entity of generic type instead
  */
@@ -26,10 +26,20 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
     @Inject
     private Provider<MessageBodyWorkers> workers;
 
+    private static Class raw(Type genericType) {
+        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
+        return (Class) parameterizedType.getRawType();
+    }
+
+    private static Type actual(Type genericType) {
+        final ParameterizedType actualGenericType = (ParameterizedType) genericType;
+        return actualGenericType.getActualTypeArguments()[0];
+    }
+
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         Class rawType = raw(genericType);
-        return Observable.class.isAssignableFrom(rawType) || Single.class.isAssignableFrom(rawType);
+        return isRx(rawType);
     }
 
     @Override
@@ -46,16 +56,6 @@ public class RxBodyWriter implements MessageBodyWriter<Object> {
         final MessageBodyWriter writer = workers.get().getMessageBodyWriter(entity.getClass(), actualTypeArgument, annotations, mediaType);
 
         writer.writeTo(entity, entity.getClass(), actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
-    }
-
-    private static Class raw(Type genericType) {
-        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
-        return (Class) parameterizedType.getRawType();
-    }
-
-    private static Type actual(Type genericType) {
-        final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return actualGenericType.getActualTypeArguments()[0];
     }
 
 }

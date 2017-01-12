@@ -8,10 +8,10 @@ Please report bugs and share ideas.
 
 
 ## Roadmap
-- [ ] Tests coverage
+- [x] Tests coverage
 - [ ] Switchable client connectors (Grizzly/Netty)
 - [x] rx.Single support (Only server)
-- [ ] Async JAX-RS filters
+- [x] Async Request interceptors
 
 
 

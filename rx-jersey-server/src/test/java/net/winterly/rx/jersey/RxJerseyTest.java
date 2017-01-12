@@ -10,6 +10,7 @@ public class RxJerseyTest extends JerseyTest {
 
     protected ResourceConfig config() {
         return new ResourceConfig()
+                .register(JacksonFeature.class)
                 .register(RxJerseyServerFeature.class);
     }
 
