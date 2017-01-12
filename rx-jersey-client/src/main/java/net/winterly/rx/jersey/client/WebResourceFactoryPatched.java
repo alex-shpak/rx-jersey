@@ -81,11 +81,11 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
      * the interface passed in the first argument.
      * <p></p>
      * Calling this method has the same effect as calling {@code WebResourceFactory.newResource(resourceInterface, rootTarget,
-     *false)}.
+     * false)}.
      *
-     * @param <C> Type of the resource to be created.
+     * @param <C>               Type of the resource to be created.
      * @param resourceInterface Interface describing the resource to be created.
-     * @param target WebTarget pointing to the resource or the parent of the resource.
+     * @param target            WebTarget pointing to the resource or the parent of the resource.
      * @return Instance of a class implementing the resource interface that can
      * be used for making requests to the server.
      */
@@ -97,14 +97,14 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
      * Creates a new client-side representation of a resource described by
      * the interface passed in the first argument.
      *
-     * @param <C> Type of the resource to be created.
-     * @param resourceInterface Interface describing the resource to be created.
-     * @param target WebTarget pointing to the resource or the parent of the resource.
+     * @param <C>                Type of the resource to be created.
+     * @param resourceInterface  Interface describing the resource to be created.
+     * @param target             WebTarget pointing to the resource or the parent of the resource.
      * @param ignoreResourcePath If set to true, ignores path annotation on the resource interface (this is used when creating
-     * sub-resources)
-     * @param headers Header params collected from parent resources (used when creating a sub-resource)
-     * @param cookies Cookie params collected from parent resources (used when creating a sub-resource)
-     * @param form Form params collected from parent resources (used when creating a sub-resource)
+     *                           sub-resources)
+     * @param headers            Header params collected from parent resources (used when creating a sub-resource)
+     * @param cookies            Cookie params collected from parent resources (used when creating a sub-resource)
+     * @param form               Form params collected from parent resources (used when creating a sub-resource)
      * @return Instance of a class implementing the resource interface that can
      * be used for making requests to the server.
      */
@@ -117,7 +117,7 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
                                     final Form form) {
 
         return (C) Proxy.newProxyInstance(AccessController.doPrivileged(ReflectionHelper.getClassLoaderPA(resourceInterface)),
-                new Class[] {resourceInterface},
+                new Class[]{resourceInterface},
                 new WebResourceFactoryPatched(ignoreResourcePath ? target : addPathFromAnnotation(resourceInterface, target),
                         headers, cookies, form));
     }
@@ -309,16 +309,14 @@ public final class WebResourceFactoryPatched implements InvocationHandler {
             }
         }
 
-        WebResourceInvoker invoker = builder instanceof RxInvocationBuilder ? new WebResourceInvoker.Rx() : new WebResourceInvoker.Sync(); // Portions Copyright 2016 Alex Shpak
-
         final GenericType responseGenericType = new GenericType(method.getGenericReturnType());
         if (entity != null) {
             if (entityType instanceof ParameterizedType) {
                 entity = new GenericEntity(entity, entityType);
             }
-            result = invoker.method(builder, httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak
+            result = ((RxInvocationBuilder) builder).rx().method(httpMethod, Entity.entity(entity, contentType), responseGenericType); // Portions Copyright 2016 Alex Shpak
         } else {
-            result = invoker.method(builder, httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak
+            result = ((RxInvocationBuilder) builder).rx().method(httpMethod, responseGenericType); // Portions Copyright 2016 Alex Shpak
         }
 
         return result;
