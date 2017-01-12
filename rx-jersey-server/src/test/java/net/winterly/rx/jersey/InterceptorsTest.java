@@ -8,11 +8,13 @@ import rx.Observable;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,6 +37,14 @@ public class InterceptorsTest extends RxJerseyTest {
         assertEquals("intercepted", message);
     }
 
+    @Test(expected = NotAuthorizedException.class)
+    public void shouldHandleInterceptorException() {
+        target("interceptors").path("error")
+                .request()
+                .header("throw", true)
+                .get(String.class);
+    }
+
     @Path("/interceptors")
     public static class EchoResource {
 
@@ -42,6 +52,12 @@ public class InterceptorsTest extends RxJerseyTest {
         @Path("echo")
         public Observable<String> echo(@HeaderParam("message") String message) {
             return Observable.just(message);
+        }
+
+        @GET
+        @Path("error")
+        public Observable<String> error() {
+            return Observable.just(null);
         }
     }
 
@@ -52,10 +68,20 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @Override
         public Observable<?> filter(ContainerRequestContext requestContext) {
-
             return Observable.just(requestContext).doOnNext(it -> {
                 it.getHeaders().putSingle("message", "intercepted");
             });
+        }
+    }
+
+    public static class ThrowingInterceptor implements RxRequestInterceptor {
+
+        @Override
+        public Observable<?> filter(ContainerRequestContext requestContext) {
+            if (requestContext.getHeaders().containsKey("throw")) {
+                throw new NotAuthorizedException("Surprise!");
+            }
+            return Observable.empty();
         }
     }
 
@@ -63,9 +89,12 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @Override
         protected void configure() {
-            bind(Interceptor.class)
-                    .to(RxRequestInterceptor.class)
-                    .in(Singleton.class);
+            Stream.of(Interceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
+                bind(interceptor)
+                        .to(RxRequestInterceptor.class)
+                        .in(Singleton.class);
+            });
+
         }
     }
 

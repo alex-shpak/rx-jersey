@@ -13,8 +13,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import static rx.Observable.*;
-
 public class RxMethodDispatcher implements ResourceMethodDispatcher {
 
     private final ResourceMethodDispatcher original;
@@ -37,11 +35,11 @@ public class RxMethodDispatcher implements ResourceMethodDispatcher {
         final ContainerRequestContext requestContext = containerRequestContext.get();
         final AsyncContext asyncContext = suspend();
 
-        Observable<?> intercept = from(requestInterceptors)
+        Observable<?> intercept = Observable.from(requestInterceptors)
                 .concatMap(it -> it.filter(requestContext))
                 .lastOrDefault(null);
 
-        Observable<?> dispatch = defer(() -> just(original.dispatch(resource, request))
+        Observable<?> dispatch = Observable.defer(() -> Observable.just(original.dispatch(resource, request))
                 .map(Response::getEntity)
                 .flatMap(it -> (Observable<?>) it)
         );

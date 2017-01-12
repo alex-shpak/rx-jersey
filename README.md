@@ -11,7 +11,7 @@ Please report bugs and share ideas.
 - [x] Tests coverage
 - [ ] Switchable client connectors (Grizzly/Netty)
 - [x] rx.Single support (Only server)
-- [x] Async Request interceptors
+- [x] Async request interceptors
 
 
 
