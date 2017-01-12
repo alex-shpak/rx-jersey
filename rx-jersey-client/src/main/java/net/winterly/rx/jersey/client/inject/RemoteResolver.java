@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -34,8 +33,8 @@ public class RemoteResolver implements InjectionResolver<Remote> {
     private ServiceLocator serviceLocator;
 
     /**
-     * @throws IllegalStateException if uri is not correct or there is no sufficient injection resolved
      * @return RxWebTarget or Proxy client of specified injectee interface
+     * @throws IllegalStateException if uri is not correct or there is no sufficient injection resolved
      */
     @Override
     public Object resolve(Injectee injectee, ServiceHandle<?> root) {
@@ -47,13 +46,13 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         RxWebTarget rxWebTarget = rxClient.target(target);
         Type type = injectee.getRequiredType();
 
-        if(type instanceof ParameterizedType) {
+        if (type instanceof ParameterizedType) {
             return rxWebTarget;
         }
 
-        if(type instanceof Class) {
-            Class resource = (Class) type;
-            if(resource.isInterface()) {
+        if (type instanceof Class) {
+            Class<?> resource = (Class) type;
+            if (resource.isInterface()) {
                 return WebResourceFactoryPatched.newResource(resource, rxWebTarget);
             }
         }
@@ -63,7 +62,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
 
     public static URI merge(String value, UriInfo uriInfo) {
         URI target = URI.create(value);
-        if(target.getHost() == null) {
+        if (target.getHost() == null) {
             target = UriBuilder.fromUri(uriInfo.getBaseUri()).uri(target).build();
         }
 
