@@ -9,12 +9,8 @@ import java.lang.reflect.Method;
 public final class ObservableInvocationHandler extends RxInvocationHandler {
 
     @Override
-    protected void invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable {
-        Observable<?> observable = (Observable) method.invoke(proxy, args);
-        observable.subscribe(
-                entity -> onNext(asyncContext, entity),
-                throwable -> onError(asyncContext, throwable)
-        );
+    protected Observable<?> invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable {
+        return (Observable) method.invoke(proxy, args);
     }
 
 }

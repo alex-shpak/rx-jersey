@@ -1,13 +1,16 @@
 package net.winterly.rx.jersey.server;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.process.AsyncContext;
 import rx.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -20,34 +23,39 @@ import java.lang.reflect.Method;
 public abstract class RxInvocationHandler implements InvocationHandler {
 
     @Inject
-    private ServiceLocator serviceLocator;
+    private Provider<AsyncContext> asyncContext;
+
+    @Inject
+    private Provider<ContainerRequestContext> containerRequestContext;
+
+    @Inject
+    private Provider<ContainerResponseContext> containerResponseContext;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         final AsyncContext asyncContext = suspend();
-        invokeAsync(proxy, method, args, asyncContext);
+
+        invokeAsync(proxy, method, args, asyncContext)
+                .singleOrDefault(null)
+                .map(response -> response == null ? Response.noContent().build() : response)
+                .subscribe(
+                    asyncContext::resume,
+                    asyncContext::resume
+                );
 
         return null;
     }
 
-    protected abstract void invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable;
-
-    protected void onNext(AsyncResponse asyncResponse, Object entity) {
-        asyncResponse.resume(entity);
-    }
-
-    protected void onError(AsyncResponse asyncResponse, Throwable throwable) {
-        asyncResponse.resume(throwable);
-    }
+    protected abstract Observable<?> invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable;
 
     private AsyncContext suspend() {
-        final AsyncContext asyncContext = serviceLocator.getService(AsyncContext.class);
+        final AsyncContext context = asyncContext.get();
 
-        if(!asyncContext.suspend()) {
+        if(!context.suspend()) {
             throw new ProcessingException(LocalizationMessages.ERROR_SUSPENDING_ASYNC_REQUEST());
         }
 
-        return asyncContext;
+        return context;
     }
 }
