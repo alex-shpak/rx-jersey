@@ -21,7 +21,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        final String message = target("echo")
+        final String message = target("single").path("echo")
                 .queryParam("message", "hello")
                 .request()
                 .get(String.class);
@@ -31,7 +31,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNullEntity() {
-        final int status = target("nullable")
+        final int status = target("single").path("nullable")
                 .request()
                 .get()
                 .getStatus();
@@ -41,19 +41,19 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnNullObservable() {
-        target("npe")
+        target("single").path("npe")
                 .request()
                 .get(String.class);
     }
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnMultipleEntities() {
-        target("multiple")
+        target("single").path("multiple")
                 .request()
                 .get(String.class);
     }
 
-    @Path("/")
+    @Path("/single")
     public static class SingleResource {
 
         @GET

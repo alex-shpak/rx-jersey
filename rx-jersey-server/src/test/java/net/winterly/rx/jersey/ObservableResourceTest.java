@@ -20,7 +20,7 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        final String message = target("echo")
+        final String message = target("observable").path("echo")
                 .queryParam("message", "hello")
                 .request()
                 .get(String.class);
@@ -30,7 +30,7 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnEmptyObservable() {
-        final int status = target("empty")
+        final int status = target("observable").path("empty")
                 .request()
                 .get()
                 .getStatus();
@@ -40,7 +40,7 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNullEntity() {
-        final int status = target("nullable")
+        final int status = target("observable").path("nullable")
                 .request()
                 .get()
                 .getStatus();
@@ -50,20 +50,20 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnNullObservable() {
-        target("npe")
+        target("observable").path("npe")
                 .request()
                 .get(String.class);
     }
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnMultipleEntities() {
-        target("multiple")
+        target("observable").path("multiple")
                 .request()
                 .get(String.class);
     }
 
 
-    @Path("/")
+    @Path("/observable")
     public static class ObservableResource {
 
         @GET

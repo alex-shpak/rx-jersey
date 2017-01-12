@@ -19,7 +19,9 @@ public final class RxJerseyServerFeature implements Feature {
         context.register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(RxInvocationHandlerProvider.class).to(ResourceMethodInvocationHandlerProvider.class).in(Singleton.class);
+                bind(RxInvocationHandlerProvider.class)
+                        .to(ResourceMethodInvocationHandlerProvider.class)
+                        .in(Singleton.class);
             }
         });
 

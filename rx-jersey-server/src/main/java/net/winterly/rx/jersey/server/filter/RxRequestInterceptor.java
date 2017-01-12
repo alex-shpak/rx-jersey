@@ -6,8 +6,8 @@ import rx.Observable;
 import javax.ws.rs.container.ContainerRequestContext;
 
 @Contract
-public interface RxContainerResponseFilter {
+public interface RxRequestInterceptor {
 
-    Observable<Void> filter(ContainerRequestContext requestContext, Object entity);
+    Observable<?> filter(ContainerRequestContext requestContext);
 
 }

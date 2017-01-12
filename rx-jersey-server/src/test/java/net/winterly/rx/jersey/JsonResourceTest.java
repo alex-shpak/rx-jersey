@@ -2,6 +2,8 @@ package net.winterly.rx.jersey;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 import rx.Observable;
 
@@ -22,7 +24,7 @@ public class JsonResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldWriteJsonEntities() {
-        final Message message = target("writeJson")
+        final Message message = target("json").path("writeJson")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get(Message.class);
 
@@ -30,8 +32,8 @@ public class JsonResourceTest extends RxJerseyTest {
     }
 
     @Test
-    public void shouldReadJsonEntities2() {
-        final Message message = target("readJson")
+    public void shouldReadJsonEntities() {
+        final Message message = target("json").path("readJson")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(new Message("hello")))
                 .readEntity(Message.class);
@@ -40,7 +42,7 @@ public class JsonResourceTest extends RxJerseyTest {
     }
 
 
-    @Path("/")
+    @Path("/json")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public static class JsonResource {

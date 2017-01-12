@@ -1,15 +1,16 @@
 package net.winterly.rx.jersey.server;
 
+import net.winterly.rx.jersey.server.filter.RxRequestInterceptor;
+import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.process.AsyncContext;
 import rx.Observable;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -22,32 +23,38 @@ import java.lang.reflect.Method;
  */
 public abstract class RxInvocationHandler implements InvocationHandler {
 
-    @Inject
+    @Context
     private Provider<AsyncContext> asyncContext;
 
-    @Inject
+    @Context
     private Provider<ContainerRequestContext> containerRequestContext;
 
-    @Inject
-    private Provider<ContainerResponseContext> containerResponseContext;
+    @Context
+    private IterableProvider<RxRequestInterceptor> requestInterceptors;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
+        final ContainerRequestContext requestContext = containerRequestContext.get();
         final AsyncContext asyncContext = suspend();
 
-        invokeAsync(proxy, method, args, asyncContext)
+        Observable<?> interceptors = Observable.from(requestInterceptors)
+                .concatMap(it -> it.filter(requestContext))
+                .lastOrDefault(null);
+
+        Observable<?> action = invokeAsync(proxy, method, args)
                 .singleOrDefault(null)
-                .map(response -> response == null ? Response.noContent().build() : response)
-                .subscribe(
-                    asyncContext::resume,
-                    asyncContext::resume
-                );
+                .map(response -> response == null ? Response.noContent().build() : response);
+
+        interceptors.flatMap(it -> action).subscribe(
+                asyncContext::resume,
+                asyncContext::resume
+        );
 
         return null;
     }
 
-    protected abstract Observable<?> invokeAsync(Object proxy, Method method, Object[] args, AsyncContext asyncContext) throws Throwable;
+    protected abstract Observable<?> invokeAsync(Object proxy, Method method, Object[] args) throws Throwable;
 
     private AsyncContext suspend() {
         final AsyncContext context = asyncContext.get();

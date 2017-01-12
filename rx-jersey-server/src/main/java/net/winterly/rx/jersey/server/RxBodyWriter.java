@@ -6,6 +6,7 @@ import rx.Single;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -19,6 +20,7 @@ import java.lang.reflect.Type;
 /**
  * MessageBodyWriter accepting {@link rx.Observable} or {@link rx.Single} and routing to write entity of generic type instead
  */
+@Singleton
 public class RxBodyWriter implements MessageBodyWriter<Object> {
 
     @Inject

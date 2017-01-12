@@ -9,11 +9,8 @@ import org.glassfish.jersey.test.JerseyTest;
 public class RxJerseyTest extends JerseyTest {
 
     protected ResourceConfig config() {
-        ResourceConfig resourceConfig = new ResourceConfig();
-        resourceConfig.register(JacksonFeature.class);
-        resourceConfig.register(RxJerseyServerFeature.class);
-
-        return resourceConfig;
+        return new ResourceConfig()
+                .register(RxJerseyServerFeature.class);
     }
 
     @Override
