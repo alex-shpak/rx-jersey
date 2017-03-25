@@ -67,7 +67,7 @@ public class InterceptorsTest extends RxJerseyTest {
         private SecurityContext securityContext;
 
         @Override
-        public Observable<?> filter(ContainerRequestContext requestContext) {
+        public Observable<?> apply(ContainerRequestContext requestContext) {
             return Observable.just(requestContext).doOnNext(it -> {
                 it.getHeaders().putSingle("message", "intercepted");
             });
@@ -77,10 +77,18 @@ public class InterceptorsTest extends RxJerseyTest {
     public static class ThrowingInterceptor implements RxRequestInterceptor {
 
         @Override
-        public Observable<?> filter(ContainerRequestContext requestContext) {
+        public Observable<?> apply(ContainerRequestContext requestContext) {
             if (requestContext.getHeaders().containsKey("throw")) {
                 throw new NotAuthorizedException("Surprise!");
             }
+            return Observable.empty();
+        }
+    }
+
+    public static class EmptyInterceptor implements RxRequestInterceptor {
+
+        @Override
+        public Observable<?> apply(ContainerRequestContext requestContext) {
             return Observable.empty();
         }
     }
@@ -89,7 +97,7 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @Override
         protected void configure() {
-            Stream.of(Interceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
+            Stream.of(Interceptor.class, EmptyInterceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
                 bind(interceptor)
                         .to(RxRequestInterceptor.class)
                         .in(Singleton.class);

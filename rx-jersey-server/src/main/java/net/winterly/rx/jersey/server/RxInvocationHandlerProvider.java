@@ -19,12 +19,9 @@ public class RxInvocationHandlerProvider implements ResourceMethodInvocationHand
         Class returnType = invocable.getRawResponseType();
 
         if (Observable.class.isAssignableFrom(returnType)) {
-            return (RxInvocationHandler) (proxy, method, args) ->
-                    (Observable) method.invoke(proxy, args);
-
+            return (RxInvocationHandler) (proxy, method, args) -> ((Observable<?>) method.invoke(proxy, args)).singleOrDefault(null).toSingle();
         } else if (Single.class.isAssignableFrom(returnType)) {
-            return (RxInvocationHandler) (proxy, method, args) ->
-                    ((Single) method.invoke(proxy, args)).toObservable();
+            return (RxInvocationHandler) (proxy, method, args) -> ((Single<?>) method.invoke(proxy, args));
         }
 
         return null;
@@ -34,10 +31,10 @@ public class RxInvocationHandlerProvider implements ResourceMethodInvocationHand
 
         @Override
         default Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            return invokeAsync(proxy, method, args).singleOrDefault(null);
+            return invokeAsync(proxy, method, args);
         }
 
-        Observable<?> invokeAsync(Object proxy, Method method, Object[] args) throws Throwable;
+        Single<?> invokeAsync(Object proxy, Method method, Object[] args) throws Throwable;
 
     }
 

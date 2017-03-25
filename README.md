@@ -12,11 +12,12 @@ Please report bugs and share ideas.
 - [ ] Switchable client connectors (Grizzly/Netty)
 - [x] rx.Single support (Only server)
 - [x] Async request interceptors
+- [ ] RxJava 2.0
 
 
 
 ## Maven Artifact
-[https://jitpack.io/#alex-shpak/rx-jersey/0.5.3](https://jitpack.io/#alex-shpak/rx-jersey/0.5.3)
+[https://jitpack.io/#alex-shpak/rx-jersey/0.7.0](https://jitpack.io/#alex-shpak/rx-jersey/0.7.0)
 
 ```gradle
 compile "com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion"
@@ -46,8 +47,8 @@ Update your resource, see example:
 public class HelloResource {
 
     @GET
-    public Observable<HelloEntity> getAsync() {
-        return Observable.just(new HelloEntity());
+    public Single<HelloEntity> getAsync() {
+        return Single.just(new HelloEntity());
     }
 
 
@@ -75,13 +76,16 @@ public class HelloResource {
 
     @GET
     public Observable<HelloEntity> getAsync() {
-        return remote.call().map( it -> it.doStuff() );
+        return remote.call().map(it -> it.doStuff());
     }
 
 }
 ```
 
-
+## Important notes
+ - It's recommended to use rx.Single as return type (Representing single response entity)
+ - Multiple elements emitted in `Observable` will be treated as error
+ - Empty `Observable` or `null` value in `Observable` or `Single` will be treated as `204: No content`
 
 ## Licence
 [MIT](LICENCE.txt)

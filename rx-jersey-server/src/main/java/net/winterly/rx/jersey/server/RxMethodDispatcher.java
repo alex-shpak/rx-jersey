@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.process.AsyncContext;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
 import rx.Observable;
+import rx.Single;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 public class RxMethodDispatcher implements ResourceMethodDispatcher {
 
+    private final Response noContent = Response.noContent().build();
     private final ResourceMethodDispatcher original;
 
     @Context
@@ -35,21 +37,19 @@ public class RxMethodDispatcher implements ResourceMethodDispatcher {
         final ContainerRequestContext requestContext = containerRequestContext.get();
         final AsyncContext asyncContext = suspend();
 
-        Observable<?> intercept = Observable.from(requestInterceptors)
-                .concatMap(it -> it.filter(requestContext))
-                .lastOrDefault(null);
+        Single<?> intercept = Observable.from(requestInterceptors)
+                .concatMap(interceptor -> interceptor.apply(requestContext))
+                .lastOrDefault(null)
+                .map(nullable -> null)
+                .toSingle(); //will emit single null value after all observables
 
-        Observable<?> dispatch = Observable.defer(() -> Observable.just(original.dispatch(resource, request))
+        Single<?> dispatch = Single.defer(() -> Single.just(original.dispatch(resource, request)))
                 .map(Response::getEntity)
-                .flatMap(it -> (Observable<?>) it)
-        );
+                .flatMap(single -> (Single<?>) single);
 
-        intercept.flatMap(it -> dispatch)
-                .map(response -> response == null ? Response.noContent().build() : response)
-                .subscribe(
-                        asyncContext::resume,
-                        asyncContext::resume
-                );
+        intercept.flatMap(nullVal -> dispatch)
+                .map(response -> response == null ? noContent : response)
+                .subscribe(asyncContext::resume, asyncContext::resume);
 
         return null;
     }
