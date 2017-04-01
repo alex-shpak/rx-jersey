@@ -83,9 +83,17 @@ public class HelloResource {
 ```
 
 ## Important notes
- - It's recommended to use rx.Single as return type (Representing single response entity)
- - Multiple elements emitted in `Observable` will be treated as error
- - Empty `Observable` or `null` value in `Observable` or `Single` will be treated as `204: No content`
+### RxJava 1
+ - It's recommended to use `rx.Single` as return type (Representing single response entity).
+ - Multiple elements emitted in `Observable` will be treated as error.
+ - Empty `Observable` or `null` value in `Observable` or `Single` will be treated as `204: No content`.
+
+### RxJava 2 (Upcoming)
+ - It's recommended to use `io.reactivex.Maybe` which could be 0 or 1 item or an error.
+ - Multiple elements emitted in `Observable` or `Flowable` will be treated as error.
+ - Empty `Observable`/`Maybe` will be treated as `204: No content`.
+ - `Completable` will be executed and `204: No content` will be returned.
+ 
 
 ## Licence
 [MIT](LICENCE.txt)
