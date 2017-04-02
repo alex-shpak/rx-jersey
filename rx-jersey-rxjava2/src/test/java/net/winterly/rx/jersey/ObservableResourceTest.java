@@ -1,8 +1,7 @@
 package net.winterly.rx.jersey;
 
+import io.reactivex.Observable;
 import org.junit.Test;
-import rx.Observable;
-import rx.Single;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.InternalServerErrorException;
@@ -12,16 +11,16 @@ import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 
-public class SingleResourceTest extends RxJerseyTest {
+public class ObservableResourceTest extends RxJerseyTest {
 
     @Override
     protected Application configure() {
-        return config().register(SingleResource.class);
+        return config().register(ObservableResource.class);
     }
 
     @Test
     public void shouldReturnContent() {
-        final String message = target("single").path("echo")
+        final String message = target("observable").path("echo")
                 .queryParam("message", "hello")
                 .request()
                 .get(String.class);
@@ -30,8 +29,8 @@ public class SingleResourceTest extends RxJerseyTest {
     }
 
     @Test
-    public void shouldReturnNoContentOnNullEntity() {
-        final int status = target("single").path("nullable")
+    public void shouldReturnNoContentOnEmptyObservable() {
+        final int status = target("observable").path("empty")
                 .request()
                 .get()
                 .getStatus();
@@ -41,43 +40,44 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnNullObservable() {
-        target("single").path("npe")
+        target("observable").path("npe")
                 .request()
                 .get(String.class);
     }
 
     @Test(expected = InternalServerErrorException.class)
     public void shouldThrowOnMultipleEntities() {
-        target("single").path("multiple")
+        target("observable").path("multiple")
                 .request()
                 .get(String.class);
     }
 
-    @Path("/single")
-    public static class SingleResource {
+
+    @Path("/observable")
+    public static class ObservableResource {
 
         @GET
         @Path("echo")
-        public Single<String> echo(@QueryParam("message") String message) {
-            return Single.just(message);
+        public Observable<String> echo(@QueryParam("message") String message) {
+            return Observable.just(message);
         }
 
         @GET
-        @Path("nullable")
-        public Single<String> nullable() {
-            return Single.just(null);
+        @Path("empty")
+        public Observable<String> empty() {
+            return Observable.empty();
         }
 
         @GET
         @Path("npe")
-        public Single<String> npe() {
+        public Observable<String> npe() {
             return null;
         }
 
         @GET
         @Path("multiple")
-        public Single<String> multiple() {
-            return Observable.just("hello", "rx").toSingle();
+        public Observable<String> multiple() {
+            return Observable.just("hello", "rx");
         }
 
     }
