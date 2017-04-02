@@ -1,6 +1,6 @@
 package net.winterly.rx.jersey;
 
-import net.winterly.rx.jersey.server.spi.RxRequestInterceptor;
+import net.winterly.rx.jersey.server.ObservableRequestInterceptor;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
 import rx.Observable;
@@ -61,23 +61,23 @@ public class InterceptorsTest extends RxJerseyTest {
         }
     }
 
-    public static class Interceptor implements RxRequestInterceptor {
+    public static class Interceptor implements ObservableRequestInterceptor<ContainerRequestContext> {
 
         @Context
         private SecurityContext securityContext;
 
         @Override
-        public Observable<?> apply(ContainerRequestContext requestContext) {
+        public Observable<ContainerRequestContext> intercept(ContainerRequestContext requestContext) {
             return Observable.just(requestContext).doOnNext(it -> {
                 it.getHeaders().putSingle("message", "intercepted");
             });
         }
     }
 
-    public static class ThrowingInterceptor implements RxRequestInterceptor {
+    public static class ThrowingInterceptor implements ObservableRequestInterceptor<Void> {
 
         @Override
-        public Observable<?> apply(ContainerRequestContext requestContext) {
+        public Observable<Void> intercept(ContainerRequestContext requestContext) {
             if (requestContext.getHeaders().containsKey("throw")) {
                 throw new NotAuthorizedException("Surprise!");
             }
@@ -85,10 +85,10 @@ public class InterceptorsTest extends RxJerseyTest {
         }
     }
 
-    public static class EmptyInterceptor implements RxRequestInterceptor {
+    public static class EmptyInterceptor implements ObservableRequestInterceptor {
 
         @Override
-        public Observable<?> apply(ContainerRequestContext requestContext) {
+        public Observable<?> intercept(ContainerRequestContext requestContext) {
             return Observable.empty();
         }
     }
@@ -99,7 +99,7 @@ public class InterceptorsTest extends RxJerseyTest {
         protected void configure() {
             Stream.of(Interceptor.class, EmptyInterceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
                 bind(interceptor)
-                        .to(RxRequestInterceptor.class)
+                        .to(ObservableRequestInterceptor.class)
                         .in(Singleton.class);
             });
 

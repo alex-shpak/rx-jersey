@@ -1,12 +1,13 @@
 package net.winterly.rx.jersey.server;
 
+import net.winterly.rxjersey.server.RxInvocationHandler;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 import rx.Observable;
 import rx.Single;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * Provides {@link InvocationHandler} for resources returning {@link Observable} or {@link Single}
@@ -14,28 +15,30 @@ import java.lang.reflect.Method;
  */
 public class RxInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
+    private final HashMap<Class, RxInvocationHandler<Single, ?>> handlers = new HashMap<>();
+
+    public RxInvocationHandlerProvider() {
+        handlers.put(Observable.class, new ObservableHandler());
+        handlers.put(Single.class, new SingleHandler());
+    }
+
     @Override
     public InvocationHandler create(Invocable invocable) {
         Class returnType = invocable.getRawResponseType();
-
-        if (Observable.class.isAssignableFrom(returnType)) {
-            return (RxInvocationHandler) (proxy, method, args) -> ((Observable<?>) method.invoke(proxy, args)).singleOrDefault(null).toSingle();
-        } else if (Single.class.isAssignableFrom(returnType)) {
-            return (RxInvocationHandler) (proxy, method, args) -> ((Single<?>) method.invoke(proxy, args));
-        }
-
-        return null;
+        return handlers.get(returnType);
     }
 
-    public interface RxInvocationHandler extends InvocationHandler {
-
+    private static class ObservableHandler implements RxInvocationHandler<Single, Observable<?>> {
         @Override
-        default Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            return invokeAsync(proxy, method, args);
+        public Single convert(Observable<?> result) throws Throwable {
+            return result.singleOrDefault(null).toSingle();
         }
-
-        Single<?> invokeAsync(Object proxy, Method method, Object[] args) throws Throwable;
-
     }
 
+    private static class SingleHandler implements RxInvocationHandler<Single, Single<?>> {
+        @Override
+        public Single convert(Single<?> result) throws Throwable {
+            return result;
+        }
+    }
 }

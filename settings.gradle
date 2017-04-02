@@ -1,3 +1,4 @@
+include 'rx-jersey-core'
 include 'rx-jersey-server'
 include 'rx-jersey-client'
 include 'dropwizard'

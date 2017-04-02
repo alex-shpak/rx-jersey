@@ -1,66 +1,66 @@
 package net.winterly.rx.jersey.server;
 
-import net.winterly.rx.jersey.server.spi.RxRequestInterceptor;
+import net.winterly.rxjersey.server.RxMethodDispatcher;
+import net.winterly.rxjersey.server.RxMethodDispatcherProvider;
 import org.glassfish.hk2.api.IterableProvider;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.process.AsyncContext;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
 import rx.Observable;
 import rx.Single;
 
+import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-public class RxMethodDispatcher implements ResourceMethodDispatcher {
+public class SingleMethodDispatcher extends RxMethodDispatcher {
 
     private final Response noContent = Response.noContent().build();
-    private final ResourceMethodDispatcher original;
-
-    @Context
-    private javax.inject.Provider<AsyncContext> asyncContext;
 
     @Context
     private javax.inject.Provider<ContainerRequestContext> containerRequestContext;
 
     @Context
-    private IterableProvider<RxRequestInterceptor> requestInterceptors;
+    private IterableProvider<ObservableRequestInterceptor<?>> requestInterceptors;
 
-    public RxMethodDispatcher(ResourceMethodDispatcher original) {
-        this.original = original;
+    public SingleMethodDispatcher(ResourceMethodDispatcher originalDispatcher) {
+        super(originalDispatcher);
     }
 
     @Override
-    public Response dispatch(Object resource, ContainerRequest request) throws ProcessingException {
+    public void async(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException {
         final ContainerRequestContext requestContext = containerRequestContext.get();
-        final AsyncContext asyncContext = suspend();
 
         Single<?> intercept = Observable.from(requestInterceptors)
-                .concatMap(interceptor -> interceptor.apply(requestContext))
+                .concatMap(interceptor -> interceptor.intercept(requestContext))
                 .lastOrDefault(null)
                 .map(nullable -> null)
                 .toSingle(); //will emit single null value after all observables
 
-        Single<?> dispatch = Single.defer(() -> Single.just(original.dispatch(resource, request)))
+        Single<?> dispatch = Single.defer(() -> Single.just(dispatcher.dispatch(resource, request)))
                 .map(Response::getEntity)
                 .flatMap(single -> (Single<?>) single);
 
         intercept.flatMap(nullVal -> dispatch)
                 .map(response -> response == null ? noContent : response)
                 .subscribe(asyncContext::resume, asyncContext::resume);
-
-        return null;
     }
 
-    private AsyncContext suspend() {
-        final AsyncContext context = asyncContext.get();
+    public static class Provider extends RxMethodDispatcherProvider {
 
-        if (!context.suspend()) {
-            throw new ProcessingException(LocalizationMessages.ERROR_SUSPENDING_ASYNC_REQUEST());
+        @Inject
+        public Provider(ServiceLocator serviceLocator) {
+            super(serviceLocator, Observable.class, Single.class);
         }
 
-        return context;
+        @Override
+        public ResourceMethodDispatcher create(ResourceMethodDispatcher dispatcher) {
+            return new SingleMethodDispatcher(dispatcher);
+        }
+
     }
+
 }
