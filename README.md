@@ -1,4 +1,7 @@
 ## Reactive Jersey feature
+
+[![Build Status](https://travis-ci.org/alex-shpak/rx-jersey.svg?branch=master)](https://travis-ci.org/alex-shpak/rx-jersey)
+
 RxJava support for Jersey resources and proxy client with non-blocking experience.
 Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under-the-hood.
 

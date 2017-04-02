@@ -1,5 +1,6 @@
 package net.winterly.rxjersey.server;
 
+import org.glassfish.hk2.api.Rank;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import java.util.List;
  * This class will only redirect writing to another {@link MessageBodyWriter} <br>
  * Requires list of supported types
  */
+@Rank(1)
 public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
     @Inject
