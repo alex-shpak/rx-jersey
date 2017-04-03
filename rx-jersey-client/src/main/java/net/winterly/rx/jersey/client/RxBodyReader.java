@@ -23,6 +23,24 @@ public class RxBodyReader implements MessageBodyReader<Object> {
     @Inject
     private Provider<MessageBodyWorkers> workers;
 
+    private static Type actual(Type genericType) {
+        final ParameterizedType actualGenericType = (ParameterizedType) genericType;
+        return actualGenericType.getActualTypeArguments()[0];
+    }
+
+    private static Class entityType(Type actualTypeArgument) {
+        if (actualTypeArgument instanceof Class) {
+            return (Class) actualTypeArgument;
+        }
+
+        if (actualTypeArgument instanceof ParameterizedType) {
+            ParameterizedType parameterized = (ParameterizedType) actualTypeArgument;
+            return (Class) parameterized.getRawType();
+        }
+
+        throw new IllegalStateException();
+    }
+
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return Observable.class.isAssignableFrom(type);
@@ -36,24 +54,6 @@ public class RxBodyReader implements MessageBodyReader<Object> {
         final MessageBodyReader reader = workers.get().getMessageBodyReader(entityType, actualTypeArgument, annotations, mediaType);
 
         return reader.readFrom(entityType, actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
-    }
-
-    private static Type actual(Type genericType) {
-        final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return actualGenericType.getActualTypeArguments()[0];
-    }
-
-    private static Class entityType(Type actualTypeArgument) {
-        if(actualTypeArgument instanceof Class) {
-            return (Class) actualTypeArgument;
-        }
-
-        if(actualTypeArgument instanceof ParameterizedType) {
-            ParameterizedType parameterized = (ParameterizedType) actualTypeArgument;
-            return (Class) parameterized.getRawType();
-        }
-
-        throw new IllegalStateException();
     }
 
 }

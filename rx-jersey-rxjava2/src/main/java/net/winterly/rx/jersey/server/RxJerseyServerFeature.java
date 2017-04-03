@@ -9,8 +9,7 @@ import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 
 /**
- * Feature implementation to configure RxJava support for resources <br>
- * Registers {@link RxBodyWriter} and {@link RxInvocationHandlerProvider}
+ * See <a href="https://github.com/alex-shpak/rx-jersey">Github Repository</a>
  */
 public final class RxJerseyServerFeature implements Feature {
 
@@ -25,7 +24,7 @@ public final class RxJerseyServerFeature implements Feature {
 
         @Override
         protected void configure() {
-            bind(RxInvocationHandlerProvider.class)
+            bind(MaybeInvocationHandlerProvider.class)
                     .to(ResourceMethodInvocationHandlerProvider.class)
                     .in(Singleton.class);
 

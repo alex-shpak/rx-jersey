@@ -7,7 +7,13 @@ import javax.annotation.Priority;
 import javax.inject.Singleton;
 
 /**
- * MessageBodyWriter accepting io.reactivex.* types and routing to write entity of generic type instead
+ * MessageBodyWriter accepting {@code io.reactivex.*} types
+ *
+ * @see Flowable
+ * @see Observable
+ * @see Single
+ * @see Completable
+ * @see Maybe
  */
 @Singleton
 @Priority(1)

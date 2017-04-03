@@ -14,7 +14,7 @@ import javax.ws.rs.client.ClientBuilder;
 /**
  * Factory to inject configured {@code RxClient<RxObservableInvoker>} instance. <br>
  * This factory will register {@link RxBodyReader} for provided client. <br>
- *
+ * <p>
  * Usage:
  * <pre>
  * &#064;Inject

@@ -9,6 +9,9 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+/**
+ * Generic {@link ResourceMethodDispatcher} that obtains {@link AsyncContext} and asynchronously dispatches request
+ */
 public abstract class RxMethodDispatcher implements ResourceMethodDispatcher {
 
     private final ResourceMethodDispatcher originalDispatcher;
@@ -16,10 +19,18 @@ public abstract class RxMethodDispatcher implements ResourceMethodDispatcher {
     @Context
     private javax.inject.Provider<AsyncContext> asyncContext;
 
+    /**
+     * @param originalDispatcher original {@link ResourceMethodDispatcher} that was supposed to be invoked
+     */
     public RxMethodDispatcher(ResourceMethodDispatcher originalDispatcher) {
         this.originalDispatcher = originalDispatcher;
     }
 
+    /**
+     * Uses {@link AsyncContext} to suspend current request
+     *
+     * @return obtained {@link AsyncContext} or throws error
+     */
     private AsyncContext suspend() {
         final AsyncContext context = asyncContext.get();
 
@@ -33,10 +44,19 @@ public abstract class RxMethodDispatcher implements ResourceMethodDispatcher {
     @Override
     public Response dispatch(Object resource, ContainerRequest request) throws ProcessingException {
         final AsyncContext asyncContext = suspend();
-        async(asyncContext, originalDispatcher, resource, request);
-        return null; //should return null for async requests
+        dispatch(asyncContext, originalDispatcher, resource, request);
+        return null; //should return null for dispatch requests
     }
 
-    public abstract void async(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException;
+    /**
+     * Should execute interceptors, dispatch and resume with {@link AsyncContext}
+     *
+     * @param asyncContext Async Context
+     * @param dispatcher   original {@link ResourceMethodDispatcher}
+     * @param resource     the resource class instance.
+     * @param request      request to be dispatched.
+     * @throws ProcessingException same as {@link ResourceMethodDispatcher#dispatch(Object, ContainerRequest)}
+     */
+    public abstract void dispatch(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException;
 
 }

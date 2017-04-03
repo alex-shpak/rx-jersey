@@ -1,5 +1,6 @@
 package net.winterly.rxjersey.server;
 
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import javax.inject.Inject;
@@ -19,24 +20,37 @@ import java.util.List;
 /**
  * Generic {@link MessageBodyWriter} that overrides writer to serialise incoming entity as type of generic class. <br>
  * This class will only redirect writing to another {@link MessageBodyWriter} <br>
- * Requires list of supported types
+ * Requires list of supported types <br>
+ * <p>
+ * Providers implementing {@link RxGenericBodyWriter} must be programmatically registered in {@link ServiceLocator}
  */
 public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
+
+    private final List<Class> allowedTypes;
 
     @Inject
     private Provider<MessageBodyWorkers> workers;
 
-    private final List<Class> allowedTypes;
-
-    protected RxGenericBodyWriter(Class... allowedTypes) {
+    /**
+     * @param allowedTypes list of types to be processed by this writer
+     */
+    protected RxGenericBodyWriter(Class<?>... allowedTypes) {
         this.allowedTypes = Arrays.asList(allowedTypes);
     }
 
+    /**
+     * @param genericType type to process
+     * @return the raw type without generics
+     */
     private static Class raw(Type genericType) {
         final ParameterizedType parameterizedType = (ParameterizedType) genericType;
         return (Class) parameterizedType.getRawType();
     }
 
+    /**
+     * @param genericType type to process
+     * @return first type from generic list
+     */
     private static Type actual(Type genericType) {
         final ParameterizedType actualGenericType = (ParameterizedType) genericType;
         return actualGenericType.getActualTypeArguments()[0];

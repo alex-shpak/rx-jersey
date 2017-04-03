@@ -30,7 +30,7 @@ public class MaybeMethodDispatcher extends RxMethodDispatcher {
     }
 
     @Override
-    public void async(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException {
+    public void dispatch(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException {
         final ContainerRequestContext requestContext = containerRequestContext.get();
 
         Completable intercept = Flowable.fromIterable(requestInterceptors)
@@ -53,7 +53,7 @@ public class MaybeMethodDispatcher extends RxMethodDispatcher {
         }
 
         @Override
-        public ResourceMethodDispatcher create(ResourceMethodDispatcher dispatcher) {
+        public RxMethodDispatcher create(ResourceMethodDispatcher dispatcher) {
             return new MaybeMethodDispatcher(dispatcher);
         }
 

@@ -6,9 +6,13 @@ import rx.Single;
 
 import javax.annotation.Priority;
 import javax.inject.Singleton;
+import javax.ws.rs.ext.MessageBodyWriter;
 
 /**
- * MessageBodyWriter accepting {@link rx.Observable} or {@link rx.Single} and routing to write entity of generic type instead
+ * {@link MessageBodyWriter} accepting {@link rx.Observable} or {@link rx.Single}
+ *
+ * @see Observable
+ * @see Single
  */
 @Singleton
 @Priority(1)

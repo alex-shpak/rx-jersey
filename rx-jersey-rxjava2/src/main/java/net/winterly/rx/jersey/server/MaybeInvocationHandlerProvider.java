@@ -9,14 +9,14 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 
 /**
- * Provides {@link InvocationHandler} for resources returning io.reactivex.* instances
- * and converts all to {@link Maybe}
+ * Provides {@link InvocationHandler} for resources returning {@code io.reactivex.*} instances
+ * and converts them to {@link Maybe}
  */
-public class RxInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
+public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
     private final HashMap<Class, RxInvocationHandler<Maybe, ?>> handlers = new HashMap<>();
 
-    public RxInvocationHandlerProvider() {
+    public MaybeInvocationHandlerProvider() {
         handlers.put(Flowable.class, new FlowableHandler());
         handlers.put(Observable.class, new ObservableHandler());
         handlers.put(Single.class, new SingleHandler());

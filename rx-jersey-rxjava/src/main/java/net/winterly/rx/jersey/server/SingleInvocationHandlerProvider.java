@@ -13,11 +13,11 @@ import java.util.HashMap;
  * Provides {@link InvocationHandler} for resources returning {@link Observable} or {@link Single}
  * and converts both to single Observable
  */
-public class RxInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
+public class SingleInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
     private final HashMap<Class, RxInvocationHandler<Single, ?>> handlers = new HashMap<>();
 
-    public RxInvocationHandlerProvider() {
+    public SingleInvocationHandlerProvider() {
         handlers.put(Observable.class, new ObservableHandler());
         handlers.put(Single.class, new SingleHandler());
     }

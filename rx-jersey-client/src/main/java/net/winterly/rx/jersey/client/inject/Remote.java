@@ -12,19 +12,19 @@ import java.lang.annotation.Target;
  * If annotation value contains host then value will be used as target URI for {@link org.glassfish.jersey.client.rx.RxWebTarget}
  * otherwise value will be merged with {@link UriInfo#getBaseUri()}. <br>
  * Annotation value has higher priority in merge <br><br>
- *
+ * <p>
  * Example:
  * <pre>
  * value="http://example.com",  baseUrl="http://baseurl.com/resource"   will produce "http://example.com/"
  * value="/resource",           baseUrl="http://baseurl.com/some"       will produce "http://baseurl.com/resource"
  * </pre>
- *
+ * <p>
  * Usage:
  * <pre>
  * &#064;Remote("http://example.com/")
  * ResourceInterface resource;
  * </pre>
- *
+ * <p>
  * <pre>
  * &#064;Remote
  * ResourceInterface resource;
@@ -37,8 +37,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Remote {
 
-    String value() default DEFAULT;
-
     String DEFAULT = "/";
+
+    String value() default DEFAULT;
 
 }

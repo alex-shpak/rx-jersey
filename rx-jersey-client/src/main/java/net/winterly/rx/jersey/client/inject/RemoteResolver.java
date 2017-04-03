@@ -32,6 +32,15 @@ public class RemoteResolver implements InjectionResolver<Remote> {
     @Inject
     private ServiceLocator serviceLocator;
 
+    public static URI merge(String value, UriInfo uriInfo) {
+        URI target = URI.create(value);
+        if (target.getHost() == null) {
+            target = UriBuilder.fromUri(uriInfo.getBaseUri()).uri(target).build();
+        }
+
+        return target;
+    }
+
     /**
      * @return RxWebTarget or Proxy client of specified injectee interface
      * @throws IllegalStateException if uri is not correct or there is no sufficient injection resolved
@@ -58,15 +67,6 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         }
 
         throw new IllegalStateException(format("Can't find proper injection for %s", type));
-    }
-
-    public static URI merge(String value, UriInfo uriInfo) {
-        URI target = URI.create(value);
-        if (target.getHost() == null) {
-            target = UriBuilder.fromUri(uriInfo.getBaseUri()).uri(target).build();
-        }
-
-        return target;
     }
 
     @Override
