@@ -1,7 +1,6 @@
 package net.winterly.rx.jersey.server;
 
 import io.reactivex.*;
-import net.winterly.rxjersey.server.RxInvocationHandler;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 

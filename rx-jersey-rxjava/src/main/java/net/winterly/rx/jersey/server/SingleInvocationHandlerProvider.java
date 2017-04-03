@@ -1,6 +1,5 @@
 package net.winterly.rx.jersey.server;
 
-import net.winterly.rxjersey.server.RxInvocationHandler;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 import rx.Observable;

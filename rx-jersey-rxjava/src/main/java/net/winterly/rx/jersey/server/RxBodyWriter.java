@@ -1,6 +1,5 @@
 package net.winterly.rx.jersey.server;
 
-import net.winterly.rxjersey.server.RxGenericBodyWriter;
 import rx.Observable;
 import rx.Single;
 

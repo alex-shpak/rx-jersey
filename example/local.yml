@@ -1,0 +1,11 @@
+server:
+  maxThreads: 13
+  maxQueuedRequests: 10000
+  applicationConnectors:
+    - type: http
+      port: 8088
+      acceptQueueSize: 10000
+  adminConnectors:
+    - type: http
+      port: 8089
+      acceptQueueSize: 10000

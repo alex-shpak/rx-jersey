@@ -1,7 +1,5 @@
 package net.winterly.rx.jersey.server;
 
-import net.winterly.rxjersey.server.RxMethodDispatcher;
-import net.winterly.rxjersey.server.RxMethodDispatcherProvider;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ContainerRequest;

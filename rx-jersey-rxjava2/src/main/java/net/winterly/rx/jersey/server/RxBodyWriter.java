@@ -1,7 +1,6 @@
 package net.winterly.rx.jersey.server;
 
 import io.reactivex.*;
-import net.winterly.rxjersey.server.RxGenericBodyWriter;
 
 import javax.annotation.Priority;
 import javax.inject.Singleton;

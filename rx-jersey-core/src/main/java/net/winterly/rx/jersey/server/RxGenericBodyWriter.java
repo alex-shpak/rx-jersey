@@ -1,4 +1,4 @@
-package net.winterly.rxjersey.server;
+package net.winterly.rx.jersey.server;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.message.MessageBodyWorkers;
