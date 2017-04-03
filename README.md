@@ -15,15 +15,18 @@ Please report bugs and share ideas.
 - [ ] Switchable client connectors (Grizzly/Netty)
 - [x] rx.Single support (Only server)
 - [x] Async request interceptors
-- [ ] RxJava 2.0
+- [x] RxJava 2.0
 
 
 
-## Maven Artifact
-[https://jitpack.io/#alex-shpak/rx-jersey/0.7.0](https://jitpack.io/#alex-shpak/rx-jersey/0.7.0)
+## Maven Artifacts
+[https://jitpack.io/#alex-shpak/rx-jersey/0.8.0](https://jitpack.io/#alex-shpak/rx-jersey/0.8.0)
 
 ```gradle
 compile "com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava2:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rx-jersey-client:$rxJerseyVersion"
 ```
 
 
@@ -50,8 +53,8 @@ Update your resource, see example:
 public class HelloResource {
 
     @GET
-    public Single<HelloEntity> getAsync() {
-        return Single.just(new HelloEntity());
+    public Maybe<HelloEntity> getAsync() {
+        return Maybe.just(new HelloEntity());
     }
 
 
@@ -91,7 +94,7 @@ public class HelloResource {
  - Multiple elements emitted in `Observable` will be treated as error.
  - Empty `Observable` or `null` value in `Observable` or `Single` will be treated as `204: No content`.
 
-### RxJava 2 (Upcoming)
+### RxJava 2
  - It's recommended to use `io.reactivex.Maybe` which could be 0 or 1 item or an error.
  - Multiple elements emitted in `Observable` or `Flowable` will be treated as error.
  - Empty `Observable`/`Maybe` will be treated as `204: No content`.
