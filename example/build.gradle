@@ -2,5 +2,4 @@ apply plugin: 'java'
 
 dependencies {
     compile project(":dropwizard")
-    compile project(":rx-jersey-rxjava2")
 }
