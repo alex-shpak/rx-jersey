@@ -32,8 +32,6 @@ public class RemoteTest extends RxJerseyTest {
 
         //RxClient<RxInvoker<Observable>> rxClient = serviceLocator.getService(RxClient.class);
         RxWebTarget<RxObservableInvoker> rxWebTarget = RxObservable.from(client()).target("https://api.github.com/");
-
-
         Observable<GithubRepository> obs = rxWebTarget.path("/repos/alex-shpak/rx-jersey").request(MediaType.APPLICATION_JSON).rx().method("GET", GithubRepository.class);
 
         GithubRepository object = obs.toBlocking().first();

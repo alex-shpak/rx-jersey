@@ -1,17 +1,17 @@
 package net.winterly.rx.jersey.client.inject;
 
 import net.winterly.rx.jersey.client.RxBodyReader;
+import net.winterly.rx.jersey.client.RxJerseyClientFeature;
 import org.glassfish.hk2.api.Factory;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.rx.RxClient;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
-import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Context;
+import java.util.Optional;
 
 /**
  * Factory to inject configured {@code RxClient<RxObservableInvoker>} instance. <br>
@@ -26,20 +26,15 @@ import javax.ws.rs.core.Context;
 public class RxClientFactory implements Factory<RxClient> {
 
     @Inject
-    private ServiceLocator serviceLocator;
-
-    @Context
-    private ClientConfig clientConfig;
+    @Named(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME)
+    private Provider<Client> clientProvider;
 
     @Override
     public RxClient provide() {
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.connectorProvider(new GrizzlyConnectorProvider());
-        clientConfig.register(RxBodyReader.class);
+        Client client = Optional.ofNullable(clientProvider.get()).orElseGet(ClientBuilder::newClient);
+        client.register(RxBodyReader.class);
 
-        Client grizzlyClient = ClientBuilder.newBuilder().withConfig(clientConfig).build();
-
-        return RxObservable.from(grizzlyClient);
+        return RxObservable.from(client);
     }
 
     @Override

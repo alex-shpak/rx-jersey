@@ -43,7 +43,7 @@ public class RxBodyReader implements MessageBodyReader<Object> {
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return Observable.class.isAssignableFrom(type);
+        return Observable.class.equals(type);
     }
 
     @SuppressWarnings("unchecked")

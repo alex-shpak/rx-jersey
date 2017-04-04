@@ -7,11 +7,20 @@ import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerP
 import javax.inject.Singleton;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * See <a href="https://github.com/alex-shpak/rx-jersey">Github Repository</a>
  */
 public final class RxJerseyServerFeature implements Feature {
+
+    private final List<Class<? extends ObservableRequestInterceptor<?>>> interceptors = new LinkedList<>();
+
+    public RxJerseyServerFeature register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+        interceptors.add(interceptor);
+        return this;
+    }
 
     @Override
     public boolean configure(FeatureContext context) {
@@ -20,7 +29,7 @@ public final class RxJerseyServerFeature implements Feature {
         return true;
     }
 
-    private static class Binder extends AbstractBinder {
+    private class Binder extends AbstractBinder {
 
         @Override
         protected void configure() {
@@ -32,6 +41,11 @@ public final class RxJerseyServerFeature implements Feature {
                     .to(ResourceMethodDispatcher.Provider.class)
                     .in(Singleton.class)
                     .ranked(1);
+
+            interceptors.forEach(interceptor -> bind(interceptor)
+                    .to(ObservableRequestInterceptor.class)
+                    .in(Singleton.class)
+            );
         }
     }
 }
