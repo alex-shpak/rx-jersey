@@ -3,6 +3,7 @@ package net.winterly.rx.jersey.example;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import io.dropwizard.Application;
 import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.winterly.rx.jersey.client.RxJerseyClientFeature;
@@ -18,19 +19,22 @@ public class RxJerseyApplication extends Application<RxJerseyConfiguration> {
 
     @Override
     public void initialize(Bootstrap<RxJerseyConfiguration> bootstrap) {
-        bootstrap.getObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        bootstrap.getObjectMapper()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     public void run(RxJerseyConfiguration configuration, Environment environment) throws Exception {
-        RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature();
-        rxJerseyServerFeature.register(HeaderInterceptor.class);
-        environment.jersey().register(rxJerseyServerFeature);
+        JerseyEnvironment jersey = environment.jersey();
 
-        RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature();
-        rxJerseyClientFeature.register(getClient(configuration, environment));
-        environment.jersey().register(rxJerseyClientFeature);
+        RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature()
+                .register(HeaderInterceptor.class);
 
-        environment.jersey().register(GithubResource.class);
+        RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature()
+                .register(getClient(configuration, environment));
+
+        jersey.register(rxJerseyServerFeature);
+        jersey.register(rxJerseyClientFeature);
+        jersey.register(GithubResource.class);
     }
 
     private Client getClient(RxJerseyConfiguration configuration, Environment environment) {

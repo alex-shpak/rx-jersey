@@ -40,7 +40,7 @@ public final class RxJerseyServerFeature implements Feature {
             bind(MaybeMethodDispatcher.Provider.class)
                     .to(ResourceMethodDispatcher.Provider.class)
                     .in(Singleton.class)
-                    .ranked(1);
+                    .ranked(1); // Should be first in list
 
             interceptors.forEach(interceptor -> bind(interceptor)
                     .to(CompletableRequestInterceptor.class)

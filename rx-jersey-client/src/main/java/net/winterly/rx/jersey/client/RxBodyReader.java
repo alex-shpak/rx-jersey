@@ -38,7 +38,7 @@ public class RxBodyReader implements MessageBodyReader<Object> {
             return (Class) parameterized.getRawType();
         }
 
-        throw new IllegalStateException();
+        throw new IllegalArgumentException();
     }
 
     @Override
