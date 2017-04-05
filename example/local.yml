@@ -9,3 +9,5 @@ server:
     - type: http
       port: 8089
       acceptQueueSize: 10000
+#  requestLog:
+#    appenders: []

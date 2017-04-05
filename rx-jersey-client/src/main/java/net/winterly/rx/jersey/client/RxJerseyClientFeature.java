@@ -31,6 +31,7 @@ public class RxJerseyClientFeature implements Feature {
     @Override
     public boolean configure(FeatureContext context) {
         context.register(new Binder());
+        context.register(RxClientExceptionMapper.class);
         return true;
     }
 

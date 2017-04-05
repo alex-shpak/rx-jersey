@@ -25,21 +25,19 @@ public class RxJerseyApplication extends Application<RxJerseyConfiguration> {
 
     public void run(RxJerseyConfiguration configuration, Environment environment) throws Exception {
         JerseyEnvironment jersey = environment.jersey();
+        Client client = new JerseyClientBuilder(environment)
+                .using(configuration.jerseyClient)
+                .build(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME);
 
         RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature()
                 .register(HeaderInterceptor.class);
 
         RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature()
-                .register(getClient(configuration, environment));
+                .register(client);
 
         jersey.register(rxJerseyServerFeature);
         jersey.register(rxJerseyClientFeature);
         jersey.register(GithubResource.class);
     }
 
-    private Client getClient(RxJerseyConfiguration configuration, Environment environment) {
-        return new JerseyClientBuilder(environment)
-                .using(configuration.jerseyClient)
-                .build(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME);
-    }
 }
