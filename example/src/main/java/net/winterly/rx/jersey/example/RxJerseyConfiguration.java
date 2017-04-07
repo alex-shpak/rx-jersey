@@ -10,6 +10,6 @@ public class RxJerseyConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    public JerseyClientConfiguration jerseyClient = new JerseyClientConfiguration();
+    public JerseyClientConfiguration client = new JerseyClientConfiguration();
 
 }

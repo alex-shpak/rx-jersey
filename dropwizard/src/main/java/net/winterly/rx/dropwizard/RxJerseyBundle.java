@@ -10,17 +10,17 @@ import net.winterly.rx.jersey.server.RxJerseyServerFeature;
 import javax.ws.rs.client.Client;
 
 
-public class RxResourceBundle implements Bundle {
+public class RxJerseyBundle implements Bundle {
 
     private final RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature();
     private final RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature();
 
-    public RxResourceBundle register(Client client) {
+    public RxJerseyBundle register(Client client) {
         this.rxJerseyClientFeature.register(client);
         return this;
     }
 
-    public RxResourceBundle register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+    public RxJerseyBundle register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
         rxJerseyServerFeature.register(interceptor);
         return this;
     }

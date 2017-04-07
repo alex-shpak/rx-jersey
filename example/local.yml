@@ -1,13 +1,16 @@
 server:
   maxThreads: 13
-  maxQueuedRequests: 10000
+  maxQueuedRequests: 100000
   applicationConnectors:
     - type: http
       port: 8088
-      acceptQueueSize: 10000
+      acceptQueueSize: 100000
   adminConnectors:
     - type: http
       port: 8089
-      acceptQueueSize: 10000
-#  requestLog:
-#    appenders: []
+      acceptQueueSize: 100000
+  requestLog:
+    appenders: []
+
+client:
+  maxThreads: 4

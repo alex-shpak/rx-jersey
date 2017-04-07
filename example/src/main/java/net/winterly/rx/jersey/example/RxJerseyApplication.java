@@ -8,6 +8,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.winterly.rx.jersey.client.RxJerseyClientFeature;
 import net.winterly.rx.jersey.server.RxJerseyServerFeature;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.ws.rs.client.Client;
 
@@ -25,9 +27,11 @@ public class RxJerseyApplication extends Application<RxJerseyConfiguration> {
 
     public void run(RxJerseyConfiguration configuration, Environment environment) throws Exception {
         JerseyEnvironment jersey = environment.jersey();
+
         Client client = new JerseyClientBuilder(environment)
-                .using(configuration.jerseyClient)
-                .build(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME);
+                .using(configuration.client)
+                .using(new GrizzlyConnectorProvider())
+                .buildRx(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME, RxObservableInvoker.class);
 
         RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature()
                 .register(HeaderInterceptor.class);
