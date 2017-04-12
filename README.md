@@ -12,7 +12,6 @@ Please report bugs and share ideas.
 
 ## Roadmap
 - [x] Tests coverage
-- [ ] Switchable client connectors (Grizzly/Netty)
 - [x] rx.Single support (Only server)
 - [x] Async request interceptors
 - [x] RxJava 2.0
@@ -34,7 +33,7 @@ compile "com.github.alex-shpak.rx-jersey:rx-jersey-client:$rxJerseyVersion"
 ## Dropwizard Bundle
 Add dropwizard bundle to bootstrap
 ```java
-bootstrap.addBundle(new RxResourceBundle())
+bootstrap.addBundle(new RxJerseyBundle())
 ```
 
 This will register both client and server features

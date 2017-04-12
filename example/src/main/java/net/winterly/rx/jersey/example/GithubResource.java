@@ -8,7 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.concurrent.TimeUnit;
 
 @Path("/example/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,7 +25,7 @@ public class GithubResource {
     @GET
     @Path("echo/{message}")
     public Single<String> echo(@PathParam("message") String message) {
-        return Single.just(message).delay(300, TimeUnit.MILLISECONDS);
+        return Single.just(message);
     }
 
 }

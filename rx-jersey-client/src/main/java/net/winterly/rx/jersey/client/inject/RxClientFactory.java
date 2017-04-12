@@ -32,11 +32,8 @@ public class RxClientFactory implements Factory<RxClient> {
 
     @Override
     public RxClient provide() {
-        int poolSize = Runtime.getRuntime().availableProcessors();
-
-        Client client = Optional.ofNullable(clientProvider.get()).orElseGet(ClientBuilder::newClient);
+        Client client = Optional.ofNullable(clientProvider.get()).orElseGet(this::defaultClient);
         client.register(RxBodyReader.class);
-        client.property(ClientProperties.ASYNC_THREADPOOL_SIZE, poolSize);
 
         return RxObservable.from(client);
     }
@@ -44,6 +41,15 @@ public class RxClientFactory implements Factory<RxClient> {
     @Override
     public void dispose(RxClient instance) {
         instance.close();
+    }
+
+    private Client defaultClient() {
+        int poolSize = Runtime.getRuntime().availableProcessors();
+
+        Client client = ClientBuilder.newClient();
+        client.property(ClientProperties.ASYNC_THREADPOOL_SIZE, poolSize);
+
+        return client;
     }
 
 }
