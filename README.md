@@ -13,7 +13,7 @@ Please report bugs and share ideas.
 ## Roadmap
 - [x] Tests coverage
 - [x] rx.Single support (Only server)
-- [x] Async request interceptors
+- [x] Async Request Interceptors
 - [x] RxJava 2.0
 
 
