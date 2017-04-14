@@ -12,7 +12,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import java.util.Optional;
 
 /**
  * Factory to inject configured {@code RxClient<RxObservableInvoker>} instance. <br>
@@ -32,7 +31,11 @@ public class RxClientFactory implements Factory<RxClient> {
 
     @Override
     public RxClient provide() {
-        Client client = Optional.ofNullable(clientProvider.get()).orElseGet(this::defaultClient);
+        Client client = clientProvider.get(); //Optional.ofNullable(clientProvider.get()).orElseGet(this::defaultClient);
+        if (client == null) {
+            client = defaultClient();
+        }
+
         client.register(RxBodyReader.class);
 
         return RxObservable.from(client);
@@ -44,10 +47,10 @@ public class RxClientFactory implements Factory<RxClient> {
     }
 
     private Client defaultClient() {
-        int poolSize = Runtime.getRuntime().availableProcessors();
+        int cores = Runtime.getRuntime().availableProcessors();
 
         Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.ASYNC_THREADPOOL_SIZE, poolSize);
+        client.property(ClientProperties.ASYNC_THREADPOOL_SIZE, cores);
 
         return client;
     }
