@@ -1,22 +1,41 @@
 package net.winterly.rxjersey.dropwizard;
 
-import io.dropwizard.Bundle;
+import io.dropwizard.Configuration;
+import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.client.JerseyClientConfiguration;
+import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.winterly.rxjersey.client.RxJerseyClientFeature;
 import net.winterly.rxjersey.server.ObservableRequestInterceptor;
 import net.winterly.rxjersey.server.RxJerseyServerFeature;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.ws.rs.client.Client;
+import java.util.function.Function;
 
 
-public class RxJerseyBundle implements Bundle {
+public class RxJerseyBundle implements ConfiguredBundle<Configuration> {
 
     private final RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature();
     private final RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature();
 
-    public RxJerseyBundle register(Client client) {
-        this.rxJerseyClientFeature.register(client);
+    private Function<Configuration, JerseyClientConfiguration> clientConfigurationProvider;
+
+    public RxJerseyBundle() {
+        setClientConfigurationProvider(configuration -> {
+            int cores = Runtime.getRuntime().availableProcessors();
+            JerseyClientConfiguration clientConfiguration = new JerseyClientConfiguration();
+            clientConfiguration.setMaxThreads(cores);
+
+            return clientConfiguration;
+        });
+    }
+
+    public RxJerseyBundle setClientConfigurationProvider(Function<Configuration, JerseyClientConfiguration> provider) {
+        clientConfigurationProvider = provider;
         return this;
     }
 
@@ -26,14 +45,27 @@ public class RxJerseyBundle implements Bundle {
     }
 
     @Override
+    public void run(Configuration configuration, Environment environment) throws Exception {
+        JerseyEnvironment jersey = environment.jersey();
+
+        JerseyClientConfiguration clientConfiguration = clientConfigurationProvider.apply(configuration);
+        Client client = getClient(environment, clientConfiguration);
+
+        rxJerseyClientFeature.register(client);
+
+        jersey.register(rxJerseyServerFeature);
+        jersey.register(rxJerseyClientFeature);
+    }
+
+    @Override
     public void initialize(Bootstrap<?> bootstrap) {
 
     }
 
-    @Override
-    public void run(Environment environment) {
-        environment.jersey().register(rxJerseyServerFeature);
-        environment.jersey().register(rxJerseyClientFeature);
+    private Client getClient(Environment environment, JerseyClientConfiguration jerseyClientConfiguration) {
+        return new JerseyClientBuilder(environment)
+                .using(jerseyClientConfiguration)
+                .using(new GrizzlyConnectorProvider())
+                .buildRx(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME, RxObservableInvoker.class);
     }
-
 }

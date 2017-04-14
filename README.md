@@ -1,21 +1,19 @@
-## Reactive Jersey feature
+## RxJersey - Reactive Jersey Feature
 
 [![Build Status](https://travis-ci.org/alex-shpak/rx-jersey.svg?branch=master)](https://travis-ci.org/alex-shpak/rx-jersey)
 
-RxJava support for Jersey resources and proxy client with non-blocking experience.
-Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under-the-hood.
+RxJersey is RxJava extension for [Jersey](https://jersey.java.net/) framework providing non-blocking Jax-RS server and client.
+RxJersey target is to handle large amount requests in small static set of threads, which is highly suitable for microservice applications.
 
-Comes with dropwizard bundle.
-
-Please report bugs and share ideas.
+Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under the hood.
 
 
-## Roadmap
-- [x] Tests coverage
-- [x] rx.Single support (Only server)
+## Features
+- [x] RxJava Support
+- [x] RxJava 2 Support
+- [x] RxJava Proxy Client
 - [x] Async Request Interceptors
-- [x] RxJava 2.0
-
+- [x] Dropwizard bundle
 
 
 ## Maven Artifacts
@@ -29,76 +27,33 @@ compile "com.github.alex-shpak.rx-jersey:rx-jersey-client:$rxJerseyVersion"
 ```
 
 
-
-## Dropwizard Bundle
-Add dropwizard bundle to bootstrap
+## Example
 ```java
-bootstrap.addBundle(new RxJerseyBundle())
-```
+@Path("/example/")
+public class GithubResource {
 
-This will register both client and server features
-
-
-
-## Jersey Server
-register `RxJerseyServerFeature` in `resourceConfig`
-```java
-resourceConfig.register(RxJerseyServerFeature.class);
-```
-
-Update your resource, see example:
-```java
-@Path("/")
-public class HelloResource {
+    @Remote("https://api.github.com/")
+    private GithubApi githubApi;
 
     @GET
-    public Maybe<HelloEntity> getAsync() {
-        return Maybe.just(new HelloEntity());
-    }
-
-
-    public static class HelloEntity {
-        public String hello = "world";
-    }
-}
-```
-
-
-
-## Jersey client
-register `RxJerseyClientFeature` in `resourceConfig`
-```java
-resourceConfig.register(RxJerseyClientFeature.class);
-```
-
-Update your resource, see example:
-```java
-@Path("/")
-public class HelloResource {
-
-    @Remote("http://example.com") //skip annotation value to get target from current context
-    private OtherResource remote;
-
-    @GET
-    public Observable<HelloEntity> getAsync() {
-        return remote.call().map(it -> it.doStuff());
+    @Path("github")
+    public Single<GithubRepository> getRepository() {
+        return githubApi.getRepository("alex-shpak", "rx-jersey").toSingle();
     }
 
 }
+
+@Path("/")
+public interface GithubApi {
+
+    @GET
+    @Path("/repos/{user}/{repo}")
+    Observable<GithubRepository> getRepository(@PathParam("user") String username, @PathParam("repo") String repo);
+}
+
 ```
 
-## Important notes
-### RxJava 1
- - It's recommended to use `rx.Single` as return type (Representing single response entity).
- - Multiple elements emitted in `Observable` will be treated as error.
- - Empty `Observable` or `null` value in `Observable` or `Single` will be treated as `204: No content`.
 
-### RxJava 2
- - It's recommended to use `io.reactivex.Maybe` which could be 0 or 1 item or an error.
- - Multiple elements emitted in `Observable` or `Flowable` will be treated as error.
- - Empty `Observable`/`Maybe` will be treated as `204: No content`.
- - `Completable` will be executed and `204: No content` will be returned.
- 
-
+### Also visit [wiki](https://github.com/alex-shpak/rx-jersey/wiki) and [example](https://github.com/alex-shpak/rx-jersey/tree/master/example)
 ## Licence
 [MIT](LICENCE.txt)

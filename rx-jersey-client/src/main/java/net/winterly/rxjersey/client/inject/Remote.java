@@ -34,8 +34,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Remote {
 
-    String DEFAULT = "/";
-
-    String value() default DEFAULT;
+    String value() default "/";
 
 }
