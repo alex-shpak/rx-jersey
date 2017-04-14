@@ -3,9 +3,11 @@ package net.winterly.rxjersey.client.inject;
 import net.winterly.rxjersey.client.RxBodyReader;
 import net.winterly.rxjersey.client.RxJerseyClientFeature;
 import org.glassfish.hk2.api.Factory;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.RxClient;
 import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,7 +33,7 @@ public class RxClientFactory implements Factory<RxClient> {
 
     @Override
     public RxClient provide() {
-        Client client = clientProvider.get(); //Optional.ofNullable(clientProvider.get()).orElseGet(this::defaultClient);
+        Client client = clientProvider.get();
         if (client == null) {
             client = defaultClient();
         }
@@ -48,11 +50,11 @@ public class RxClientFactory implements Factory<RxClient> {
 
     private Client defaultClient() {
         int cores = Runtime.getRuntime().availableProcessors();
+        ClientConfig config = new ClientConfig();
+        config.connectorProvider(new GrizzlyConnectorProvider());
+        config.property(ClientProperties.ASYNC_THREADPOOL_SIZE, cores);
 
-        Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.ASYNC_THREADPOOL_SIZE, cores);
-
-        return client;
+        return ClientBuilder.newClient(config);
     }
 
 }
