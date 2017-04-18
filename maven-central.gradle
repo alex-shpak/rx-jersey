@@ -5,6 +5,10 @@ signing {
     sign configurations.archives
 }
 
+if (!project.hasProperty('ossrhUsername')) {
+    return
+}
+
 uploadArchives {
     repositories.mavenDeployer {
         beforeDeployment {
