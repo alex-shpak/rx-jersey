@@ -18,9 +18,17 @@ For documentation visit [wiki](https://github.com/alex-shpak/rx-jersey/wiki)
 
 
 ## Maven Artifacts
-[https://jitpack.io/#alex-shpak/rx-jersey/0.8.0](https://jitpack.io/#alex-shpak/rx-jersey/0.8.0)
+### Maven Central
+```
+compile "net.winterly.rxjersey:dropwizard:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rx-jersey-rxjava:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rx-jersey-rxjava2:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rx-jersey-client:$rxJerseyVersion"
+```
 
-```gradle
+### JitPack
+Most recent snapshot is available via [JitPack](https://jitpack.io/#alex-shpak/rx-jersey/)
+```
 compile "com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion"
 compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava:$rxJerseyVersion"
 compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava2:$rxJerseyVersion"

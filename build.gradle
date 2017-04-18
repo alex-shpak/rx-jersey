@@ -7,8 +7,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'signing'
+    apply from: "$rootDir/maven-central.gradle"
 
     group 'net.winterly.rxjersey'
     version rxJerseyVersion
@@ -29,7 +28,6 @@ subprojects {
     }
 
     artifacts {
-        archives sourcesJar
-        archives javadocJar
+        archives sourcesJar, javadocJar
     }
 }
