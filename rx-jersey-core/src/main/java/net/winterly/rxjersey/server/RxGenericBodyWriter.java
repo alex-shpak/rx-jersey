@@ -39,11 +39,10 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
     }
 
     /**
-     * @param genericType type to process
+     * @param parameterizedType type to process
      * @return the raw type without generics
      */
-    private static Class raw(Type genericType) {
-        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
+    private static Class raw(ParameterizedType parameterizedType) {
         return (Class) parameterizedType.getRawType();
     }
 
@@ -58,7 +57,9 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        Class rawType = raw(genericType);
+        if(!(genericType instanceof ParameterizedType))
+            return false;
+        Class rawType = raw((ParameterizedType)genericType);
         return allowedTypes.contains(rawType);
     }
 
