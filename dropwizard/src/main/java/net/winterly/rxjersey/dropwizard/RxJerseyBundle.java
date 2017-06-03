@@ -66,6 +66,6 @@ public class RxJerseyBundle implements ConfiguredBundle<Configuration> {
         return new JerseyClientBuilder(environment)
                 .using(jerseyClientConfiguration)
                 .using(new GrizzlyConnectorProvider())
-                .buildRx(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME, RxObservableInvoker.class);
+                .buildRx("rxJerseyClient", RxObservableInvoker.class);
     }
 }

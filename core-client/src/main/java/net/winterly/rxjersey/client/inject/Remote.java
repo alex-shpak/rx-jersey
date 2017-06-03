@@ -1,5 +1,8 @@
 package net.winterly.rxjersey.client.inject;
 
+import org.glassfish.hk2.api.InjectionResolver;
+import org.glassfish.hk2.api.TypeLiteral;
+
 import javax.inject.Qualifier;
 import javax.ws.rs.core.UriInfo;
 import java.lang.annotation.ElementType;
@@ -33,6 +36,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Remote {
+
+    TypeLiteral TYPE = new TypeLiteral<InjectionResolver<Remote>>() { };
 
     String value() default "/";
 

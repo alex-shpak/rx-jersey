@@ -9,6 +9,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -23,10 +24,17 @@ import static java.lang.String.format;
  * @see Remote
  */
 @Singleton
-public abstract class RemoteResolver implements InjectionResolver<Remote> {
+public class RemoteResolver implements InjectionResolver<Remote> {
 
     @Inject
     private ServiceLocator serviceLocator;
+
+    @Inject
+    private ClientMethodInvoker clientMethodInvoker;
+
+    @Inject
+    @RxJerseyClient
+    private Client client;
 
     private static URI merge(String value, UriInfo uriInfo) {
         URI target = URI.create(value);
@@ -47,8 +55,7 @@ public abstract class RemoteResolver implements InjectionResolver<Remote> {
         UriInfo uriInfo = serviceLocator.getService(UriInfo.class);
 
         URI target = merge(remote.value(), uriInfo);
-
-        WebTarget webTarget = getWebTarget(target);
+        WebTarget webTarget = client.target(target);
         Type type = injectee.getRequiredType();
 
         if (type instanceof WebTarget) {
@@ -56,7 +63,7 @@ public abstract class RemoteResolver implements InjectionResolver<Remote> {
         } else if (type instanceof Class) {
             Class<?> resource = (Class) type;
             if (resource.isInterface()) {
-                return WebResourceFactory.newResource(resource, webTarget, getMethodInvoker());
+                return WebResourceFactory.newResource(resource, webTarget, clientMethodInvoker);
             }
         }
 
@@ -73,7 +80,4 @@ public abstract class RemoteResolver implements InjectionResolver<Remote> {
         return false;
     }
 
-    protected abstract WebTarget getWebTarget(URI target);
-
-    protected abstract ClientMethodInvoker getMethodInvoker();
 }

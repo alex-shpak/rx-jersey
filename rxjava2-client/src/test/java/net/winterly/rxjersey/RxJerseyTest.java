@@ -14,7 +14,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -25,7 +24,6 @@ import java.net.URI;
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    @Named(RxJerseyClientFeature.RX_JERSEY_CLIENT_NAME)
     private Provider<Client> clientProvider;
 
     protected ResourceConfig config() {

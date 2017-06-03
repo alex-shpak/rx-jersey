@@ -19,6 +19,7 @@ import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import java.net.URI;
@@ -26,7 +27,7 @@ import java.net.URI;
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    private Provider<RxClient<RxInvoker<Observable>>> rxClientProvider;
+    private Provider<Client> clientProvider;
 
     protected ResourceConfig config() {
         return new ResourceConfig()
@@ -59,7 +60,8 @@ public class RxJerseyTest extends JerseyTest {
     }
 
     protected RxWebTarget<RxInvoker<Observable>> remote(URI uri) {
-        return rxClientProvider.get().target(uri);
+        RxClient<RxInvoker<Observable>> rxClient = (RxClient) clientProvider.get();
+        return rxClient.target(uri);
     }
 
     public static class LocatorFeature implements Feature {
