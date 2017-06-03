@@ -117,6 +117,7 @@ public final class WebResourceFactory implements InvocationHandler {
      * @param headers            Header params collected from parent resources (used when creating a sub-resource)
      * @param cookies            Cookie params collected from parent resources (used when creating a sub-resource)
      * @param form               Form params collected from parent resources (used when creating a sub-resource)
+     * @param invoker            Method invoker
      * @return Instance of a class implementing the resource interface that can
      * be used for making requests to the server.
      */
