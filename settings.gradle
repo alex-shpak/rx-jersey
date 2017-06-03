@@ -1,7 +1,9 @@
-include 'rx-jersey-core'
-include 'rx-jersey-rxjava'
-include 'rx-jersey-rxjava2'
-include 'rx-jersey-client'
+include 'core-server'
+include 'core-client'
+include 'rxjava-server'
+include 'rxjava2-server'
+include 'rxjava-client'
+include 'rxjava2-client'
 include 'dropwizard'
 include 'example'
 

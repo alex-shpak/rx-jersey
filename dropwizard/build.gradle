@@ -4,6 +4,6 @@ dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-client:$dropwizardVersion"
     
-    compile project(":rx-jersey-rxjava")
-    compile project(":rx-jersey-client")
+    compile project(":rxjava-server")
+    compile project(":rxjava-client")
 }

@@ -1,6 +1,5 @@
 package net.winterly.rxjersey.example;
 
-import net.winterly.rxjersey.client.inject.Remote;
 import rx.Single;
 
 import javax.ws.rs.GET;
@@ -13,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class GithubResource {
 
-    @Remote("https://api.github.com/")
     private GithubApi githubApi;
 
     @GET
