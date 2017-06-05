@@ -1,6 +1,6 @@
 package net.winterly.rxjersey;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import org.junit.Test;
 
 import javax.ws.rs.BadRequestException;
@@ -11,16 +11,16 @@ import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 
-public class ObservableResourceTest extends RxJerseyTest {
+public class FlowableResourceTest extends RxJerseyTest {
 
     @Override
     protected Application configure() {
-        return config().register(ServerResource.class);
+        return config().register(ObservableServerResource.class);
     }
 
     @Test
     public void shouldReturnContent() {
-        Resource resource = resource(Resource.class);
+        ObservableResource resource = resource(ObservableResource.class);
         String message = resource.echo("hello").blockingFirst();
 
         assertEquals("hello", message);
@@ -28,7 +28,7 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        Resource resource = resource(Resource.class);
+        ObservableResource resource = resource(ObservableResource.class);
         String message = resource.empty().blockingFirst();
 
         assertEquals("", message);
@@ -36,31 +36,31 @@ public class ObservableResourceTest extends RxJerseyTest {
 
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        Resource resource = resource(Resource.class);
+        ObservableResource resource = resource(ObservableResource.class);
         String message = resource.error().blockingFirst();
 
         assertEquals("", message);
     }
 
-    @Path("/observable")
-    public interface Resource {
+    @Path("/flowable")
+    public interface ObservableResource {
 
         @GET
         @Path("echo")
-        Observable<String> echo(@QueryParam("message") String message);
+        Flowable<String> echo(@QueryParam("message") String message);
 
         @GET
         @Path("empty")
-        Observable<String> empty();
+        Flowable<String> empty();
 
         @GET
         @Path("error")
-        Observable<String> error();
+        Flowable<String> error();
 
     }
 
-    @Path("/observable")
-    public static class ServerResource {
+    @Path("/flowable")
+    public static class ObservableServerResource {
 
         @GET
         @Path("echo")

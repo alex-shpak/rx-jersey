@@ -1,6 +1,6 @@
 package net.winterly.rxjersey;
 
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
 import org.junit.Test;
 
 import javax.ws.rs.BadRequestException;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 
-public class ObservableResourceTest extends RxJerseyTest {
+public class MaybeResourceTest extends RxJerseyTest {
 
     @Override
     protected Application configure() {
@@ -21,7 +21,7 @@ public class ObservableResourceTest extends RxJerseyTest {
     @Test
     public void shouldReturnContent() {
         Resource resource = resource(Resource.class);
-        String message = resource.echo("hello").blockingFirst();
+        String message = resource.echo("hello").blockingGet();
 
         assertEquals("hello", message);
     }
@@ -29,7 +29,7 @@ public class ObservableResourceTest extends RxJerseyTest {
     @Test
     public void shouldReturnNoContentOnNull() {
         Resource resource = resource(Resource.class);
-        String message = resource.empty().blockingFirst();
+        String message = resource.empty().blockingGet();
 
         assertEquals("", message);
     }
@@ -37,29 +37,29 @@ public class ObservableResourceTest extends RxJerseyTest {
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
         Resource resource = resource(Resource.class);
-        String message = resource.error().blockingFirst();
+        String message = resource.error().blockingGet();
 
         assertEquals("", message);
     }
 
-    @Path("/observable")
+    @Path("/maybe")
     public interface Resource {
 
         @GET
         @Path("echo")
-        Observable<String> echo(@QueryParam("message") String message);
+        Maybe<String> echo(@QueryParam("message") String message);
 
         @GET
         @Path("empty")
-        Observable<String> empty();
+        Maybe<String> empty();
 
         @GET
         @Path("error")
-        Observable<String> error();
+        Maybe<String> error();
 
     }
 
-    @Path("/observable")
+    @Path("/maybe")
     public static class ServerResource {
 
         @GET

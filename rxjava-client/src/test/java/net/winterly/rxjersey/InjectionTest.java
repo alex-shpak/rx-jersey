@@ -1,6 +1,7 @@
 package net.winterly.rxjersey;
 
 import net.winterly.rxjersey.client.inject.Remote;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
 import rx.Observable;
 
@@ -8,15 +9,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 
 public class InjectionTest extends RxJerseyTest {
 
     @Override
-    protected Application configure() {
-        return config().register(Resource.class);
+    protected void configure(ResourceConfig resourceConfig) {
+        resourceConfig.register(Resource.class);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class InjectionTest extends RxJerseyTest {
         assertEquals("hello", message);
     }
 
-    @Path("/observable")
+    @Path("/injection")
     public interface ResourceAPI {
 
         @GET
@@ -37,10 +37,9 @@ public class InjectionTest extends RxJerseyTest {
         @GET
         @Path("inject")
         Observable<String> inject(@QueryParam("message") String message);
-
     }
 
-    @Path("/observable")
+    @Path("/injection")
     public static class Resource {
 
         @Remote
@@ -60,6 +59,5 @@ public class InjectionTest extends RxJerseyTest {
         public String inject(@QueryParam("message") String message) {
             return remote.echo(message).toBlocking().first();
         }
-
     }
 }
