@@ -34,8 +34,12 @@ public abstract class RxGenericBodyReader implements MessageBodyReader<Object> {
     }
 
     private static Type actual(Type genericType) {
-        final ParameterizedType actualGenericType = (ParameterizedType) genericType;
-        return actualGenericType.getActualTypeArguments()[0];
+        if (genericType instanceof ParameterizedType) {
+            final ParameterizedType actualGenericType = (ParameterizedType) genericType;
+            return actualGenericType.getActualTypeArguments()[0];
+        }
+
+        return String.class;
     }
 
     private static Class entityType(Type actualTypeArgument) {

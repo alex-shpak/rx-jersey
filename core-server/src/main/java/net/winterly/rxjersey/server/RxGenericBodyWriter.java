@@ -57,10 +57,11 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        if(!(genericType instanceof ParameterizedType))
-            return false;
-        Class rawType = raw((ParameterizedType)genericType);
-        return allowedTypes.contains(rawType);
+        if (genericType instanceof ParameterizedType) {
+            Class rawType = raw((ParameterizedType)genericType);
+            return allowedTypes.contains(rawType);
+        }
+        return false;
     }
 
     @Override

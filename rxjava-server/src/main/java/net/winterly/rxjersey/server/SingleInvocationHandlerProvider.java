@@ -45,7 +45,7 @@ public class SingleInvocationHandlerProvider implements ResourceMethodInvocation
     private static class CompletableHandler implements RxInvocationHandler<Single, Completable> {
         @Override
         public Single convert(Completable result) throws Throwable {
-            return result.toSingle(() -> null);
+            return result.andThen(Single.just(null));
         }
     }
 }
