@@ -58,12 +58,15 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         WebTarget webTarget = client.target(target);
         Type type = injectee.getRequiredType();
 
-        if (type instanceof WebTarget) {
-            return webTarget;
-        } else if (type instanceof Class) {
-            Class<?> resource = (Class) type;
-            if (resource.isInterface()) {
-                return WebResourceFactory.newResource(resource, webTarget, clientMethodInvoker);
+        if (type instanceof Class) {
+            Class<?> required = (Class) type;
+
+            if (WebTarget.class.isAssignableFrom(required)) {
+                return webTarget;
+            }
+
+            if (required.isInterface()) {
+                return WebResourceFactory.newResource(required, webTarget, clientMethodInvoker);
             }
         }
 

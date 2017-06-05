@@ -15,15 +15,13 @@ import org.glassfish.jersey.test.JerseyTest;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.core.MediaType;
 
 public class RxJerseyTest extends JerseyTest {
 
@@ -90,6 +88,7 @@ public class RxJerseyTest extends JerseyTest {
 
         @GET
         @Path("json")
+        @Produces(MediaType.APPLICATION_JSON)
         public Entity json(@QueryParam("message") String message) {
             return new Entity(message);
         }

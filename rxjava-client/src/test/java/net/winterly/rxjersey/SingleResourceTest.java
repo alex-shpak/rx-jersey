@@ -14,7 +14,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        ObservableResource resource = resource(ObservableResource.class);
+        SingleResource resource = resource(SingleResource.class);
         String message = resource.echo("hello").toBlocking().value();
 
         assertEquals("hello", message);
@@ -22,7 +22,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        ObservableResource resource = resource(ObservableResource.class);
+        SingleResource resource = resource(SingleResource.class);
         String message = resource.empty().toBlocking().value();
 
         assertEquals("", message);
@@ -30,14 +30,14 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test(expected = ResponseProcessingException.class)
     public void shouldHandleError() {
-        ObservableResource resource = resource(ObservableResource.class);
+        SingleResource resource = resource(SingleResource.class);
         String message = resource.error().toBlocking().value();
 
         assertEquals("", message);
     }
 
     @Path("/endpoint")
-    public interface ObservableResource {
+    public interface SingleResource {
 
         @GET
         @Path("echo")
