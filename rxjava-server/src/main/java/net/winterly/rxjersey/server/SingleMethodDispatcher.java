@@ -33,17 +33,14 @@ public class SingleMethodDispatcher extends RxMethodDispatcher {
     public void dispatch(AsyncContext asyncContext, ResourceMethodDispatcher dispatcher, Object resource, ContainerRequest request) throws ProcessingException {
         final ContainerRequestContext requestContext = containerRequestContext.get();
 
-        Single<?> intercept = Observable.from(requestInterceptors)
+        Completable intercept = Observable.from(requestInterceptors)
                 .concatMap(interceptor -> interceptor.intercept(requestContext))
                 .lastOrDefault(null)
-                .map(nullable -> null)
-                .toSingle(); //will emit single null value after all observables
+                .toCompletable();
 
-        Single<?> dispatch = Single.defer(() -> Single.just(dispatcher.dispatch(resource, request)))
-                .map(Response::getEntity)
-                .flatMap(single -> (Single<?>) single);
+        Single<?> dispatch = Single.defer(() -> (Single<?>) dispatcher.dispatch(resource, request).getEntity());
 
-        intercept.flatMap(nullVal -> dispatch)
+        intercept.andThen(dispatch)
                 .map(response -> response == null ? noContent : response)
                 .subscribe(asyncContext::resume, asyncContext::resume);
     }

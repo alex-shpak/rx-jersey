@@ -35,7 +35,6 @@ public class ObservableClientMethodInvoker implements ClientMethodInvoker<Object
         return converter.convert(observable);
     }
 
-
     private interface Converter<T> {
         T convert(Observable observable);
     }
