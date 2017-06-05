@@ -19,7 +19,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
-import java.net.URI;
 
 public class RxJerseyTest extends JerseyTest {
 
@@ -53,11 +52,7 @@ public class RxJerseyTest extends JerseyTest {
     }
 
     protected WebTarget remote() {
-        return remote(getBaseUri());
-    }
-
-    protected WebTarget remote(URI uri) {
-        return clientProvider.get().target(uri);
+        return clientProvider.get().target(getBaseUri());
     }
 
     public static class LocatorFeature implements Feature {

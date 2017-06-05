@@ -10,24 +10,20 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.rx.RxClient;
-import org.glassfish.jersey.client.rx.RxInvoker;
 import org.glassfish.jersey.client.rx.RxWebTarget;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import rx.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
-import java.net.URI;
 
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    private Provider<Client> clientProvider;
+    private Provider<RxClient> clientProvider;
 
     protected ResourceConfig config() {
         return new ResourceConfig()
@@ -55,13 +51,8 @@ public class RxJerseyTest extends JerseyTest {
         return WebResourceFactory.newResource(resource, remote(), new ObservableClientMethodInvoker());
     }
 
-    protected RxWebTarget<RxInvoker<Observable>> remote() {
-        return remote(getBaseUri());
-    }
-
-    protected RxWebTarget<RxInvoker<Observable>> remote(URI uri) {
-        RxClient<RxInvoker<Observable>> rxClient = (RxClient) clientProvider.get();
-        return rxClient.target(uri);
+    protected RxWebTarget remote() {
+        return clientProvider.get().target(getBaseUri());
     }
 
     public static class LocatorFeature implements Feature {

@@ -2,6 +2,7 @@ package net.winterly.rxjersey.server;
 
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -19,12 +20,12 @@ public class SingleInvocationHandlerProvider implements ResourceMethodInvocation
     public SingleInvocationHandlerProvider() {
         handlers.put(Observable.class, new ObservableHandler());
         handlers.put(Single.class, new SingleHandler());
+        handlers.put(Completable.class, new CompletableHandler());
     }
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        Class returnType = invocable.getRawResponseType();
-        return handlers.get(returnType);
+        return handlers.get(invocable.getRawResponseType());
     }
 
     private static class ObservableHandler implements RxInvocationHandler<Single, Observable<?>> {
@@ -38,6 +39,13 @@ public class SingleInvocationHandlerProvider implements ResourceMethodInvocation
         @Override
         public Single convert(Single<?> result) throws Throwable {
             return result;
+        }
+    }
+
+    private static class CompletableHandler implements RxInvocationHandler<Single, Completable> {
+        @Override
+        public Single convert(Completable result) throws Throwable {
+            return result.toSingle(() -> null);
         }
     }
 }

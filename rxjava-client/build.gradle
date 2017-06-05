@@ -2,6 +2,7 @@ apply plugin: 'java'
 
 dependencies {
     compile project(":core-client")
+    compile "io.reactivex:rxjava:$rxJavaVersion"
 
     compile "org.glassfish.jersey.ext.rx:jersey-rx-client-rxjava:$jerseyVersion"
     compile "org.glassfish.jersey.connectors:jersey-grizzly-connector:$jerseyVersion"

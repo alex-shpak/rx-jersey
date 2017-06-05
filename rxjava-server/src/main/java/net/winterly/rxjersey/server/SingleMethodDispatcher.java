@@ -5,6 +5,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.process.AsyncContext;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -51,7 +52,7 @@ public class SingleMethodDispatcher extends RxMethodDispatcher {
 
         @Inject
         public Provider(ServiceLocator serviceLocator) {
-            super(serviceLocator, Observable.class, Single.class);
+            super(serviceLocator, Observable.class, Single.class, Completable.class);
         }
 
         @Override

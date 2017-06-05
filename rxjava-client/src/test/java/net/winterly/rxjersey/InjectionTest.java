@@ -7,6 +7,7 @@ import rx.Observable;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
@@ -15,19 +16,19 @@ public class InjectionTest extends RxJerseyTest {
 
     @Override
     protected Application configure() {
-        return config().register(InjectionServerResource.class);
+        return config().register(Resource.class);
     }
 
     @Test
     public void shouldReturnContent() {
-        InjectionResource resource = resource(InjectionResource.class);
+        ResourceAPI resource = resource(ResourceAPI.class);
         String message = resource.inject("hello").toBlocking().first();
 
         assertEquals("hello", message);
     }
 
     @Path("/observable")
-    public interface InjectionResource {
+    public interface ResourceAPI {
 
         @GET
         @Path("echo")
@@ -40,10 +41,13 @@ public class InjectionTest extends RxJerseyTest {
     }
 
     @Path("/observable")
-    public static class InjectionServerResource {
+    public static class Resource {
 
         @Remote
-        private InjectionResource remote;
+        private ResourceAPI remote;
+
+        @Remote
+        private WebTarget webTarget;
 
         @GET
         @Path("echo")

@@ -1,28 +1,52 @@
 package net.winterly.rxjersey.client;
 
-import io.reactivex.Flowable;
+import io.reactivex.*;
 import io.reactivex.functions.Function;
 import org.reactivestreams.Publisher;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
+import java.util.HashMap;
+import java.util.concurrent.Future;
 
-public class FlowableClientMethodInvoker implements ClientMethodInvoker<Flowable, Invocation.Builder> {
+public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object, Invocation.Builder> {
 
-    @Override
-    public <T> Flowable method(Invocation.Builder builder, String name, GenericType<T> responseType) {
-        return Flowable.fromFuture(builder.async().method(name, responseType))
-                .onErrorResumeNext((Function<Throwable, Publisher<? extends T>>) this::error);
+    private final HashMap<Class, Converter> converters = new HashMap<>();
+
+    public FlowableClientMethodInvoker() {
+        converters.put(Flowable.class, flowable -> flowable);
+        converters.put(Observable.class, Flowable::toObservable);
+        converters.put(Single.class, Flowable::singleOrError);
+        converters.put(Maybe.class, Flowable::singleElement);
+        converters.put(Completable.class, Flowable::ignoreElements);
     }
 
     @Override
-    public <T> Flowable method(Invocation.Builder builder, String name, Entity<?> entity, GenericType<T> responseType) {
-        return Flowable.fromFuture(builder.async().method(name, entity, responseType))
-                .onErrorResumeNext((Function<Throwable, Publisher<? extends T>>) this::error);
+    public <T> Object method(Invocation.Builder builder, String name, GenericType<T> responseType) {
+        Future<T> future = builder.async().method(name, responseType);
+        return convert(future, responseType);
     }
 
-    private <T> Flowable<T> error(Throwable throwable) {
-        return Flowable.error(throwable.getCause()); //execution exception to response exception
+    @Override
+    public <T> Object method(Invocation.Builder builder, String name, Entity<?> entity, GenericType<T> responseType) {
+        Future<T> future = builder.async().method(name, entity, responseType);
+        return convert(future, responseType);
     }
+
+    private <T> Object convert(Future<T> future, GenericType<T> responseType) {
+        Function<Throwable, Publisher<? extends T>> mapError = throwable -> Flowable.error(throwable.getCause());
+        Converter converter = converters.get(responseType.getRawType());
+
+        Flowable flowable = Flowable.fromFuture(future)
+                .onErrorResumeNext(mapError);
+
+        return converter.convert(flowable);
+    }
+
+    private interface Converter<T> {
+        T convert(Flowable flowable);
+    }
+
+
 }

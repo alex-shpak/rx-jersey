@@ -1,5 +1,6 @@
 package net.winterly.rxjersey.client;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -9,6 +10,6 @@ import rx.Single;
 public class RxBodyReader extends RxGenericBodyReader {
 
     public RxBodyReader() {
-        super(Observable.class, Single.class);
+        super(Observable.class, Single.class, Completable.class);
     }
 }

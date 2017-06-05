@@ -25,8 +25,7 @@ public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationH
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        Class returnType = invocable.getRawResponseType();
-        return handlers.get(returnType);
+        return handlers.get(invocable.getRawResponseType());
     }
 
     private static class FlowableHandler implements RxInvocationHandler<Maybe, Flowable<?>> {

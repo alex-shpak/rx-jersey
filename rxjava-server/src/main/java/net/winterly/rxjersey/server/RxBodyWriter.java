@@ -1,5 +1,6 @@
 package net.winterly.rxjersey.server;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -17,6 +18,6 @@ import javax.ws.rs.ext.MessageBodyWriter;
 @Priority(1)
 public class RxBodyWriter extends RxGenericBodyWriter {
     public RxBodyWriter() {
-        super(Observable.class, Single.class);
+        super(Observable.class, Single.class, Completable.class);
     }
 }
