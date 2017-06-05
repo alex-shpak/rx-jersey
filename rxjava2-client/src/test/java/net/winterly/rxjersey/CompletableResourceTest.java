@@ -7,17 +7,11 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Application;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
 public class CompletableResourceTest extends RxJerseyTest {
-
-    @Override
-    protected Application configure() {
-        return config().register(ObservableServerResource.class);
-    }
 
     @Test
     public void shouldReturnContent() {
@@ -43,7 +37,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         assertEquals(completed, true);
     }
 
-    @Path("/completable")
+    @Path("/endpoint")
     public interface ObservableResource {
 
         @GET
@@ -57,29 +51,5 @@ public class CompletableResourceTest extends RxJerseyTest {
         @GET
         @Path("error")
         Completable error();
-
-    }
-
-    @Path("/completable")
-    public static class ObservableServerResource {
-
-        @GET
-        @Path("echo")
-        public String echo(@QueryParam("message") String message) {
-            return message;
-        }
-
-        @GET
-        @Path("empty")
-        public String empty() {
-            return null;
-        }
-
-        @GET
-        @Path("error")
-        public String error() {
-            throw new BadRequestException();
-        }
-
     }
 }

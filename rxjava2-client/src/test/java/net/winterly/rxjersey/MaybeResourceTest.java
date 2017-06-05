@@ -7,16 +7,10 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Application;
 
 import static org.junit.Assert.assertEquals;
 
 public class MaybeResourceTest extends RxJerseyTest {
-
-    @Override
-    protected Application configure() {
-        return config().register(ServerResource.class);
-    }
 
     @Test
     public void shouldReturnContent() {
@@ -42,7 +36,7 @@ public class MaybeResourceTest extends RxJerseyTest {
         assertEquals("", message);
     }
 
-    @Path("/maybe")
+    @Path("/endpoint")
     public interface Resource {
 
         @GET
@@ -56,29 +50,5 @@ public class MaybeResourceTest extends RxJerseyTest {
         @GET
         @Path("error")
         Maybe<String> error();
-
-    }
-
-    @Path("/maybe")
-    public static class ServerResource {
-
-        @GET
-        @Path("echo")
-        public String echo(@QueryParam("message") String message) {
-            return message;
-        }
-
-        @GET
-        @Path("empty")
-        public String empty() {
-            return null;
-        }
-
-        @GET
-        @Path("error")
-        public String error() {
-            throw new BadRequestException();
-        }
-
     }
 }
