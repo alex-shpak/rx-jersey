@@ -34,9 +34,7 @@ public class MaybeMethodDispatcher extends RxMethodDispatcher {
         Completable intercept = Flowable.fromIterable(requestInterceptors)
                 .flatMapCompletable(interceptor -> interceptor.intercept(requestContext));
 
-        Maybe<Object> dispatch = Maybe.defer(() -> Maybe.just(dispatcher.dispatch(resource, request)))
-                .map(Response::getEntity) //entity is Maybe
-                .flatMap(maybe -> (Maybe<?>) maybe);
+        Maybe<Object> dispatch = Maybe.defer(() -> (Maybe<?>) dispatcher.dispatch(resource, request).getEntity());
 
         intercept.andThen(dispatch)
                 .defaultIfEmpty(noContent)
