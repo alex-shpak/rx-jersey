@@ -10,20 +10,14 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/example/")
 @Produces(MediaType.APPLICATION_JSON)
-public class GithubResource {
-
-    private GithubApi githubApi;
+public interface GithubResource {
 
     @GET
     @Path("github")
-    public Single<GithubRepository> getRepository() {
-        return githubApi.getRepository("alex-shpak", "rx-jersey").toSingle();
-    }
+    Single<GithubRepository> getRepository();
 
     @GET
     @Path("echo/{message}")
-    public Single<String> echo(@PathParam("message") String message) {
-        return Single.just(message);
-    }
+    Single<String> echo(@PathParam("message") String message);
 
 }

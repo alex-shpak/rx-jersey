@@ -24,7 +24,7 @@ public class RxJerseyApplication extends Application<RxJerseyConfiguration> {
     }
 
     public void run(RxJerseyConfiguration configuration, Environment environment) throws Exception {
-        environment.jersey().register(GithubResource.class);
+        environment.jersey().register(GithubResourceImpl.class);
     }
 
 }
