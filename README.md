@@ -7,7 +7,7 @@ RxJersey target is to handle large amount requests in small static set of thread
 
 Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under the hood.
 
-For documentation visit [wiki](https://github.com/alex-shpak/rx-jersey/wiki)
+### For documentation visit [WIKI](https://github.com/alex-shpak/rx-jersey/wiki)
 
 ## Features
 - [x] RxJava Support
@@ -21,18 +21,20 @@ For documentation visit [wiki](https://github.com/alex-shpak/rx-jersey/wiki)
 ### Maven Central
 ```
 compile "net.winterly.rxjersey:dropwizard:$rxJerseyVersion"
-compile "net.winterly.rxjersey:rx-jersey-rxjava:$rxJerseyVersion"
-compile "net.winterly.rxjersey:rx-jersey-rxjava2:$rxJerseyVersion"
-compile "net.winterly.rxjersey:rx-jersey-client:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rxjava-client:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rxjava-server:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rxjava2-client:$rxJerseyVersion"
+compile "net.winterly.rxjersey:rxjava2-server:$rxJerseyVersion"
 ```
 
 ### JitPack
 Most recent snapshot is available via [JitPack](https://jitpack.io/#alex-shpak/rx-jersey/)
 ```
 compile "com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion"
-compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava:$rxJerseyVersion"
-compile "com.github.alex-shpak.rx-jersey:rx-jersey-rxjava2:$rxJerseyVersion"
-compile "com.github.alex-shpak.rx-jersey:rx-jersey-client:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rxjava-client:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rxjava-server:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rxjava2-client:$rxJerseyVersion"
+compile "com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion"
 ```
 
 
