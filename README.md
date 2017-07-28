@@ -16,6 +16,10 @@ Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under 
 - [x] Async Request Interceptors
 - [x] Dropwizard bundle
 
+## Roadmap
+- [ ] Futures support
+- [ ] Vert.x integration
+
 
 ## Maven Artifacts
 ### Maven Central
