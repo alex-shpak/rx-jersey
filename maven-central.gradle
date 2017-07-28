@@ -2,20 +2,16 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 
 
+if (!project.hasProperty('ossrhUsername')) {
+    println 'Signing condfiguration is missing, skip signing'
+}
+
 signing {
     sign configurations.archives
 }
 
 uploadArchives {
-    doFirst {
-        if (!project.hasProperty('ossrhUsername')) {
-            throw new GradleException('error occurred')
-        }
-    }
     repositories.mavenDeployer {
-        def ossrhUsername = project.findProperty 'ossrhUsername'
-        def ossrhPassword = project.findProperty 'ossrhPassword'
-
         beforeDeployment {
             MavenDeployment deployment -> signing.signPom(deployment)
         }
