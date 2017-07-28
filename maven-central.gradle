@@ -4,6 +4,7 @@ apply plugin: 'maven'
 
 if (!project.hasProperty('ossrhUsername')) {
     println 'Signing condfiguration is missing, skip signing'
+    return
 }
 
 signing {
