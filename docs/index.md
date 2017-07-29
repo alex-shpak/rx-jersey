@@ -1,1 +1,1 @@
-# Welcome to RxJersey Documentation
+### See documentation at [WIKI](https://github.com/alex-shpak/rx-jersey/wiki)
