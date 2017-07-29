@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Rx Client · GitBook</title>
+        <title>Server · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.2">
@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="gitbook/style.css">
 
     
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
             
                 
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
@@ -100,14 +104,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter " data-level="1.2" data-path="jersey-configuration.html">
             
-                <span>
+                <a href="jersey-configuration.html">
             
                     
                     Configuration
             
-                </span>
+                </a>
             
 
             
@@ -119,7 +123,7 @@
                 <a href="jersey-configuration.html">
             
                     
-                    Jersey Configuration
+                    Jersey configuration
             
                 </a>
             
@@ -132,7 +136,7 @@
                 <a href="dropwizard-configuration.html">
             
                     
-                    Dropwizard Configuration
+                    Dropwizard configuration
             
                 </a>
             
@@ -150,7 +154,7 @@
                 <a href="rx-jersey-client.html">
             
                     
-                    Rx Server
+                    Client
             
                 </a>
             
@@ -163,7 +167,7 @@
                 <a href="rx-jersey-server.html">
             
                     
-                    Rx Client
+                    Server
             
                 </a>
             
@@ -214,7 +218,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >Rx Client</a>
+        <a href="." >Server</a>
     </h1>
 </div>
 
@@ -229,17 +233,17 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="jersey-server">Jersey Server</h2>
+                                <h2 id="jersey-server"><a name="jersey-server" class="plugin-anchor" href="#jersey-server"><i class="fa fa-link" aria-hidden="true"></i></a>Jersey Server</h2>
 <p>Register <code>RxJerseyServerFeature</code> in <code>resourceConfig</code></p>
 <pre><code class="lang-java">resourceConfig.register(RxJerseyServerFeature.class);
 </code></pre>
-<p>Or</p>
+<p>Or with configuration</p>
 <pre><code class="lang-java">RxJerseyServerFeature rxJerseyServerFeature = <span class="hljs-keyword">new</span> RxJerseyServerFeature()
                 .register(AuthInterceptor.class);
 
 resourceConfig.register(rxJerseyServerFeature);
 </code></pre>
-<p>Update your resource, see example:</p>
+<p>Update your resource adding rx return type:</p>
 <pre><code class="lang-java"><span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/&quot;</span>)
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloResource</span> </span>{
 
@@ -254,9 +258,9 @@ resourceConfig.register(rxJerseyServerFeature);
     }
 }
 </code></pre>
-<h2 id="inteceptor">Inteceptor</h2>
+<h2 id="inteceptor"><a name="inteceptor" class="plugin-anchor" href="#inteceptor"><i class="fa fa-link" aria-hidden="true"></i></a>Inteceptor</h2>
 <p>You can use RxJava enabled interceptors</p>
-<h4 id="rxjava">RxJava</h4>
+<h4 id="rxjava"><a name="rxjava" class="plugin-anchor" href="#rxjava"><i class="fa fa-link" aria-hidden="true"></i></a>RxJava</h4>
 <p>Result of such interceptor will be ignored</p>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ObservableRequestInterceptor</span>&lt;<span class="hljs-title">Void</span>&gt; </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> Observable&lt;Void&gt; <span class="hljs-title">intercept</span><span class="hljs-params">(ContainerRequestContext requestContext)</span> </span>{
@@ -264,22 +268,22 @@ resourceConfig.register(rxJerseyServerFeature);
     }
 }
 </code></pre>
-<h4 id="rxjava-2">RxJava 2</h4>
+<h4 id="rxjava-2"><a name="rxjava-2" class="plugin-anchor" href="#rxjava-2"><i class="fa fa-link" aria-hidden="true"></i></a>RxJava 2</h4>
 <pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">CompletableRequestInterceptor</span> </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> Completable <span class="hljs-title">intercept</span><span class="hljs-params">(ContainerRequestContext requestContext)</span> </span>{
         <span class="hljs-keyword">return</span> Observable.complete();
     }
 }
 </code></pre>
-<h2 id="important-notes">Important notes</h2>
-<h4 id="rxjava">RxJava</h4>
+<h2 id="important-notes"><a name="important-notes" class="plugin-anchor" href="#important-notes"><i class="fa fa-link" aria-hidden="true"></i></a>Important notes</h2>
+<h4 id="rxjava"><a name="rxjava" class="plugin-anchor" href="#rxjava"><i class="fa fa-link" aria-hidden="true"></i></a>RxJava</h4>
 <ul>
 <li>It&apos;s recommended to use <code>rx.Single</code> as return type (Representing single response entity).</li>
 <li>Multiple elements emitted in <code>Observable</code> will be treated as error.</li>
 <li>Empty <code>Observable</code> or <code>null</code> value in <code>Observable</code> or <code>Single</code> will be treated as <code>204: No content</code>.</li>
 <li><code>Completable</code> will be executed and <code>204: No content</code> will be returned.</li>
 </ul>
-<h4 id="rxjava-2">RxJava 2</h4>
+<h4 id="rxjava-2"><a name="rxjava-2" class="plugin-anchor" href="#rxjava-2"><i class="fa fa-link" aria-hidden="true"></i></a>RxJava 2</h4>
 <ul>
 <li>It&apos;s recommended to use <code>io.reactivex.Maybe</code> which could be 0 or 1 item or an error.</li>
 <li>Multiple elements emitted in <code>Observable</code> or <code>Flowable</code> will be treated as error.</li>
@@ -313,7 +317,7 @@ resourceConfig.register(rxJerseyServerFeature);
 
             
                 
-                <a href="rx-jersey-client.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Rx Server">
+                <a href="rx-jersey-client.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Client">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -325,7 +329,7 @@ resourceConfig.register(rxJerseyServerFeature);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Rx Client","level":"1.4","depth":1,"next":{"title":"Vert.x (WIP)","level":"1.5","depth":1,"ref":"","articles":[]},"previous":{"title":"Rx Server","level":"1.3","depth":1,"path":"rx-jersey-client.md","ref":"rx-jersey-client.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rx-jersey-server.md","mtime":"2017-07-29T21:05:49.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T21:50:46.903Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Server","level":"1.4","depth":1,"next":{"title":"Vert.x (WIP)","level":"1.5","depth":1,"ref":"","articles":[]},"previous":{"title":"Client","level":"1.3","depth":1,"path":"rx-jersey-client.md","ref":"rx-jersey-client.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rx-jersey-server.md","mtime":"2017-07-29T22:22:47.830Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T23:14:10.292Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

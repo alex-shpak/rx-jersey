@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Dropwizard Configuration · GitBook</title>
+        <title>Dropwizard configuration · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.2">
@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="gitbook/style.css">
 
     
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
             
                 
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
@@ -102,14 +106,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter " data-level="1.2" data-path="jersey-configuration.html">
             
-                <span>
+                <a href="jersey-configuration.html">
             
                     
                     Configuration
             
-                </span>
+                </a>
             
 
             
@@ -121,7 +125,7 @@
                 <a href="jersey-configuration.html">
             
                     
-                    Jersey Configuration
+                    Jersey configuration
             
                 </a>
             
@@ -134,7 +138,7 @@
                 <a href="dropwizard-configuration.html">
             
                     
-                    Dropwizard Configuration
+                    Dropwizard configuration
             
                 </a>
             
@@ -152,7 +156,7 @@
                 <a href="rx-jersey-client.html">
             
                     
-                    Rx Server
+                    Client
             
                 </a>
             
@@ -165,7 +169,7 @@
                 <a href="rx-jersey-server.html">
             
                     
-                    Rx Client
+                    Server
             
                 </a>
             
@@ -216,7 +220,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >Dropwizard Configuration</a>
+        <a href="." >Dropwizard configuration</a>
     </h1>
 </div>
 
@@ -231,17 +235,17 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="configuring-dropwizard">Configuring dropwizard</h2>
+                                <h2 id="dropwizard-configuration"><a name="dropwizard-configuration" class="plugin-anchor" href="#dropwizard-configuration"><i class="fa fa-link" aria-hidden="true"></i></a>Dropwizard configuration</h2>
 <p>Use provided <code>RxJerseyBundle</code></p>
 <pre><code class="lang-java"><span class="hljs-meta">@Override</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initialize</span><span class="hljs-params">(Bootstrap&lt;RxJerseyConfiguration&gt; bootstrap)</span> </span>{
-    bootstrap.addBundle(<span class="hljs-keyword">new</span> RxJerseyBundle()
-            .setClientConfigurationProvider(config -&gt; ((RxJerseyConfiguration) config).client)
+    bootstrap.addBundle(<span class="hljs-keyword">new</span> RxJerseyBundle&lt;RxJerseyConfiguration&gt;()
+            .setClientConfigurationProvider(config -&gt; config.client)
             .register(HeaderInterceptor.class)
     );
 }
 </code></pre>
-<p>Or alternatively you can directly configure and register Jersey feature</p>
+<p>Alternatively you can directly configure and register Jersey feature</p>
 <pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">(RxJerseyConfiguration configuration, Environment environment)</span> <span class="hljs-keyword">throws</span> Exception </span>{
     JerseyEnvironment jersey = environment.jersey();
 
@@ -260,7 +264,7 @@
     jersey.register(rxJerseyClientFeature);
 }
 </code></pre>
-<p><a href="https://github.com/alex-shpak/rx-jersey/tree/master/example" target="_blank">See example</a> for more information</p>
+<h4 id="see-example-for-more-information"><a name="see-example-for-more-information" class="plugin-anchor" href="#see-example-for-more-information"><i class="fa fa-link" aria-hidden="true"></i></a><a href="https://github.com/alex-shpak/rx-jersey/tree/master/example" target="_blank">See example</a> for more information</h4>
 
                                 
                                 </section>
@@ -288,12 +292,12 @@
 
             
                 
-                <a href="jersey-configuration.html" class="navigation navigation-prev " aria-label="Previous page: Jersey Configuration">
+                <a href="jersey-configuration.html" class="navigation navigation-prev " aria-label="Previous page: Jersey configuration">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="rx-jersey-client.html" class="navigation navigation-next " aria-label="Next page: Rx Server">
+                <a href="rx-jersey-client.html" class="navigation navigation-next " aria-label="Next page: Client">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -304,7 +308,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Dropwizard Configuration","level":"1.2.2","depth":2,"next":{"title":"Rx Server","level":"1.3","depth":1,"path":"rx-jersey-client.md","ref":"rx-jersey-client.md","articles":[]},"previous":{"title":"Jersey Configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"dropwizard-configuration.md","mtime":"2017-07-29T21:05:49.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T21:50:46.903Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Dropwizard configuration","level":"1.2.2","depth":2,"next":{"title":"Client","level":"1.3","depth":1,"path":"rx-jersey-client.md","ref":"rx-jersey-client.md","articles":[]},"previous":{"title":"Jersey configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"dropwizard-configuration.md","mtime":"2017-07-29T23:13:15.427Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T23:14:10.292Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Jersey Configuration · GitBook</title>
+        <title>Configuration · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.2">
@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="gitbook/style.css">
 
     
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
             
                 
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
@@ -57,8 +61,10 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="dropwizard-configuration.html" />
+    <link rel="next" href="jersey-configuration.html" />
     
+    
+    <link rel="prev" href="./" />
     
 
     </head>
@@ -100,14 +106,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter active" data-level="1.2" data-path="jersey-configuration.html">
             
-                <span>
+                <a href="jersey-configuration.html">
             
                     
                     Configuration
             
-                </span>
+                </a>
             
 
             
@@ -119,7 +125,7 @@
                 <a href="jersey-configuration.html">
             
                     
-                    Jersey Configuration
+                    Jersey configuration
             
                 </a>
             
@@ -132,7 +138,7 @@
                 <a href="dropwizard-configuration.html">
             
                     
-                    Dropwizard Configuration
+                    Dropwizard configuration
             
                 </a>
             
@@ -150,7 +156,7 @@
                 <a href="rx-jersey-client.html">
             
                     
-                    Rx Server
+                    Client
             
                 </a>
             
@@ -163,7 +169,7 @@
                 <a href="rx-jersey-server.html">
             
                     
-                    Rx Client
+                    Server
             
                 </a>
             
@@ -214,7 +220,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >Jersey Configuration</a>
+        <a href="." >Configuration</a>
     </h1>
 </div>
 
@@ -229,15 +235,16 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="simple-configuration">Simple configuration</h2>
+                                <h2 id="jersey-configuration"><a name="jersey-configuration" class="plugin-anchor" href="#jersey-configuration"><i class="fa fa-link" aria-hidden="true"></i></a>Jersey configuration</h2>
+<h3 id="simple-configuration"><a name="simple-configuration" class="plugin-anchor" href="#simple-configuration"><i class="fa fa-link" aria-hidden="true"></i></a>Simple configuration</h3>
 <p>This will assume default configuration with no interceptor and Grizzly client</p>
 <pre><code class="lang-java">resourceConfig.register(RxJerseyServerFeature.class);
 resourceConfig.register(RxJerseyClientFeature.class);
 </code></pre>
-<h2 id="detailed-configuration">Detailed configuration</h2>
+<h3 id="detailed-configuration"><a name="detailed-configuration" class="plugin-anchor" href="#detailed-configuration"><i class="fa fa-link" aria-hidden="true"></i></a>Detailed configuration</h3>
 <p>This configuration will add async request interceptor and override default client</p>
 <pre><code class="lang-java">RxJerseyServerFeature rxJerseyServerFeature = <span class="hljs-keyword">new</span> RxJerseyServerFeature()
-        .register(AuthRequestInterceptor.class)
+        .register(AuthRequestInterceptor.class);
 
 RxJerseyClientFeature rxJerseyClientFeature = <span class="hljs-keyword">new</span> RxJerseyClientFeature()
         .register(client); <span class="hljs-comment">// Should be non-blocking client implementation</span>
@@ -272,8 +279,12 @@ resourceConfig.register(rxJerseyClientFeature);
 
             
                 
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
                 
-                <a href="dropwizard-configuration.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Dropwizard Configuration">
+                
+                <a href="jersey-configuration.html" class="navigation navigation-next " aria-label="Next page: Jersey configuration">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -284,7 +295,7 @@ resourceConfig.register(rxJerseyClientFeature);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Jersey Configuration","level":"1.2.1","depth":2,"next":{"title":"Dropwizard Configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]},"previous":{"title":"Configuration","level":"1.2","depth":1,"ref":"","articles":[{"title":"Jersey Configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},{"title":"Dropwizard Configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"jersey-configuration.md","mtime":"2017-07-29T21:05:49.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T21:50:46.903Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Configuration","level":"1.2","depth":1,"next":{"title":"Jersey configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"jersey-configuration.md","mtime":"2017-07-29T23:11:25.481Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T23:14:10.292Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

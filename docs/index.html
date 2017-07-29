@@ -17,6 +17,10 @@
     
             
                 
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
                 
             
@@ -56,6 +60,8 @@
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
+    
+    <link rel="next" href="jersey-configuration.html" />
     
     
 
@@ -98,14 +104,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" >
+        <li class="chapter " data-level="1.2" data-path="jersey-configuration.html">
             
-                <span>
+                <a href="jersey-configuration.html">
             
                     
                     Configuration
             
-                </span>
+                </a>
             
 
             
@@ -117,7 +123,7 @@
                 <a href="jersey-configuration.html">
             
                     
-                    Jersey Configuration
+                    Jersey configuration
             
                 </a>
             
@@ -130,7 +136,7 @@
                 <a href="dropwizard-configuration.html">
             
                     
-                    Dropwizard Configuration
+                    Dropwizard configuration
             
                 </a>
             
@@ -148,7 +154,7 @@
                 <a href="rx-jersey-client.html">
             
                     
-                    Rx Server
+                    Client
             
                 </a>
             
@@ -161,7 +167,7 @@
                 <a href="rx-jersey-server.html">
             
                     
-                    Rx Client
+                    Server
             
                 </a>
             
@@ -227,40 +233,41 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="rxjersey---reactive-jersey-feature">RxJersey - Reactive Jersey Feature</h2>
+                                <h2 id="rxjersey---reactive-jersey-feature"><a name="rxjersey---reactive-jersey-feature" class="plugin-anchor" href="#rxjersey---reactive-jersey-feature"><i class="fa fa-link" aria-hidden="true"></i></a>RxJersey - Reactive Jersey Feature</h2>
 <p><a href="https://travis-ci.org/alex-shpak/rx-jersey" target="_blank"><img src="https://travis-ci.org/alex-shpak/rx-jersey.svg?branch=master" alt="Build Status"></a>
 <img src="https://img.shields.io/maven-central/v/net.winterly.rxjersey/core-server.svg" alt="Maven Central"></p>
 <p>RxJersey is RxJava extension for <a href="https://jersey.java.net/" target="_blank">Jersey</a> framework providing non-blocking Jax-RS server and client.
 RxJersey target is to handle large amount requests in small static set of threads, which is highly suitable for microservice applications.</p>
 <p>Library uses Jersey 2 async support with <code>@Suspended</code> and <code>AsyncResponse</code> under the hood.</p>
-<h2 id="features">Features</h2>
+<h2 id="features"><a name="features" class="plugin-anchor" href="#features"><i class="fa fa-link" aria-hidden="true"></i></a>Features</h2>
 <ul>
-<li>[x] RxJava Support</li>
-<li>[x] RxJava 2 Support</li>
-<li>[x] RxJava Proxy Client</li>
-<li>[x] Async Request Interceptors</li>
-<li>[x] Dropwizard bundle</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled" checked="checked"> RxJava Support</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled" checked="checked"> RxJava 2 Support</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled" checked="checked"> RxJava Proxy Client</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled" checked="checked"> Async Request Interceptors</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled" checked="checked"> Dropwizard bundle</li>
 </ul>
-<h2 id="roadmap">Roadmap</h2>
+<h2 id="roadmap"><a name="roadmap" class="plugin-anchor" href="#roadmap"><i class="fa fa-link" aria-hidden="true"></i></a>Roadmap</h2>
 <ul>
-<li>[ ] Futures support</li>
-<li>[ ] Vert.x integration</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled"> Futures support</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled"> Vert.x integration</li>
+<li style="list-style: none"><input type="checkbox" disabled="disabled"> Improved proxy client</li>
 </ul>
-<h2 id="maven-artifacts">Maven Artifacts</h2>
-<h3 id="maven-central">Maven Central</h3>
+<h2 id="maven-artifacts"><a name="maven-artifacts" class="plugin-anchor" href="#maven-artifacts"><i class="fa fa-link" aria-hidden="true"></i></a>Maven Artifacts</h2>
+<h3 id="maven-central"><a name="maven-central" class="plugin-anchor" href="#maven-central"><i class="fa fa-link" aria-hidden="true"></i></a>Maven Central</h3>
 <pre><code>compile &quot;net.winterly.rxjersey:dropwizard:$rxJerseyVersion&quot;
 compile &quot;net.winterly.rxjersey:rxjava-client:$rxJerseyVersion&quot;
 compile &quot;net.winterly.rxjersey:rxjava-server:$rxJerseyVersion&quot;
 compile &quot;net.winterly.rxjersey:rxjava2-client:$rxJerseyVersion&quot;
 compile &quot;net.winterly.rxjersey:rxjava2-server:$rxJerseyVersion&quot;
-</code></pre><h3 id="jitpack">JitPack</h3>
+</code></pre><h3 id="jitpack"><a name="jitpack" class="plugin-anchor" href="#jitpack"><i class="fa fa-link" aria-hidden="true"></i></a>JitPack</h3>
 <p>Most recent snapshot is available via <a href="https://jitpack.io/#alex-shpak/rx-jersey/" target="_blank">JitPack</a></p>
 <pre><code>compile &quot;com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion&quot;
 compile &quot;com.github.alex-shpak.rx-jersey:rxjava-client:$rxJerseyVersion&quot;
 compile &quot;com.github.alex-shpak.rx-jersey:rxjava-server:$rxJerseyVersion&quot;
 compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-client:$rxJerseyVersion&quot;
 compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion&quot;
-</code></pre><h2 id="example">Example</h2>
+</code></pre><h2 id="example"><a name="example" class="plugin-anchor" href="#example"><i class="fa fa-link" aria-hidden="true"></i></a>Example</h2>
 <pre><code class="lang-java"><span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/example/&quot;</span>)
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GithubResource</span> </span>{
 
@@ -283,7 +290,7 @@ compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion&qu
     <span class="hljs-function">Observable&lt;GithubRepository&gt; <span class="hljs-title">getRepository</span><span class="hljs-params">(@PathParam(<span class="hljs-string">&quot;user&quot;</span>)</span> String username, @<span class="hljs-title">PathParam</span><span class="hljs-params">(<span class="hljs-string">&quot;repo&quot;</span>)</span> String repo)</span>;
 }
 </code></pre>
-<h2 id="licence">Licence</h2>
+<h2 id="licence"><a name="licence" class="plugin-anchor" href="#licence"><i class="fa fa-link" aria-hidden="true"></i></a>Licence</h2>
 <p><a href="LICENCE.txt">MIT</a></p>
 
                                 
@@ -313,6 +320,10 @@ compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion&qu
             
                 
                 
+                <a href="jersey-configuration.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Configuration">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
             
         
     </div>
@@ -320,7 +331,7 @@ compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion&qu
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Configuration","level":"1.2","depth":1,"ref":"","articles":[{"title":"Jersey Configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},{"title":"Dropwizard Configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2017-07-29T21:50:12.251Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T21:50:46.903Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Configuration","level":"1.2","depth":1,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[{"title":"Jersey configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},{"title":"Dropwizard configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2017-07-29T22:59:18.522Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T23:14:10.292Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
