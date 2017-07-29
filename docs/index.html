@@ -1,0 +1,359 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Introduction · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    Configuration
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="jersey-configuration.html">
+            
+                <a href="jersey-configuration.html">
+            
+                    
+                    Jersey Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="dropwizard-configuration.html">
+            
+                <a href="dropwizard-configuration.html">
+            
+                    
+                    Dropwizard Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="rx-jersey-client.html">
+            
+                <a href="rx-jersey-client.html">
+            
+                    
+                    Rx Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="rx-jersey-server.html">
+            
+                <a href="rx-jersey-server.html">
+            
+                    
+                    Rx Client
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <span>
+            
+                    
+                    Vert.x (WIP)
+            
+                </span>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="rxjersey---reactive-jersey-feature">RxJersey - Reactive Jersey Feature</h2>
+<p><a href="https://travis-ci.org/alex-shpak/rx-jersey" target="_blank"><img src="https://travis-ci.org/alex-shpak/rx-jersey.svg?branch=master" alt="Build Status"></a>
+<img src="https://img.shields.io/maven-central/v/net.winterly.rxjersey/core-server.svg" alt="Maven Central"></p>
+<p>RxJersey is RxJava extension for <a href="https://jersey.java.net/" target="_blank">Jersey</a> framework providing non-blocking Jax-RS server and client.
+RxJersey target is to handle large amount requests in small static set of threads, which is highly suitable for microservice applications.</p>
+<p>Library uses Jersey 2 async support with <code>@Suspended</code> and <code>AsyncResponse</code> under the hood.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>[x] RxJava Support</li>
+<li>[x] RxJava 2 Support</li>
+<li>[x] RxJava Proxy Client</li>
+<li>[x] Async Request Interceptors</li>
+<li>[x] Dropwizard bundle</li>
+</ul>
+<h2 id="roadmap">Roadmap</h2>
+<ul>
+<li>[ ] Futures support</li>
+<li>[ ] Vert.x integration</li>
+</ul>
+<h2 id="maven-artifacts">Maven Artifacts</h2>
+<h3 id="maven-central">Maven Central</h3>
+<pre><code>compile &quot;net.winterly.rxjersey:dropwizard:$rxJerseyVersion&quot;
+compile &quot;net.winterly.rxjersey:rxjava-client:$rxJerseyVersion&quot;
+compile &quot;net.winterly.rxjersey:rxjava-server:$rxJerseyVersion&quot;
+compile &quot;net.winterly.rxjersey:rxjava2-client:$rxJerseyVersion&quot;
+compile &quot;net.winterly.rxjersey:rxjava2-server:$rxJerseyVersion&quot;
+</code></pre><h3 id="jitpack">JitPack</h3>
+<p>Most recent snapshot is available via <a href="https://jitpack.io/#alex-shpak/rx-jersey/" target="_blank">JitPack</a></p>
+<pre><code>compile &quot;com.github.alex-shpak.rx-jersey:dropwizard:$rxJerseyVersion&quot;
+compile &quot;com.github.alex-shpak.rx-jersey:rxjava-client:$rxJerseyVersion&quot;
+compile &quot;com.github.alex-shpak.rx-jersey:rxjava-server:$rxJerseyVersion&quot;
+compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-client:$rxJerseyVersion&quot;
+compile &quot;com.github.alex-shpak.rx-jersey:rxjava2-server:$rxJerseyVersion&quot;
+</code></pre><h2 id="example">Example</h2>
+<pre><code class="lang-java"><span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/example/&quot;</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GithubResource</span> </span>{
+
+    <span class="hljs-meta">@Remote</span>(<span class="hljs-string">&quot;https://api.github.com/&quot;</span>)
+    <span class="hljs-keyword">private</span> GithubApi githubApi;
+
+    <span class="hljs-meta">@GET</span>
+    <span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;github&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Single&lt;GithubRepository&gt; <span class="hljs-title">getRepository</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> githubApi.getRepository(<span class="hljs-string">&quot;alex-shpak&quot;</span>, <span class="hljs-string">&quot;rx-jersey&quot;</span>).toSingle();
+    }
+
+}
+
+<span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/&quot;</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">GithubApi</span> </span>{
+
+    <span class="hljs-meta">@GET</span>
+    <span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/repos/{user}/{repo}&quot;</span>)
+    <span class="hljs-function">Observable&lt;GithubRepository&gt; <span class="hljs-title">getRepository</span><span class="hljs-params">(@PathParam(<span class="hljs-string">&quot;user&quot;</span>)</span> String username, @<span class="hljs-title">PathParam</span><span class="hljs-params">(<span class="hljs-string">&quot;repo&quot;</span>)</span> String repo)</span>;
+}
+</code></pre>
+<h2 id="licence">Licence</h2>
+<p><a href="LICENCE.txt">MIT</a></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Configuration","level":"1.2","depth":1,"ref":"","articles":[{"title":"Jersey Configuration","level":"1.2.1","depth":2,"path":"jersey-configuration.md","ref":"jersey-configuration.md","articles":[]},{"title":"Dropwizard Configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2017-07-29T21:50:12.251Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T21:50:46.903Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

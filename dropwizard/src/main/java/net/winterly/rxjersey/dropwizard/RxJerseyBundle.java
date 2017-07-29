@@ -17,12 +17,12 @@ import javax.ws.rs.client.Client;
 import java.util.function.Function;
 
 
-public class RxJerseyBundle implements ConfiguredBundle<Configuration> {
+public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle<T> {
 
     private final RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature();
     private final RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature();
 
-    private Function<Configuration, JerseyClientConfiguration> clientConfigurationProvider;
+    private Function<T, JerseyClientConfiguration> clientConfigurationProvider;
 
     public RxJerseyBundle() {
         setClientConfigurationProvider(configuration -> {
@@ -34,18 +34,18 @@ public class RxJerseyBundle implements ConfiguredBundle<Configuration> {
         });
     }
 
-    public RxJerseyBundle setClientConfigurationProvider(Function<Configuration, JerseyClientConfiguration> provider) {
+    public RxJerseyBundle<T> setClientConfigurationProvider(Function<T, JerseyClientConfiguration> provider) {
         clientConfigurationProvider = provider;
         return this;
     }
 
-    public RxJerseyBundle register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+    public RxJerseyBundle<T> register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
         rxJerseyServerFeature.register(interceptor);
         return this;
     }
 
     @Override
-    public void run(Configuration configuration, Environment environment) throws Exception {
+    public void run(T configuration, Environment environment) throws Exception {
         JerseyEnvironment jersey = environment.jersey();
 
         JerseyClientConfiguration clientConfiguration = clientConfigurationProvider.apply(configuration);

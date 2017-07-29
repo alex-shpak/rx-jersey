@@ -1,1 +1,0 @@
-### See documentation at [WIKI](https://github.com/alex-shpak/rx-jersey/wiki)
