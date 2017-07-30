@@ -29,10 +29,9 @@ public class HelloResource {
 ```
 
 ## Inteceptor
-You can use RxJava enabled interceptors
+You can use RxJava enabled interceptors. Result of such interceptor will be ignored. Thrown or returned error would be redirected to jersey.
 
 #### RxJava
-Result of such interceptor will be ignored
 ```java
 public class SimpleInterceptor implements ObservableRequestInterceptor<Void> {
     public Observable<Void> intercept(ContainerRequestContext requestContext) {

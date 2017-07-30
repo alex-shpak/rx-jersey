@@ -1,6 +1,8 @@
-## Jersey Client
+## RxJersey Proxy Client
 
-Register Jersey feature
+Proxy client provides convenient way to call resources without constructing request. Also it allows to reuse resource interfaces between microservices.
+
+In order to enable RxJava in proxy client register Jersey feature
 ```java
 RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature()
         .register(client); //should be non-blocking client implementation
@@ -8,14 +10,8 @@ resourceConfig.register(rxJerseyClientFeature);
 ```
 Default client with Grizzly connector will be used if not provided
 
-### With RxJava
-Supported types are `Observable`, `Single`, `Completable`
 
-### With RxJava 2
-Supported types are `Flowable`, `Observable`, `Maybe`, `Single`, `Completable`
-
-
-## Proxy client
+## Remote resource injection
 You can inject proxy client with `@Remote` annotation, in addition you can inject `WebTarget` or `RxWebTarget`
 ```java
 @Path("/example/")

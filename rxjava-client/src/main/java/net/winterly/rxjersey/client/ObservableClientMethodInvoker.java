@@ -8,12 +8,9 @@ import rx.Single;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
 import java.util.HashMap;
 
 public class ObservableClientMethodInvoker implements ClientMethodInvoker<Object, RxInvocationBuilder<RxInvoker<Observable>>> {
-
-    private static final GenericType<Response> RESPONSE_GENERIC_TYPE = new GenericType<>(Response.class);
 
     private final HashMap<Class, Converter> converters = new HashMap<>();
 

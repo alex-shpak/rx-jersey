@@ -61,10 +61,8 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="rx-jersey-server.html" />
     
-    
-    <link rel="prev" href="dropwizard-configuration.html" />
+    <link rel="prev" href="rx-jersey-server.html" />
     
 
     </head>
@@ -151,12 +149,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3" data-path="rx-jersey-client.html">
+        <li class="chapter " data-level="1.3" data-path="rx-jersey-server.html">
             
-                <a href="rx-jersey-client.html">
+                <a href="rx-jersey-server.html">
             
                     
-                    Client
+                    Server
             
                 </a>
             
@@ -164,12 +162,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="rx-jersey-server.html">
+        <li class="chapter active" data-level="1.4" data-path="rx-jersey-client.html">
             
-                <a href="rx-jersey-server.html">
+                <a href="rx-jersey-client.html">
             
                     
-                    Server
+                    Client
             
                 </a>
             
@@ -235,18 +233,15 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="jersey-client"><a name="jersey-client" class="plugin-anchor" href="#jersey-client"><i class="fa fa-link" aria-hidden="true"></i></a>Jersey Client</h2>
-<p>Register Jersey feature</p>
+                                <h2 id="rxjersey-proxy-client"><a name="rxjersey-proxy-client" class="plugin-anchor" href="#rxjersey-proxy-client"><i class="fa fa-link" aria-hidden="true"></i></a>RxJersey Proxy Client</h2>
+<p>Proxy client provides convenient way to call resources without constructing request. Also it allows to reuse resource interfaces between microservices.</p>
+<p>In order to enable RxJava in proxy client register Jersey feature</p>
 <pre><code class="lang-java">RxJerseyClientFeature rxJerseyClientFeature = <span class="hljs-keyword">new</span> RxJerseyClientFeature()
         .register(client); <span class="hljs-comment">//should be non-blocking client implementation</span>
 resourceConfig.register(rxJerseyClientFeature);
 </code></pre>
 <p>Default client with Grizzly connector will be used if not provided</p>
-<h3 id="with-rxjava"><a name="with-rxjava" class="plugin-anchor" href="#with-rxjava"><i class="fa fa-link" aria-hidden="true"></i></a>With RxJava</h3>
-<p>Supported types are <code>Observable</code>, <code>Single</code>, <code>Completable</code></p>
-<h3 id="with-rxjava-2"><a name="with-rxjava-2" class="plugin-anchor" href="#with-rxjava-2"><i class="fa fa-link" aria-hidden="true"></i></a>With RxJava 2</h3>
-<p>Supported types are <code>Flowable</code>, <code>Observable</code>, <code>Maybe</code>, <code>Single</code>, <code>Completable</code></p>
-<h2 id="proxy-client"><a name="proxy-client" class="plugin-anchor" href="#proxy-client"><i class="fa fa-link" aria-hidden="true"></i></a>Proxy client</h2>
+<h2 id="remote-resource-injection"><a name="remote-resource-injection" class="plugin-anchor" href="#remote-resource-injection"><i class="fa fa-link" aria-hidden="true"></i></a>Remote resource injection</h2>
 <p>You can inject proxy client with <code>@Remote</code> annotation, in addition you can inject <code>WebTarget</code> or <code>RxWebTarget</code></p>
 <pre><code class="lang-java"><span class="hljs-meta">@Path</span>(<span class="hljs-string">&quot;/example/&quot;</span>)
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GithubResource</span> </span>{
@@ -330,14 +325,10 @@ resourceConfig.register(rxJerseyClientFeature);
 
             
                 
-                <a href="dropwizard-configuration.html" class="navigation navigation-prev " aria-label="Previous page: Dropwizard configuration">
+                <a href="rx-jersey-server.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Server">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="rx-jersey-server.html" class="navigation navigation-next " aria-label="Next page: Server">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -346,7 +337,7 @@ resourceConfig.register(rxJerseyClientFeature);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Client","level":"1.3","depth":1,"next":{"title":"Server","level":"1.4","depth":1,"path":"rx-jersey-server.md","ref":"rx-jersey-server.md","articles":[]},"previous":{"title":"Dropwizard configuration","level":"1.2.2","depth":2,"path":"dropwizard-configuration.md","ref":"dropwizard-configuration.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rx-jersey-client.md","mtime":"2017-07-29T21:05:49.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-29T23:14:10.292Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Client","level":"1.4","depth":1,"next":{"title":"Vert.x (WIP)","level":"1.5","depth":1,"ref":"","articles":[]},"previous":{"title":"Server","level":"1.3","depth":1,"path":"rx-jersey-server.md","ref":"rx-jersey-server.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["todo","anchors"],"pluginsConfig":{"todo":{},"anchors":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"rx-jersey-client.md","mtime":"2017-07-30T00:17:36.940Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-07-30T00:18:24.624Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
