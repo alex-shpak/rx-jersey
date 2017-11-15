@@ -7,9 +7,9 @@ import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import net.winterly.rxjersey.client.RxJerseyClientFeature;
-import net.winterly.rxjersey.server.ObservableRequestInterceptor;
-import net.winterly.rxjersey.server.RxJerseyServerFeature;
+import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
+import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
+import net.winterly.rxjersey.server.rxjava.RxJerseyServerFeature;
 import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
