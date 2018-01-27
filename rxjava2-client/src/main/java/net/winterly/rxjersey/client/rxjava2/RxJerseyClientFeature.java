@@ -41,7 +41,7 @@ public class RxJerseyClientFeature implements Feature {
         return true;
     }
 
-    private Client defaultClient() {
+    protected Client defaultClient() {
         int cores = Runtime.getRuntime().availableProcessors();
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new GrizzlyConnectorProvider());
