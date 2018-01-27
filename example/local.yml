@@ -1,5 +1,5 @@
 server:
-  maxThreads: 13
+  maxThreads: 8
   maxQueuedRequests: 100000
   applicationConnectors:
     - type: http
