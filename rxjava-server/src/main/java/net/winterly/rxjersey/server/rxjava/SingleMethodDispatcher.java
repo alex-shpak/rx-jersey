@@ -19,8 +19,6 @@ import javax.ws.rs.core.Response;
 
 public class SingleMethodDispatcher extends RxMethodDispatcher {
 
-    private final Response noContent = Response.noContent().build();
-
     @Context
     private javax.inject.Provider<ContainerRequestContext> containerRequestContext;
 
@@ -43,7 +41,7 @@ public class SingleMethodDispatcher extends RxMethodDispatcher {
         Single<?> dispatch = Single.defer(() -> (Single<?>) dispatcher.dispatch(resource, request).getEntity());
 
         intercept.andThen(dispatch)
-                .map(response -> response == null ? noContent : response)
+                .map(response -> response == null ? Response.noContent().build() : response)
                 .subscribe(asyncContext::resume, asyncContext::resume);
     }
 
