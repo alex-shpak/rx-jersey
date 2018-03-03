@@ -9,8 +9,8 @@ subprojects {
     apply plugin: 'java'
     apply from: "$rootDir/maven-central.gradle"
 
-    group 'net.winterly.rxjersey'
-    version rxJerseyVersion
+    group mavenGroup
+    version mavenVersion
 
     compileJava {
         setSourceCompatibility JavaVersion.VERSION_1_8
