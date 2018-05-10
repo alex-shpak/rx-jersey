@@ -1,7 +1,6 @@
 package net.winterly.rxjersey.server.rxjava2;
 
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 
 import javax.inject.Singleton;
@@ -36,11 +35,6 @@ public final class RxJerseyServerFeature implements Feature {
             bind(MaybeInvocationHandlerProvider.class)
                     .to(ResourceMethodInvocationHandlerProvider.class)
                     .in(Singleton.class);
-
-            bind(MaybeMethodDispatcher.Provider.class)
-                    .to(ResourceMethodDispatcher.Provider.class)
-                    .in(Singleton.class)
-                    .ranked(1); // Should be first in list
 
             interceptors.forEach(interceptor -> bind(interceptor)
                     .to(CompletableRequestInterceptor.class)
