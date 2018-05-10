@@ -18,14 +18,14 @@ public abstract class SingleInvocationHandler<R> extends RxInvocationHandler<Sin
     private Provider<ContainerRequestContext> requestContextProvider;
 
     @Inject
-    private IterableProvider<ObservableRequestInterceptor<?>> requestInterceptors;
+    private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
 
     @Override
     public void resume(AsyncContext asyncContext, Single<?> result) throws Throwable {
         final ContainerRequestContext requestContext = requestContextProvider.get();
 
         Completable intercept = Observable.from(requestInterceptors)
-                .concatMap(interceptor -> interceptor.intercept(requestContext))
+                .flatMapCompletable(interceptor -> interceptor.intercept(requestContext))
                 .lastOrDefault(null)
                 .toCompletable();
 

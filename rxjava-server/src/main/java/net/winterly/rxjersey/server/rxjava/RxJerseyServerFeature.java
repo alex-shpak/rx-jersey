@@ -14,9 +14,9 @@ import java.util.List;
  */
 public final class RxJerseyServerFeature implements Feature {
 
-    private final List<Class<? extends ObservableRequestInterceptor<?>>> interceptors = new LinkedList<>();
+    private final List<Class<? extends CompletableRequestInterceptor>> interceptors = new LinkedList<>();
 
-    public RxJerseyServerFeature register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+    public RxJerseyServerFeature register(Class<? extends CompletableRequestInterceptor> interceptor) {
         interceptors.add(interceptor);
         return this;
     }
@@ -37,7 +37,7 @@ public final class RxJerseyServerFeature implements Feature {
                     .in(Singleton.class);
 
             interceptors.forEach(interceptor -> bind(interceptor)
-                    .to(ObservableRequestInterceptor.class)
+                    .to(CompletableRequestInterceptor.class)
                     .in(Singleton.class)
             );
         }

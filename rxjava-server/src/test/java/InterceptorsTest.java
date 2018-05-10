@@ -1,7 +1,9 @@
-import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
+import net.winterly.rxjersey.server.rxjava.CompletableRequestInterceptor;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.junit.Test;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -59,35 +61,35 @@ public class InterceptorsTest extends RxJerseyTest {
         }
     }
 
-    public static class Interceptor implements ObservableRequestInterceptor<ContainerRequestContext> {
+    public static class Interceptor implements CompletableRequestInterceptor {
 
         @Context
         private SecurityContext securityContext;
 
         @Override
-        public Observable<ContainerRequestContext> intercept(ContainerRequestContext requestContext) {
-            return Observable.just(requestContext).doOnNext(it -> {
+        public Completable intercept(ContainerRequestContext requestContext) {
+            return Single.just(requestContext).doOnSuccess(it -> {
                 it.getHeaders().putSingle("message", "intercepted");
-            });
+            }).toCompletable();
         }
     }
 
-    public static class ThrowingInterceptor implements ObservableRequestInterceptor<Void> {
+    public static class ThrowingInterceptor implements CompletableRequestInterceptor {
 
         @Override
-        public Observable<Void> intercept(ContainerRequestContext requestContext) {
+        public Completable intercept(ContainerRequestContext requestContext) {
             if (requestContext.getHeaders().containsKey("throw")) {
                 throw new NotAuthorizedException("Surprise!");
             }
-            return Observable.empty();
+            return Completable.complete();
         }
     }
 
-    public static class EmptyInterceptor implements ObservableRequestInterceptor {
+    public static class EmptyInterceptor implements CompletableRequestInterceptor {
 
         @Override
-        public Observable<?> intercept(ContainerRequestContext requestContext) {
-            return Observable.empty();
+        public Completable intercept(ContainerRequestContext requestContext) {
+            return Completable.complete();
         }
     }
 
@@ -97,7 +99,7 @@ public class InterceptorsTest extends RxJerseyTest {
         protected void configure() {
             Stream.of(Interceptor.class, EmptyInterceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
                 bind(interceptor)
-                        .to(ObservableRequestInterceptor.class)
+                        .to(CompletableRequestInterceptor.class)
                         .in(Singleton.class);
             });
 
