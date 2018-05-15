@@ -1,22 +1,22 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import net.winterly.rxjersey.client.WebResourceFactory;
 import net.winterly.rxjersey.client.rxjava.ObservableClientMethodInvoker;
 import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.rx.RxClient;
-import org.glassfish.jersey.client.rx.RxWebTarget;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    private Provider<RxClient> clientProvider;
+    private Provider<Client> clientProvider;
 
     @Override
     protected Application configure() {
@@ -63,7 +63,7 @@ public class RxJerseyTest extends JerseyTest {
         return WebResourceFactory.newResource(resource, remote(), new ObservableClientMethodInvoker());
     }
 
-    protected RxWebTarget remote() {
+    protected WebTarget remote() {
         return clientProvider.get().target(getBaseUri());
     }
 

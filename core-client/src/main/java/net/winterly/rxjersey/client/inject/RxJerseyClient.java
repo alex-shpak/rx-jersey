@@ -1,9 +1,8 @@
 package net.winterly.rxjersey.client.inject;
 
-import org.glassfish.hk2.api.AnnotationLiteral;
-
 import javax.inject.Qualifier;
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -12,5 +11,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface RxJerseyClient {
 
-    class RxJerseyClientImpl extends AnnotationLiteral<RxJerseyClient> implements RxJerseyClient {}
 }

@@ -1,7 +1,6 @@
 package net.winterly.rxjersey.server.rxjava;
 
-import net.winterly.rxjersey.server.RxInvocationHandler;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 import rx.Completable;
@@ -18,37 +17,43 @@ import java.util.HashMap;
  */
 public class SingleInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private final HashMap<Class, RxInvocationHandler<Single<?>, ?>> handlers = new HashMap<>();
+    private final HashMap<Class, Class<? extends InvocationHandler>> handlers = new HashMap<>();
 
     @Inject
-    public SingleInvocationHandlerProvider(ServiceLocator serviceLocator) {
-        handlers.put(Observable.class, serviceLocator.createAndInitialize(ObservableHandler.class));
-        handlers.put(Single.class, serviceLocator.createAndInitialize(SingleHandler.class));
-        handlers.put(Completable.class, serviceLocator.createAndInitialize(CompletableHandler.class));
+    private InjectionManager injectionManager;
+
+    public SingleInvocationHandlerProvider() {
+        handlers.put(Observable.class, ObservableHandler.class);
+        handlers.put(Single.class, SingleHandler.class);
+        handlers.put(Completable.class, CompletableHandler.class);
     }
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        return handlers.get(invocable.getRawResponseType());
+        Class returnType = invocable.getRawResponseType();
+        if (handlers.containsKey(returnType)) {
+            return injectionManager.createAndInitialize(handlers.get(returnType));
+        }
+        return null;
     }
 
     private static class ObservableHandler extends SingleInvocationHandler<Observable<?>> {
         @Override
-        public Single convert(Observable<?> result) throws Throwable {
+        public Single convert(Observable<?> result) {
             return result.singleOrDefault(null).toSingle();
         }
     }
 
     private static class SingleHandler extends SingleInvocationHandler<Single<?>> {
         @Override
-        public Single convert(Single<?> result) throws Throwable {
+        public Single convert(Single<?> result) {
             return result;
         }
     }
 
     private static class CompletableHandler extends SingleInvocationHandler<Completable> {
         @Override
-        public Single convert(Completable result) throws Throwable {
+        public Single convert(Completable result) {
             return result.andThen(Single.just(null));
         }
     }

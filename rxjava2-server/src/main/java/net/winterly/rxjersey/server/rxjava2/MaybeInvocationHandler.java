@@ -12,12 +12,13 @@ import javax.inject.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
  * Provides {@link InvocationHandler} for resources returning {@code io.reactivex.*} instances
  * and converts them to {@link Maybe}
  */
-public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Maybe<?>, R> {
+public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Maybe<?>, Completable, R> {
 
     @Inject
     private Provider<ContainerRequestContext> requestContextProvider;
@@ -26,17 +27,21 @@ public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Mayb
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
 
     @Override
-    protected void resume(AsyncContext asyncContext, Maybe<?> result) throws Throwable {
+    @SuppressWarnings("unchecked")
+    public Object invoke(Object proxy, Method method, Object[] args) {
+        final AsyncContext asyncContext = suspend();
         final ContainerRequestContext requestContext = requestContextProvider.get();
 
         Completable intercept = Flowable.fromIterable(requestInterceptors)
                 .flatMapCompletable(interceptor -> interceptor.intercept(requestContext));
 
-        Maybe<Object> dispatch = Maybe.defer(() -> result);
+        Maybe<Object> invoke = Maybe.defer(() -> convert((R) method.invoke(proxy, args)));
         Maybe<Object> noContent = Maybe.defer(() -> Maybe.just(Response.noContent().build()));
 
-        intercept.andThen(dispatch)
+        intercept.andThen(invoke)
                 .switchIfEmpty(noContent)
                 .subscribe(asyncContext::resume, asyncContext::resume);
+
+        return null;
     }
 }

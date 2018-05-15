@@ -7,7 +7,6 @@ import rx.Single;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -31,7 +30,6 @@ public class InterceptorsTest extends RxJerseyTest {
     public void shouldInterceptRequests() {
         final String message = target("interceptors").path("echo")
                 .request()
-                .header("message", "hello")
                 .get(String.class);
 
         assertEquals("intercepted", message);
@@ -50,8 +48,8 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @GET
         @Path("echo")
-        public Observable<String> echo(@HeaderParam("message") String message) {
-            return Observable.just(message);
+        public Observable<String> echo(@Context ContainerRequestContext request) {
+            return Observable.just(request.getProperty("message").toString());
         }
 
         @GET
@@ -69,7 +67,7 @@ public class InterceptorsTest extends RxJerseyTest {
         @Override
         public Completable intercept(ContainerRequestContext requestContext) {
             return Single.just(requestContext).doOnSuccess(it -> {
-                it.getHeaders().putSingle("message", "intercepted");
+                it.setProperty("message", "intercepted");
             }).toCompletable();
         }
     }

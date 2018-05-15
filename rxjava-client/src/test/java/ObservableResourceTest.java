@@ -1,10 +1,10 @@
 import org.junit.Test;
 import rx.Observable;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.ResponseProcessingException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,7 +26,7 @@ public class ObservableResourceTest extends RxJerseyTest {
         assertEquals("", message);
     }
 
-    @Test(expected = ResponseProcessingException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
         ObservableResource resource = resource(ObservableResource.class);
         String message = resource.error().toBlocking().first();

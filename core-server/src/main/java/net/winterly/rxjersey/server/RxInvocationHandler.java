@@ -7,30 +7,19 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.ProcessingException;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 
 
 /**
  * Typed invocation handler that supports result conversion
  *
  * @param <T> Method result type
- * @param <R> Required type
+ * @param <I> Interceptor result type
+ * @param <R> Handler type
  */
-public abstract class RxInvocationHandler<T, R> implements InvocationHandler {
+public abstract class RxInvocationHandler<T, I, R> implements InvocationHandler {
 
     @Inject
     private Provider<AsyncContext> asyncContextProvider;
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        final AsyncContext asyncContext = suspend();
-        T result = convert((R) method.invoke(proxy, args));
-
-        resume(asyncContext, result);
-
-        return null; //async method return nulls
-    }
 
     /**
      * Uses {@link AsyncContext} to suspend current request
@@ -52,9 +41,6 @@ public abstract class RxInvocationHandler<T, R> implements InvocationHandler {
      *
      * @param result method call result
      * @return converted value
-     * @throws Throwable same as {@link InvocationHandler#invoke(Object, Method, Object[])}
      */
-    protected abstract T convert(R result) throws Throwable;
-
-    protected abstract void resume(AsyncContext asyncContext, T result) throws Throwable;
+    protected abstract T convert(R result);
 }

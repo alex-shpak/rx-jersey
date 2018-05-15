@@ -1,7 +1,7 @@
 package net.winterly.rxjersey.server.rxjava2;
 
 import io.reactivex.*;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 
@@ -15,53 +15,59 @@ import java.util.HashMap;
  */
 public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private final HashMap<Class, MaybeInvocationHandler<?>> handlers = new HashMap<>();
+    private final HashMap<Class, Class<? extends InvocationHandler>> handlers = new HashMap<>();
 
     @Inject
-    public MaybeInvocationHandlerProvider(ServiceLocator serviceLocator) {
-        handlers.put(Flowable.class, serviceLocator.createAndInitialize(FlowableHandler.class));
-        handlers.put(Observable.class, serviceLocator.createAndInitialize(ObservableHandler.class));
-        handlers.put(Single.class, serviceLocator.createAndInitialize(SingleHandler.class));
-        handlers.put(Completable.class, serviceLocator.createAndInitialize(CompletableHandler.class));
-        handlers.put(Maybe.class, serviceLocator.createAndInitialize(MaybeHandler.class));
+    private InjectionManager injectionManager;
+
+    public MaybeInvocationHandlerProvider() {
+        handlers.put(Flowable.class, FlowableHandler.class);
+        handlers.put(Observable.class, ObservableHandler.class);
+        handlers.put(Single.class, SingleHandler.class);
+        handlers.put(Completable.class, CompletableHandler.class);
+        handlers.put(Maybe.class, MaybeHandler.class);
     }
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        return handlers.get(invocable.getRawResponseType());
+        Class returnType = invocable.getRawResponseType();
+        if (handlers.containsKey(returnType)) {
+            return injectionManager.createAndInitialize(handlers.get(returnType));
+        }
+        return null;
     }
 
     private static class FlowableHandler extends MaybeInvocationHandler<Flowable<?>> {
         @Override
-        public Maybe convert(Flowable<?> result) throws Throwable {
+        public Maybe convert(Flowable<?> result) {
             return result.singleElement();
         }
     }
 
     private static class ObservableHandler extends MaybeInvocationHandler<Observable<?>> {
         @Override
-        public Maybe convert(Observable<?> result) throws Throwable {
+        public Maybe convert(Observable<?> result) {
             return result.singleElement();
         }
     }
 
     private static class SingleHandler extends MaybeInvocationHandler<Single<?>> {
         @Override
-        public Maybe convert(Single<?> result) throws Throwable {
+        public Maybe convert(Single<?> result) {
             return result.toMaybe();
         }
     }
 
     private static class CompletableHandler extends MaybeInvocationHandler<Completable> {
         @Override
-        public Maybe convert(Completable result) throws Throwable {
+        public Maybe convert(Completable result) {
             return result.toMaybe();
         }
     }
 
     private static class MaybeHandler extends MaybeInvocationHandler<Maybe<?>> {
         @Override
-        public Maybe convert(Maybe<?> result) throws Throwable {
+        public Maybe convert(Maybe<?> result) {
             return result;
         }
     }

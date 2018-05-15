@@ -4,14 +4,15 @@ import net.winterly.rxjersey.client.ClientMethodInvoker;
 import net.winterly.rxjersey.client.RxClientExceptionMapper;
 import net.winterly.rxjersey.client.inject.Remote;
 import net.winterly.rxjersey.client.inject.RemoteResolver;
-import net.winterly.rxjersey.client.inject.RxJerseyClient.RxJerseyClientImpl;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.rx.RxClient;
-import org.glassfish.jersey.client.rx.rxjava.RxObservable;
+import org.glassfish.jersey.client.rx.rxjava.RxObservableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionResolver;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -49,26 +50,30 @@ public class RxJerseyClientFeature implements Feature {
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new GrizzlyConnectorProvider());
         config.property(ClientProperties.ASYNC_THREADPOOL_SIZE, cores);
+        config.register(RxObservableInvokerProvider.class);
 
         return ClientBuilder.newClient(config);
     }
 
-    private class Binder extends AbstractBinder {
+    private class Binder extends org.glassfish.hk2.utilities.binding.AbstractBinder {
+
+        @Inject
+        private InjectionManager injectionManager;
 
         @Override
         protected void configure() {
+
             bind(RemoteResolver.class)
-                    .to(Remote.TYPE)
+                    .to(new TypeLiteral<InjectionResolver<Remote>>() {})
                     .in(Singleton.class);
 
             bind(ObservableClientMethodInvoker.class)
                     .to(ClientMethodInvoker.class)
                     .in(Singleton.class);
 
-            bind(RxObservable.from(client))
-                    .qualifiedBy(new RxJerseyClientImpl())
-                    .to(Client.class)
-                    .to(RxClient.class);
+            bind(client)
+                    .named(RemoteResolver.RX_JERSEY_CLIENT_NAME)
+                    .to(Client.class);
         }
     }
 }
