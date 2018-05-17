@@ -23,12 +23,14 @@ public class ObservableClientMethodInvoker implements ClientMethodInvoker<Object
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, GenericType<T> responseType) {
-        return convert(builder.rx(RxObservableInvoker.class).method(name, responseType), responseType);
+        Observable<T> observable = builder.rx(RxObservableInvoker.class).method(name, responseType);
+        return convert(observable, responseType);
     }
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, Entity<?> entity, GenericType<T> responseType) {
-        return convert(builder.rx(RxObservableInvoker.class).method(name, entity, responseType), responseType);
+        Observable<T> observable = builder.rx(RxObservableInvoker.class).method(name, entity, responseType);
+        return convert(observable, responseType);
     }
 
     private <T> Object convert(Observable observable, GenericType<T> responseType) {

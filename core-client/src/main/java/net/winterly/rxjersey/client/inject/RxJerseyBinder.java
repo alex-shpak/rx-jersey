@@ -1,0 +1,30 @@
+package net.winterly.rxjersey.client.inject;
+
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+
+import java.lang.reflect.Field;
+
+public abstract class RxJerseyBinder extends AbstractBinder {
+
+    private final Field injectionManagerField;
+
+    public RxJerseyBinder() {
+        try {
+            // Damn private properties everywhere
+            injectionManagerField = AbstractBinder.class.getDeclaredField("injectionManager");
+            injectionManagerField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected <T> T create(Class<T> type) {
+        try {
+            InjectionManager injectionManager = (InjectionManager) injectionManagerField.get(this);
+            return injectionManager.createAndInitialize(type);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

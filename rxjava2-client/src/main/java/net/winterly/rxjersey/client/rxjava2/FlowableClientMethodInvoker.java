@@ -1,17 +1,15 @@
 package net.winterly.rxjersey.client.rxjava2;
 
 import io.reactivex.*;
-import io.reactivex.functions.Function;
 import net.winterly.rxjersey.client.ClientMethodInvoker;
-import org.reactivestreams.Publisher;
+import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvoker;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import java.util.HashMap;
-import java.util.concurrent.Future;
 
-public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object, Invocation.Builder> {
+public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> {
 
     private final HashMap<Class, Converter> converters = new HashMap<>();
 
@@ -25,23 +23,18 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object, 
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, GenericType<T> responseType) {
-        Future<T> future = builder.async().method(name, responseType);
-        return convert(future, responseType);
+        Flowable<T> flowable = builder.rx(RxFlowableInvoker.class).method(name, responseType);
+        return convert(flowable, responseType);
     }
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, Entity<?> entity, GenericType<T> responseType) {
-        Future<T> future = builder.async().method(name, entity, responseType);
-        return convert(future, responseType);
+        Flowable<T> flowable = builder.rx(RxFlowableInvoker.class).method(name, entity, responseType);
+        return convert(flowable, responseType);
     }
 
-    private <T> Object convert(Future<T> future, GenericType<T> responseType) {
-        Function<Throwable, Publisher<? extends T>> mapError = throwable -> Flowable.error(throwable.getCause());
+    private <T> Object convert(Flowable<T> flowable, GenericType<T> responseType) {
         Converter converter = converters.get(responseType.getRawType());
-
-        Flowable flowable = Flowable.fromFuture(future)
-                .onErrorResumeNext(mapError);
-
         return converter.convert(flowable);
     }
 

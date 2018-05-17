@@ -10,7 +10,7 @@ import io.dropwizard.setup.Environment;
 import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
 import net.winterly.rxjersey.server.rxjava.CompletableRequestInterceptor;
 import net.winterly.rxjersey.server.rxjava.RxJerseyServerFeature;
-import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import org.glassfish.jersey.client.rx.spi.AbstractRxInvoker;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.ws.rs.client.Client;
@@ -39,7 +39,7 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         return this;
     }
 
-    public RxJerseyBundle<T> register(Class<? extends CompletableRequestInterceptor<?>> interceptor) {
+    public RxJerseyBundle<T> register(Class<? extends CompletableRequestInterceptor> interceptor) {
         rxJerseyServerFeature.register(interceptor);
         return this;
     }
@@ -66,6 +66,6 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         return new JerseyClientBuilder(environment)
                 .using(jerseyClientConfiguration)
                 .using(new GrizzlyConnectorProvider())
-                .buildRx("rxJerseyClient", RxObservableInvoker.class);
+                .buildRx("rxJerseyClient", AbstractRxInvoker.class);
     }
 }

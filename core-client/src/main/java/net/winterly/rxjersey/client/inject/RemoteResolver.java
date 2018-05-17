@@ -8,6 +8,7 @@ import org.glassfish.jersey.internal.inject.InjectionResolver;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -15,7 +16,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.function.Supplier;
 
 import static java.lang.String.format;
 
@@ -29,15 +29,15 @@ public class RemoteResolver implements InjectionResolver<Remote> {
 
     public static final String RX_JERSEY_CLIENT_NAME = "net.winterly.rxjersey.client.inject.RxJerseyClient";
 
-    private final InjectionManager injectionManager;
-    private final ClientMethodInvoker clientMethodInvoker;
-    private final Client client;
+    @Inject
+    private InjectionManager injectionManager;
 
-    public RemoteResolver(InjectionManager injectionManager, ClientMethodInvoker clientMethodInvoker, Client client) {
-        this.injectionManager = injectionManager;
-        this.clientMethodInvoker = clientMethodInvoker;
-        this.client = client;
-    }
+    @Inject
+    private Provider<ClientMethodInvoker> clientMethodInvoker;
+
+    @Inject
+    @Named(RX_JERSEY_CLIENT_NAME)
+    private Provider<Client> client;
 
     private static URI merge(String value, UriInfo uriInfo) {
         URI target = URI.create(value);
@@ -58,7 +58,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         UriInfo uriInfo = injectionManager.getInstance(UriInfo.class);
 
         URI target = merge(remote.value(), uriInfo);
-        WebTarget webTarget = client.target(target);
+        WebTarget webTarget = client.get().target(target);
         Type type = injectee.getRequiredType();
 
         if (type instanceof Class) {
@@ -69,7 +69,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
             }
 
             if (required.isInterface()) {
-                return WebResourceFactory.newResource(required, webTarget, clientMethodInvoker);
+                return WebResourceFactory.newResource(required, webTarget, clientMethodInvoker.get());
             }
         }
 
@@ -89,23 +89,5 @@ public class RemoteResolver implements InjectionResolver<Remote> {
     @Override
     public Class<Remote> getAnnotation() {
         return Remote.class;
-    }
-
-    public static class Factory implements Supplier<RemoteResolver> {
-
-        @Inject
-        private InjectionManager injectionManager;
-
-        @Inject
-        private ClientMethodInvoker clientMethodInvoker;
-
-        @Inject
-        @Named(RX_JERSEY_CLIENT_NAME)
-        private Client client;
-
-        @Override
-        public RemoteResolver get() {
-            return new RemoteResolver(injectionManager, clientMethodInvoker, client);
-        }
     }
 }

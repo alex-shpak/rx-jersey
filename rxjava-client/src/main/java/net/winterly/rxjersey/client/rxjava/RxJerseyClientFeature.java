@@ -2,17 +2,13 @@ package net.winterly.rxjersey.client.rxjava;
 
 import net.winterly.rxjersey.client.ClientMethodInvoker;
 import net.winterly.rxjersey.client.RxClientExceptionMapper;
-import net.winterly.rxjersey.client.inject.Remote;
 import net.winterly.rxjersey.client.inject.RemoteResolver;
-import org.glassfish.hk2.api.TypeLiteral;
+import net.winterly.rxjersey.client.inject.RxJerseyBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.rxjava.RxObservableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
-import org.glassfish.jersey.internal.inject.InjectionManager;
-import org.glassfish.jersey.internal.inject.InjectionResolver;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -55,17 +51,11 @@ public class RxJerseyClientFeature implements Feature {
         return ClientBuilder.newClient(config);
     }
 
-    private class Binder extends org.glassfish.hk2.utilities.binding.AbstractBinder {
-
-        @Inject
-        private InjectionManager injectionManager;
+    private class Binder extends RxJerseyBinder {
 
         @Override
         protected void configure() {
-
-            bind(RemoteResolver.class)
-                    .to(new TypeLiteral<InjectionResolver<Remote>>() {})
-                    .in(Singleton.class);
+            bind(create(RemoteResolver.class));
 
             bind(ObservableClientMethodInvoker.class)
                     .to(ClientMethodInvoker.class)

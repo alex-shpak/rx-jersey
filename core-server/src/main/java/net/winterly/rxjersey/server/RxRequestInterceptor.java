@@ -1,8 +1,5 @@
 package net.winterly.rxjersey.server;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Contract;
-
 import javax.ws.rs.container.ContainerRequestContext;
 
 /**
@@ -11,7 +8,6 @@ import javax.ws.rs.container.ContainerRequestContext;
  *
  * @param <T> return type of interceptor (Supposed to be Observable or Future)
  */
-@Contract
 public interface RxRequestInterceptor<T> {
 
     /**

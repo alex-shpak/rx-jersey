@@ -1,6 +1,6 @@
 package net.winterly.rxjersey.server;
 
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ import java.util.List;
  * This class will only redirect writing to another {@link MessageBodyWriter} <br>
  * Requires list of supported types <br>
  * <p>
- * Providers implementing {@link RxGenericBodyWriter} must be programmatically registered in {@link ServiceLocator}
+ * Providers implementing {@link RxGenericBodyWriter} must be programmatically registered in {@link InjectionManager}
  */
 public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 

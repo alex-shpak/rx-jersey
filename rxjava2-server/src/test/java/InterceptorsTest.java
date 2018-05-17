@@ -2,11 +2,14 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.winterly.rxjersey.server.rxjava2.CompletableRequestInterceptor;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.junit.Test;
 
 import javax.inject.Singleton;
-import javax.ws.rs.*;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
@@ -55,8 +58,8 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @GET
         @Path("echo")
-        public Observable<String> echo(@HeaderParam("message") String message) {
-            return Observable.just(message);
+        public Observable<String> echo(@Context ContainerRequestContext request) {
+            return Observable.just(request.getProperty("message").toString());
         }
 
         @GET
@@ -74,7 +77,7 @@ public class InterceptorsTest extends RxJerseyTest {
         @Override
         public Completable intercept(ContainerRequestContext requestContext) {
             return Single.just(requestContext).flatMapCompletable(it -> {
-                it.getHeaders().putSingle("message", "intercepted");
+                it.setProperty("message", "intercepted");
                 return Completable.complete();
             });
         }

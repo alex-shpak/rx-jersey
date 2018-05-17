@@ -2,12 +2,11 @@ package net.winterly.rxjersey.client.rxjava2;
 
 import net.winterly.rxjersey.client.ClientMethodInvoker;
 import net.winterly.rxjersey.client.RxClientExceptionMapper;
-import net.winterly.rxjersey.client.inject.Remote;
 import net.winterly.rxjersey.client.inject.RemoteResolver;
-import net.winterly.rxjersey.client.inject.RxJerseyClient.RxJerseyClientImpl;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import net.winterly.rxjersey.client.inject.RxJerseyBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.inject.Singleton;
@@ -46,24 +45,23 @@ public class RxJerseyClientFeature implements Feature {
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new GrizzlyConnectorProvider());
         config.property(ClientProperties.ASYNC_THREADPOOL_SIZE, cores);
+        config.register(RxFlowableInvokerProvider.class);
 
         return ClientBuilder.newClient(config);
     }
 
-    private class Binder extends AbstractBinder {
+    private class Binder extends RxJerseyBinder {
 
         @Override
         protected void configure() {
-            bind(RemoteResolver.class)
-                    .to(Remote.TYPE)
-                    .in(Singleton.class);
+            bind(create(RemoteResolver.class));
 
             bind(FlowableClientMethodInvoker.class)
                     .to(ClientMethodInvoker.class)
                     .in(Singleton.class);
 
             bind(client)
-                    .qualifiedBy(new RxJerseyClientImpl())
+                    .named(RemoteResolver.RX_JERSEY_CLIENT_NAME)
                     .to(Client.class);
         }
     }
