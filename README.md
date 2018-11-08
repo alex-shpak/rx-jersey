@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/alex-shpak/rx-jersey.svg?branch=master)](https://travis-ci.org/alex-shpak/rx-jersey)
 ![Maven Central](https://img.shields.io/maven-central/v/net.winterly.rxjersey/core-server.svg)
+[![JitPack](https://jitpack.io/v/alex-shpak/rx-jersey.svg)](https://jitpack.io/#alex-shpak/rx-jersey)
 
 RxJersey is RxJava extension for [Jersey](https://jersey.java.net/) framework providing non-blocking Jax-RS server and client.
 RxJersey target is to handle large amount requests in small static set of threads, which is highly suitable for microservice applications.
