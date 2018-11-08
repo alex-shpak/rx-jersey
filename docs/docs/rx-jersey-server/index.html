@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rx Jersey Server | Rx Jersey</title>
+
+<link href="https://fonts.googleapis.com/css?family=Oxygen|Oxygen+Mono:300,400,700" rel="stylesheet">
+<link rel="stylesheet" href="/normalize.min.css">
+
+
+<link rel="stylesheet" href="/rx-jersey/book.min.50f271dd26ebebd6d8a9877137ff6aaf244378f21a325ced70fb19102403d4ef.css">
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main>
+
+    <aside class="menu fixed">
+      <nav role="navigation">
+        <h2 class="brand">
+  <a href="https://alex-shpak.github.io/rx-jersey/">Rx Jersey</a>
+</h2>
+        
+
+        
+          <ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/"><strong>Introduction</strong></a></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Configuration</a></p>
+
+<ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Jersey configuration</a></li>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/dropwizard-configuration/">Dropwizard configuration</a><br /></li>
+</ul></li>
+
+<li><p><strong>Examples</strong></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-server/">Server</a></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-client/">Client</a></p></li>
+</ul>
+
+        
+
+        
+      </nav>
+    </aside>
+
+    <div class="content">
+      <header>
+        <label for="menu-control">
+  <img src="https://alex-shpak.github.io/rx-jersey//svg/menu.svg" />
+</label>
+<strong>Rx Jersey Server</strong>
+      </header>
+      <article class="markdown">
+
+<h2 id="jersey-server">Jersey Server</h2>
+
+<p>Register <code>RxJerseyServerFeature</code> in <code>resourceConfig</code></p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#111">resourceConfig</span><span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">RxJerseyServerFeature</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">);</span></code></pre></div>
+<p>Or with configuration</p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#111">RxJerseyServerFeature</span> <span style="color:#111">rxJerseyServerFeature</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">new</span> <span style="color:#111">RxJerseyServerFeature</span><span style="color:#f92672">()</span>
+                <span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">AuthInterceptor</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">);</span>
+
+<span style="color:#111">resourceConfig</span><span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">rxJerseyServerFeature</span><span style="color:#f92672">);</span></code></pre></div>
+<p>Update your resource adding rx return type:</p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75af00">@Path</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;/&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#00a8c8">public</span> <span style="color:#00a8c8">class</span> <span style="color:#75af00">HelloResource</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75af00">@GET</span>
+    <span style="color:#00a8c8">public</span> <span style="color:#111">Single</span><span style="color:#f92672">&lt;</span><span style="color:#111">HelloEntity</span><span style="color:#f92672">&gt;</span> <span style="color:#75af00">getAsync</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">Single</span><span style="color:#f92672">.</span><span style="color:#75af00">just</span><span style="color:#f92672">(</span><span style="color:#00a8c8">new</span> <span style="color:#111">HelloEntity</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#00a8c8">public</span> <span style="color:#00a8c8">static</span> <span style="color:#00a8c8">class</span> <span style="color:#75af00">HelloEntity</span> <span style="color:#f92672">{</span>
+        <span style="color:#00a8c8">public</span> <span style="color:#111">String</span> <span style="color:#111">hello</span> <span style="color:#f92672">=</span> <span style="color:#d88200">&#34;world&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h2 id="inteceptor">Inteceptor</h2>
+
+<p>You can use RxJava enabled interceptors. Result of such interceptor will be ignored. Thrown or returned error would be redirected to jersey.</p>
+
+<h4 id="rxjava">RxJava</h4>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#00a8c8">public</span> <span style="color:#00a8c8">class</span> <span style="color:#75af00">SimpleInterceptor</span> <span style="color:#00a8c8">implements</span> <span style="color:#111">ObservableRequestInterceptor</span><span style="color:#f92672">&lt;</span><span style="color:#111">Void</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#00a8c8">public</span> <span style="color:#111">Observable</span><span style="color:#f92672">&lt;</span><span style="color:#111">Void</span><span style="color:#f92672">&gt;</span> <span style="color:#75af00">intercept</span><span style="color:#f92672">(</span><span style="color:#111">ContainerRequestContext</span> <span style="color:#111">requestContext</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">Observable</span><span style="color:#f92672">.</span><span style="color:#75af00">empty</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h4 id="rxjava-2">RxJava 2</h4>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#00a8c8">public</span> <span style="color:#00a8c8">class</span> <span style="color:#75af00">SimpleInterceptor</span> <span style="color:#00a8c8">implements</span> <span style="color:#111">CompletableRequestInterceptor</span> <span style="color:#f92672">{</span>
+    <span style="color:#00a8c8">public</span> <span style="color:#111">Completable</span> <span style="color:#75af00">intercept</span><span style="color:#f92672">(</span><span style="color:#111">ContainerRequestContext</span> <span style="color:#111">requestContext</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">Observable</span><span style="color:#f92672">.</span><span style="color:#75af00">complete</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h2 id="important-notes">Important notes</h2>
+
+<h4 id="rxjava-1">RxJava</h4>
+
+<ul>
+<li>It&rsquo;s recommended to use <code>rx.Single</code> as return type (Representing single response entity).</li>
+<li>Multiple elements emitted in <code>Observable</code> will be treated as error.</li>
+<li>Empty <code>Observable</code> or <code>null</code> value in <code>Observable</code> or <code>Single</code> will be treated as <code>204: No content</code>.</li>
+<li><code>Completable</code> will be executed and <code>204: No content</code> will be returned.</li>
+</ul>
+
+<h4 id="rxjava-2-1">RxJava 2</h4>
+
+<ul>
+<li>It&rsquo;s recommended to use <code>io.reactivex.Maybe</code> which could be 0 or 1 item or an error.</li>
+<li>Multiple elements emitted in <code>Observable</code> or <code>Flowable</code> will be treated as error.</li>
+<li>Empty <code>Observable</code>/<code>Maybe</code> will be treated as <code>204: No content</code>.</li>
+<li><code>Completable</code> will be executed and <code>204: No content</code> will be returned.</li>
+</ul>
+</article>
+    </div>
+
+    
+    
+    <aside class="toc fixed">
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#jersey-server">Jersey Server</a></li>
+<li><a href="#inteceptor">Inteceptor</a>
+<ul>
+<li>
+<ul>
+<li><a href="#rxjava">RxJava</a></li>
+<li><a href="#rxjava-2">RxJava 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#important-notes">Important notes</a>
+<ul>
+<li>
+<ul>
+<li><a href="#rxjava-1">RxJava</a></li>
+<li><a href="#rxjava-2-1">RxJava 2</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </aside>
+    
+
+  </main>
+  
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+baseURL: https://alex-shpak.github.io/rx-jersey/
+title: Rx Jersey
+theme: book
+
+# Skip taxonomies and tags
+disableKinds:
+- taxonomy
+- taxonomyTerm
+
+# Code highlight
+pygmentsStyle: monokailight
+pygmentsCodeFences: true
+
+# Theme
+params:
+  BookShowToC: true
+  BookMenuBundle: /menu
+  BookSection: docs

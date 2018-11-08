@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docs on Rx Jersey</title>
+    <link>https://alex-shpak.github.io/rx-jersey/docs/</link>
+    <description>Recent content in Docs on Rx Jersey</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://alex-shpak.github.io/rx-jersey/docs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://alex-shpak.github.io/rx-jersey/docs/dropwizard-configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alex-shpak.github.io/rx-jersey/docs/dropwizard-configuration/</guid>
+      <description> Dropwizard configuration Use provided RxJerseyBundle
+@Override public void initialize(Bootstrap&amp;lt;RxJerseyConfiguration&amp;gt; bootstrap) { bootstrap.addBundle(new RxJerseyBundle&amp;lt;RxJerseyConfiguration&amp;gt;() .setClientConfigurationProvider(config -&amp;gt; config.client) .register(HeaderInterceptor.class) ); } Alternatively you can directly configure and register Jersey feature
+public void run(RxJerseyConfiguration configuration, Environment environment) throws Exception { JerseyEnvironment jersey = environment.jersey(); Client client = new JerseyClientBuilder(environment) .using(configuration.client) .using(new GrizzlyConnectorProvider()) .buildRx(&amp;#34;Client&amp;#34;, RxObservableInvoker.class); RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature() .register(HeaderInterceptor.class); RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature() .register(client); jersey.register(rxJerseyServerFeature); jersey.register(rxJerseyClientFeature); } See example for more information </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/</guid>
+      <description>Jersey configuration Simple configuration This will assume default configuration with no interceptor and Grizzly client
+resourceConfig.register(RxJerseyServerFeature.class); resourceConfig.register(RxJerseyClientFeature.class); Detailed configuration This configuration will add async request interceptor and override default client
+RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature() .register(AuthRequestInterceptor.class); RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature() .register(client); // Should be non-blocking client implementation  resourceConfig.register(rxJerseyServerFeature); resourceConfig.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-client/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-client/</guid>
+      <description>RxJersey Proxy Client Proxy client provides convenient way to call resources without constructing request. Also it allows to reuse resource interfaces between microservices.
+In order to enable RxJava in proxy client register Jersey feature
+RxJerseyClientFeature rxJerseyClientFeature = new RxJerseyClientFeature() .register(client); //should be non-blocking client implementation resourceConfig.register(rxJerseyClientFeature); Default client with Grizzly connector will be used if not provided
+Remote resource injection You can inject proxy client with @Remote annotation, in addition you can inject WebTarget or RxWebTarget</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-server/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-server/</guid>
+      <description>Jersey Server Register RxJerseyServerFeature in resourceConfig
+resourceConfig.register(RxJerseyServerFeature.class); Or with configuration
+RxJerseyServerFeature rxJerseyServerFeature = new RxJerseyServerFeature() .register(AuthInterceptor.class); resourceConfig.register(rxJerseyServerFeature); Update your resource adding rx return type:
+@Path(&amp;#34;/&amp;#34;) public class HelloResource { @GET public Single&amp;lt;HelloEntity&amp;gt; getAsync() { return Single.just(new HelloEntity()); } public static class HelloEntity { public String hello = &amp;#34;world&amp;#34;; } } Inteceptor You can use RxJava enabled interceptors. Result of such interceptor will be ignored. Thrown or returned error would be redirected to jersey.</description>
+    </item>
+    
+  </channel>
+</rss>

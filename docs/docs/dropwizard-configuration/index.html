@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropwizard Configuration | Rx Jersey</title>
+
+<link href="https://fonts.googleapis.com/css?family=Oxygen|Oxygen+Mono:300,400,700" rel="stylesheet">
+<link rel="stylesheet" href="/normalize.min.css">
+
+
+<link rel="stylesheet" href="/rx-jersey/book.min.50f271dd26ebebd6d8a9877137ff6aaf244378f21a325ced70fb19102403d4ef.css">
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main>
+
+    <aside class="menu fixed">
+      <nav role="navigation">
+        <h2 class="brand">
+  <a href="https://alex-shpak.github.io/rx-jersey/">Rx Jersey</a>
+</h2>
+        
+
+        
+          <ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/"><strong>Introduction</strong></a></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Configuration</a></p>
+
+<ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Jersey configuration</a></li>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/dropwizard-configuration/">Dropwizard configuration</a><br /></li>
+</ul></li>
+
+<li><p><strong>Examples</strong></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-server/">Server</a></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-client/">Client</a></p></li>
+</ul>
+
+        
+
+        
+      </nav>
+    </aside>
+
+    <div class="content">
+      <header>
+        <label for="menu-control">
+  <img src="https://alex-shpak.github.io/rx-jersey//svg/menu.svg" />
+</label>
+<strong>Dropwizard Configuration</strong>
+      </header>
+      <article class="markdown">
+
+<h2 id="dropwizard-configuration">Dropwizard configuration</h2>
+
+<p>Use provided <code>RxJerseyBundle</code></p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75af00">@Override</span>
+<span style="color:#00a8c8">public</span> <span style="color:#00a8c8">void</span> <span style="color:#75af00">initialize</span><span style="color:#f92672">(</span><span style="color:#111">Bootstrap</span><span style="color:#f92672">&lt;</span><span style="color:#111">RxJerseyConfiguration</span><span style="color:#f92672">&gt;</span> <span style="color:#111">bootstrap</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#111">bootstrap</span><span style="color:#f92672">.</span><span style="color:#75af00">addBundle</span><span style="color:#f92672">(</span><span style="color:#00a8c8">new</span> <span style="color:#111">RxJerseyBundle</span><span style="color:#f92672">&lt;</span><span style="color:#111">RxJerseyConfiguration</span><span style="color:#f92672">&gt;()</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">setClientConfigurationProvider</span><span style="color:#f92672">(</span><span style="color:#111">config</span> <span style="color:#f92672">-&gt;</span> <span style="color:#111">config</span><span style="color:#f92672">.</span><span style="color:#75af00">client</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">HeaderInterceptor</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<p>Alternatively you can directly configure and register Jersey feature</p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#00a8c8">public</span> <span style="color:#00a8c8">void</span> <span style="color:#75af00">run</span><span style="color:#f92672">(</span><span style="color:#111">RxJerseyConfiguration</span> <span style="color:#111">configuration</span><span style="color:#f92672">,</span> <span style="color:#111">Environment</span> <span style="color:#111">environment</span><span style="color:#f92672">)</span> <span style="color:#00a8c8">throws</span> <span style="color:#111">Exception</span> <span style="color:#f92672">{</span>
+    <span style="color:#111">JerseyEnvironment</span> <span style="color:#111">jersey</span> <span style="color:#f92672">=</span> <span style="color:#111">environment</span><span style="color:#f92672">.</span><span style="color:#75af00">jersey</span><span style="color:#f92672">();</span>
+
+    <span style="color:#111">Client</span> <span style="color:#111">client</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">new</span> <span style="color:#111">JerseyClientBuilder</span><span style="color:#f92672">(</span><span style="color:#111">environment</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">using</span><span style="color:#f92672">(</span><span style="color:#111">configuration</span><span style="color:#f92672">.</span><span style="color:#75af00">client</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">using</span><span style="color:#f92672">(</span><span style="color:#00a8c8">new</span> <span style="color:#111">GrizzlyConnectorProvider</span><span style="color:#f92672">())</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">buildRx</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;Client&#34;</span><span style="color:#f92672">,</span> <span style="color:#111">RxObservableInvoker</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">);</span>
+
+    <span style="color:#111">RxJerseyServerFeature</span> <span style="color:#111">rxJerseyServerFeature</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">new</span> <span style="color:#111">RxJerseyServerFeature</span><span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">HeaderInterceptor</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">);</span>
+
+    <span style="color:#111">RxJerseyClientFeature</span> <span style="color:#111">rxJerseyClientFeature</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">new</span> <span style="color:#111">RxJerseyClientFeature</span><span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">client</span><span style="color:#f92672">);</span>
+
+    <span style="color:#111">jersey</span><span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">rxJerseyServerFeature</span><span style="color:#f92672">);</span>
+    <span style="color:#111">jersey</span><span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">rxJerseyClientFeature</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h4 id="see-example-https-github-com-alex-shpak-rx-jersey-tree-master-example-for-more-information"><a href="https://github.com/alex-shpak/rx-jersey/tree/master/example">See example</a> for more information</h4>
+</article>
+    </div>
+
+    
+    
+    <aside class="toc fixed">
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#dropwizard-configuration">Dropwizard configuration</a>
+<ul>
+<li>
+<ul>
+<li><a href="#see-example-https-github-com-alex-shpak-rx-jersey-tree-master-example-for-more-information"><a href="https://github.com/alex-shpak/rx-jersey/tree/master/example">See example</a> for more information</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </aside>
+    
+
+  </main>
+  
+
+</body>
+
+</html>

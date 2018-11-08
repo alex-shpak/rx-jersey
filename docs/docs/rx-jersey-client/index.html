@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rx Jersey Client | Rx Jersey</title>
+
+<link href="https://fonts.googleapis.com/css?family=Oxygen|Oxygen+Mono:300,400,700" rel="stylesheet">
+<link rel="stylesheet" href="/normalize.min.css">
+
+
+<link rel="stylesheet" href="/rx-jersey/book.min.50f271dd26ebebd6d8a9877137ff6aaf244378f21a325ced70fb19102403d4ef.css">
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main>
+
+    <aside class="menu fixed">
+      <nav role="navigation">
+        <h2 class="brand">
+  <a href="https://alex-shpak.github.io/rx-jersey/">Rx Jersey</a>
+</h2>
+        
+
+        
+          <ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/"><strong>Introduction</strong></a></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Configuration</a></p>
+
+<ul>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/jersey-configuration/">Jersey configuration</a></li>
+<li><a href="https://alex-shpak.github.io/rx-jersey/docs/dropwizard-configuration/">Dropwizard configuration</a><br /></li>
+</ul></li>
+
+<li><p><strong>Examples</strong></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-server/">Server</a></p></li>
+
+<li><p><a href="https://alex-shpak.github.io/rx-jersey/docs/rx-jersey-client/">Client</a></p></li>
+</ul>
+
+        
+
+        
+      </nav>
+    </aside>
+
+    <div class="content">
+      <header>
+        <label for="menu-control">
+  <img src="https://alex-shpak.github.io/rx-jersey//svg/menu.svg" />
+</label>
+<strong>Rx Jersey Client</strong>
+      </header>
+      <article class="markdown">
+
+<h2 id="rxjersey-proxy-client">RxJersey Proxy Client</h2>
+
+<p>Proxy client provides convenient way to call resources without constructing request. Also it allows to reuse resource interfaces between microservices.</p>
+
+<p>In order to enable RxJava in proxy client register Jersey feature</p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#111">RxJerseyClientFeature</span> <span style="color:#111">rxJerseyClientFeature</span> <span style="color:#f92672">=</span> <span style="color:#00a8c8">new</span> <span style="color:#111">RxJerseyClientFeature</span><span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">client</span><span style="color:#f92672">);</span> <span style="color:#75715e">//should be non-blocking client implementation
+</span><span style="color:#75715e"></span><span style="color:#111">resourceConfig</span><span style="color:#f92672">.</span><span style="color:#75af00">register</span><span style="color:#f92672">(</span><span style="color:#111">rxJerseyClientFeature</span><span style="color:#f92672">);</span></code></pre></div>
+<p>Default client with Grizzly connector will be used if not provided</p>
+
+<h2 id="remote-resource-injection">Remote resource injection</h2>
+
+<p>You can inject proxy client with <code>@Remote</code> annotation, in addition you can inject <code>WebTarget</code> or <code>RxWebTarget</code></p>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75af00">@Path</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;/example/&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#00a8c8">public</span> <span style="color:#00a8c8">class</span> <span style="color:#75af00">GithubResource</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75af00">@Remote</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;https://api.github.com/&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#00a8c8">private</span> <span style="color:#111">GithubApi</span> <span style="color:#111">githubApi</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75af00">@Remote</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;https://api.github.com/&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#00a8c8">private</span> <span style="color:#111">WebTarget</span> <span style="color:#111">webTarget</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75af00">@GET</span>
+    <span style="color:#75af00">@Path</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;github&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#00a8c8">public</span> <span style="color:#111">Single</span><span style="color:#f92672">&lt;</span><span style="color:#111">GithubRepository</span><span style="color:#f92672">&gt;</span> <span style="color:#75af00">getRepository</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">githubApi</span><span style="color:#f92672">.</span><span style="color:#75af00">getRepository</span><span style="color:#f92672">(</span><span style="color:#d88200">&#34;alex-shpak&#34;</span><span style="color:#f92672">,</span> <span style="color:#d88200">&#34;rx-jersey&#34;</span><span style="color:#f92672">).</span><span style="color:#75af00">toSingle</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span></code></pre></div>
+<h2 id="manual-proxy-client-creation">Manual proxy client creation</h2>
+
+<p>You can use <code>WebResourceFactory</code> from <code>net.winterly.rxjersey.client</code> package in order to create proxy client</p>
+
+<h4 id="rxjava">RxJava</h4>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#111">WebResourceFactory</span><span style="color:#f92672">.</span><span style="color:#75af00">newResource</span><span style="color:#f92672">(</span>
+        <span style="color:#111">ResourceInterface</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">,</span>
+        <span style="color:#111">rxWebTarget</span><span style="color:#f92672">,</span>
+        <span style="color:#00a8c8">new</span> <span style="color:#111">ObservableClientMethodInvoker</span><span style="color:#f92672">()</span>
+<span style="color:#f92672">);</span></code></pre></div>
+<h4 id="rxjava-2">RxJava 2</h4>
+<div class="highlight"><pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#111">WebResourceFactory</span><span style="color:#f92672">.</span><span style="color:#75af00">newResource</span><span style="color:#f92672">(</span>
+        <span style="color:#111">ResourceInterface</span><span style="color:#f92672">.</span><span style="color:#75af00">class</span><span style="color:#f92672">,</span>
+        <span style="color:#111">webTarget</span><span style="color:#f92672">,</span>
+        <span style="color:#00a8c8">new</span> <span style="color:#111">FlowableClientMethodInvoker</span><span style="color:#f92672">()</span>
+<span style="color:#f92672">);</span></code></pre></div>
+<h2 id="url-resolving">Url resolving</h2>
+
+<p>Below is example of URL merging based on <code>@Remote</code> annotation value</p>
+
+<table>
+<thead>
+<tr>
+<th>Annotation Value</th>
+<th>Jersey Context Path</th>
+<th>Result URL</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>@Remote(&ldquo;<a href="http://example.com&quot;">http://example.com&quot;</a>)</td>
+<td><a href="http://baseurl.com/resource">http://baseurl.com/resource</a></td>
+<td><a href="http://example.com/">http://example.com/</a></td>
+</tr>
+
+<tr>
+<td>@Remote(&ldquo;/resource/&rdquo;)</td>
+<td><a href="http://baseurl.com/some">http://baseurl.com/some</a></td>
+<td><a href="http://baseurl.com/resource/">http://baseurl.com/resource/</a></td>
+</tr>
+</tbody>
+</table>
+</article>
+    </div>
+
+    
+    
+    <aside class="toc fixed">
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#rxjersey-proxy-client">RxJersey Proxy Client</a></li>
+<li><a href="#remote-resource-injection">Remote resource injection</a></li>
+<li><a href="#manual-proxy-client-creation">Manual proxy client creation</a>
+<ul>
+<li>
+<ul>
+<li><a href="#rxjava">RxJava</a></li>
+<li><a href="#rxjava-2">RxJava 2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#url-resolving">Url resolving</a></li>
+</ul></li>
+</ul>
+</nav>
+    </aside>
+    
+
+  </main>
+  
+
+</body>
+
+</html>
