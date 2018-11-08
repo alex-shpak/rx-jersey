@@ -8,9 +8,9 @@ RxJersey target is to handle large amount requests in small static set of thread
 
 Library uses Jersey 2 async support with `@Suspended` and `AsyncResponse` under the hood.
 
-Note that Jersey 2.26+ is not supported yet (WIP)
+Note that Jersey 2.26+ support is not released yet, you can obtain it from [JitPack](https://jitpack.io/#alex-shpak/rx-jersey/feature~jersey-2.27-SNAPSHOT)
 
-### For documentation visit [Gitbook](https://alex-shpak.github.io/rx-jersey)
+### [Documentation](https://alex-shpak.github.io/rx-jersey)
 
 ## Features
 - [x] RxJava Support
