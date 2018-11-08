@@ -8,7 +8,7 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
-import net.winterly.rxjersey.server.rxjava.CompletableRequestInterceptor;
+import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
 import net.winterly.rxjersey.server.rxjava.RxJerseyServerFeature;
 import org.glassfish.jersey.client.rx.spi.AbstractRxInvoker;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
@@ -34,16 +34,6 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         });
     }
 
-    public RxJerseyBundle<T> setClientConfigurationProvider(Function<T, JerseyClientConfiguration> provider) {
-        clientConfigurationProvider = provider;
-        return this;
-    }
-
-    public RxJerseyBundle<T> register(Class<? extends CompletableRequestInterceptor> interceptor) {
-        rxJerseyServerFeature.register(interceptor);
-        return this;
-    }
-
     @Override
     public void run(T configuration, Environment environment) throws Exception {
         JerseyEnvironment jersey = environment.jersey();
@@ -60,6 +50,24 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
 
+    }
+
+    public RxJerseyClientFeature client() {
+        return rxJerseyClientFeature;
+    }
+
+    public RxJerseyServerFeature server() {
+        return rxJerseyServerFeature;
+    }
+
+    public RxJerseyBundle<T> setClientConfigurationProvider(Function<T, JerseyClientConfiguration> provider) {
+        clientConfigurationProvider = provider;
+        return this;
+    }
+
+    public RxJerseyBundle<T> register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+        rxJerseyServerFeature.register(interceptor);
+        return this;
     }
 
     private Client getClient(Environment environment, JerseyClientConfiguration jerseyClientConfiguration) {

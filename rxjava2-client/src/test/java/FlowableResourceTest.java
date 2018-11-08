@@ -12,7 +12,7 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        ObservableResource resource = resource(ObservableResource.class);
+        ObservableResource resource = target(ObservableResource.class);
         String message = resource.echo("hello").blockingFirst();
 
         assertEquals("hello", message);
@@ -20,7 +20,7 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        ObservableResource resource = resource(ObservableResource.class);
+        ObservableResource resource = target(ObservableResource.class);
         String message = resource.empty().blockingFirst();
 
         assertEquals("", message);
@@ -28,7 +28,7 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        ObservableResource resource = resource(ObservableResource.class);
+        ObservableResource resource = target(ObservableResource.class);
         String message = resource.error().blockingFirst();
 
         assertEquals("", message);

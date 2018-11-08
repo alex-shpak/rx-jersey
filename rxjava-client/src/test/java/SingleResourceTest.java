@@ -12,7 +12,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.echo("hello").toBlocking().value();
 
         assertEquals("hello", message);
@@ -20,7 +20,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.empty().toBlocking().value();
 
         assertEquals("", message);
@@ -28,7 +28,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.error().toBlocking().value();
 
         assertEquals("", message);

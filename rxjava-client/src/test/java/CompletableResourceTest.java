@@ -12,7 +12,7 @@ public class CompletableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        CompletableResource resource = resource(CompletableResource.class);
+        CompletableResource resource = target(CompletableResource.class);
         boolean completed = resource.empty().await(5, TimeUnit.SECONDS);
 
         assertEquals(completed, true);
@@ -20,7 +20,7 @@ public class CompletableResourceTest extends RxJerseyTest {
 
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        CompletableResource resource = resource(CompletableResource.class);
+        CompletableResource resource = target(CompletableResource.class);
         boolean completed = resource.error().await(5, TimeUnit.SECONDS);
 
         assertEquals(completed, true);

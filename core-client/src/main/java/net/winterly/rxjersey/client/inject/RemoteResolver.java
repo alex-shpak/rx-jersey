@@ -6,9 +6,6 @@ import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -27,17 +24,15 @@ import static java.lang.String.format;
 @Singleton
 public class RemoteResolver implements InjectionResolver<Remote> {
 
-    public static final String RX_JERSEY_CLIENT_NAME = "net.winterly.rxjersey.client.inject.RxJerseyClient";
-
-    @Inject
     private InjectionManager injectionManager;
+    private ClientMethodInvoker clientMethodInvoker;
+    private Client client;
 
-    @Inject
-    private Provider<ClientMethodInvoker> clientMethodInvoker;
-
-    @Inject
-    @Named(RX_JERSEY_CLIENT_NAME)
-    private Provider<Client> client;
+    public RemoteResolver(InjectionManager injectionManager, ClientMethodInvoker methodInvoker, Client client) {
+        this.injectionManager = injectionManager;
+        this.clientMethodInvoker = methodInvoker;
+        this.client = client;
+    }
 
     private static URI merge(String value, UriInfo uriInfo) {
         URI target = URI.create(value);
@@ -58,7 +53,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
         UriInfo uriInfo = injectionManager.getInstance(UriInfo.class);
 
         URI target = merge(remote.value(), uriInfo);
-        WebTarget webTarget = client.get().target(target);
+        WebTarget webTarget = client.target(target);
         Type type = injectee.getRequiredType();
 
         if (type instanceof Class) {
@@ -69,7 +64,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
             }
 
             if (required.isInterface()) {
-                return WebResourceFactory.newResource(required, webTarget, clientMethodInvoker.get());
+                return WebResourceFactory.newResource(required, webTarget, clientMethodInvoker);
             }
         }
 
@@ -83,7 +78,7 @@ public class RemoteResolver implements InjectionResolver<Remote> {
 
     @Override
     public boolean isMethodParameterIndicator() {
-        return false;
+        return true;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package net.winterly.rxjersey.client.rxjava2;
 
-import net.winterly.rxjersey.client.ClientMethodInvoker;
-import net.winterly.rxjersey.client.RxClientExceptionMapper;
 import net.winterly.rxjersey.client.inject.RemoteResolver;
 import net.winterly.rxjersey.client.inject.RxJerseyBinder;
 import org.glassfish.jersey.client.ClientConfig;
@@ -9,7 +7,6 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
-import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Feature;
@@ -22,7 +19,7 @@ public class RxJerseyClientFeature implements Feature {
 
     private Client client;
 
-    public RxJerseyClientFeature register(Client client) {
+    public RxJerseyClientFeature setClient(Client client) {
         this.client = client;
         return this;
     }
@@ -32,15 +29,14 @@ public class RxJerseyClientFeature implements Feature {
         if (client == null) {
             client = defaultClient();
         }
-        client.register(RxBodyReader.class);
 
-        context.register(RxClientExceptionMapper.class);
+        client.register(RxBodyReader.class);
         context.register(new Binder());
 
         return true;
     }
 
-    protected Client defaultClient() {
+    private Client defaultClient() {
         int cores = Runtime.getRuntime().availableProcessors();
         ClientConfig config = new ClientConfig();
         config.connectorProvider(new GrizzlyConnectorProvider());
@@ -54,7 +50,14 @@ public class RxJerseyClientFeature implements Feature {
 
         @Override
         protected void configure() {
-            bind(create(RemoteResolver.class));
+            bind(new RemoteResolver(
+                    getInjectionManager(),
+                    new FlowableClientMethodInvoker(),
+                    client
+            ));
+
+            bind(client).to(Client.class);
+            /*bind(create(RemoteResolver.class));
 
             bind(FlowableClientMethodInvoker.class)
                     .to(ClientMethodInvoker.class)
@@ -62,7 +65,7 @@ public class RxJerseyClientFeature implements Feature {
 
             bind(client)
                     .named(RemoteResolver.RX_JERSEY_CLIENT_NAME)
-                    .to(Client.class);
+                    .to(Client.class);*/
         }
     }
 }

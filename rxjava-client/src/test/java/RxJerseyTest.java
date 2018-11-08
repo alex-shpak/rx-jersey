@@ -1,9 +1,7 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.winterly.rxjersey.client.WebResourceFactory;
-import net.winterly.rxjersey.client.inject.RemoteResolver;
 import net.winterly.rxjersey.client.rxjava.ObservableClientMethodInvoker;
 import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
-import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -11,7 +9,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.ws.rs.*;
 import javax.ws.rs.client.Client;
@@ -23,13 +20,12 @@ import javax.ws.rs.core.MediaType;
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    @Named(RemoteResolver.RX_JERSEY_CLIENT_NAME)
     private Provider<Client> clientProvider;
 
     @Override
     protected Application configure() {
         ResourceConfig resourceConfig = new ResourceConfig()
-                .register(LocatorFeature.class)
+                .register(InjectTestFeature.class)
                 .register(JacksonFeature.class)
                 .register(RxJerseyClientFeature.class)
                 .register(ServerResource.class)
@@ -46,15 +42,10 @@ public class RxJerseyTest extends JerseyTest {
     }
 
     protected void configure(ResourceConfig resourceConfig) {
-
+        //do nothing
     }
 
-    @Override
-    protected void configureClient(ClientConfig config) {
-
-    }
-
-    protected <T> T resource(Class<T> resource) {
+    protected <T> T target(Class<T> resource) {
         return WebResourceFactory.newResource(resource, target(), new ObservableClientMethodInvoker());
     }
 
@@ -63,7 +54,7 @@ public class RxJerseyTest extends JerseyTest {
         return clientProvider.get();
     }
 
-    public static class LocatorFeature implements Feature {
+    public static class InjectTestFeature implements Feature {
 
         @Inject
         private InjectionManager injectionManager;
@@ -109,13 +100,9 @@ public class RxJerseyTest extends JerseyTest {
 
     public static class Entity {
 
-        @JsonProperty
-        public String message;
+        public final String message;
 
-        public Entity() {
-        }
-
-        public Entity(String message) {
+        public Entity(@JsonProperty("message") String message) {
             this.message = message;
         }
     }

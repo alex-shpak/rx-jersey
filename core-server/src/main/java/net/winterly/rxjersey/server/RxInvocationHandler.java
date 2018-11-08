@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.internal.LocalizationMessages;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.container.ContainerRequestContext;
 import java.lang.reflect.InvocationHandler;
 
 
@@ -19,7 +20,10 @@ import java.lang.reflect.InvocationHandler;
 public abstract class RxInvocationHandler<T, I, R> implements InvocationHandler {
 
     @Inject
-    private Provider<AsyncContext> asyncContextProvider;
+    protected Provider<AsyncContext> asyncContextProvider;
+
+    @Inject
+    protected Provider<ContainerRequestContext> requestContextProvider;
 
     /**
      * Uses {@link AsyncContext} to suspend current request

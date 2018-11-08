@@ -8,7 +8,6 @@ import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.jersey.server.AsyncContext;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationHandler;
@@ -19,9 +18,6 @@ import java.lang.reflect.Method;
  * and converts them to {@link Maybe}
  */
 public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Maybe<?>, Completable, R> {
-
-    @Inject
-    private Provider<ContainerRequestContext> requestContextProvider;
 
     @Inject
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
@@ -42,6 +38,6 @@ public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Mayb
                 .switchIfEmpty(noContent)
                 .subscribe(asyncContext::resume, asyncContext::resume);
 
-        return null;
+        return null; //async method return nulls
     }
 }

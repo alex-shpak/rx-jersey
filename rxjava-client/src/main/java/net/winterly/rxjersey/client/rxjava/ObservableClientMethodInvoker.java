@@ -10,10 +10,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import java.util.HashMap;
+import java.util.function.Function;
 
 public class ObservableClientMethodInvoker implements ClientMethodInvoker<Object> {
 
-    private final HashMap<Class, Converter> converters = new HashMap<>();
+    private final HashMap<Class, Function<Observable, ?>> converters = new HashMap<>();
 
     public ObservableClientMethodInvoker() {
         converters.put(Observable.class, observable -> observable);
@@ -34,11 +35,7 @@ public class ObservableClientMethodInvoker implements ClientMethodInvoker<Object
     }
 
     private <T> Object convert(Observable observable, GenericType<T> responseType) {
-        Converter converter = converters.get(responseType.getRawType());
-        return converter.convert(observable);
-    }
-
-    private interface Converter<T> {
-        T convert(Observable observable);
+        Function<Observable, ?> converter = converters.get(responseType.getRawType());
+        return converter.apply(observable);
     }
 }

@@ -19,11 +19,10 @@ public abstract class RxJerseyBinder extends AbstractBinder {
         }
     }
 
-    protected <T> T create(Class<T> type) {
+    protected InjectionManager getInjectionManager() {
         try {
-            InjectionManager injectionManager = (InjectionManager) injectionManagerField.get(this);
-            return injectionManager.createAndInitialize(type);
-        } catch (Exception e) {
+            return (InjectionManager) injectionManagerField.get(this);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }

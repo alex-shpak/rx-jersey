@@ -69,5 +69,4 @@ public abstract class RxGenericBodyReader implements MessageBodyReader<Object> {
 
         return reader.readFrom(entityType, actualTypeArgument, annotations, mediaType, httpHeaders, entityStream);
     }
-
 }

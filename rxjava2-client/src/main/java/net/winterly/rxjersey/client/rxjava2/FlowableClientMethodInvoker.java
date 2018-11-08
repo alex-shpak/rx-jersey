@@ -8,10 +8,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import java.util.HashMap;
+import java.util.function.Function;
 
 public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> {
 
-    private final HashMap<Class, Converter> converters = new HashMap<>();
+    private final HashMap<Class, Function<Flowable, ?>> converters = new HashMap<>();
 
     public FlowableClientMethodInvoker() {
         converters.put(Flowable.class, flowable -> flowable);
@@ -34,13 +35,7 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
     }
 
     private <T> Object convert(Flowable<T> flowable, GenericType<T> responseType) {
-        Converter converter = converters.get(responseType.getRawType());
-        return converter.convert(flowable);
+        Function<Flowable, ?> converter = converters.get(responseType.getRawType());
+        return converter.apply(flowable);
     }
-
-    private interface Converter<T> {
-        T convert(Flowable flowable);
-    }
-
-
 }

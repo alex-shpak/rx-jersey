@@ -8,15 +8,11 @@ import rx.Observable;
 import rx.Single;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.Method;
 
 public abstract class SingleInvocationHandler<R> extends RxInvocationHandler<Single<?>, Completable, R> {
-
-    @Inject
-    private Provider<ContainerRequestContext> requestContextProvider;
 
     @Inject
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
