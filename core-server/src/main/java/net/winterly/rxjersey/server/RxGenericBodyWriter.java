@@ -39,11 +39,19 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
     }
 
     /**
-     * @param parameterizedType type to process
+     * @param type type to process
      * @return the raw type without generics
      */
-    private static Class raw(ParameterizedType parameterizedType) {
-        return (Class) parameterizedType.getRawType();
+    private static Class<?> raw(Type type) {
+        if (type instanceof Class<?>) {
+            return (Class<?>) type;
+        }
+
+        if (type instanceof ParameterizedType) {
+            return (Class<?>) ((ParameterizedType) type).getRawType();
+        }
+
+        return null; // needs an assigning type to resolve TypeVariable or GenericArrayType
     }
 
     /**
@@ -58,8 +66,13 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         if (genericType instanceof ParameterizedType) {
-            Class rawType = raw((ParameterizedType)genericType);
-            return allowedTypes.contains(rawType);
+            Class rawType = raw(genericType);
+
+            final Type actualTypeArgument = actual(genericType);
+            final MessageBodyWriter<?> messageBodyWriter
+                    = workers.get().getMessageBodyWriter(raw(actualTypeArgument), actualTypeArgument, annotations, mediaType);
+
+            return allowedTypes.contains(rawType) && messageBodyWriter != null;
         }
         return false;
     }
