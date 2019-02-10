@@ -108,6 +108,32 @@ public class RxJerseyTest extends JerseyTest {
         public String error() {
             throw new BadRequestException();
         }
+
+        @Path("subresource/{id}")
+        public ServerSubResource subResource(@PathParam("id") String id) {
+            return new ServerSubResource(id);
+        }
+    }
+
+    public static class ServerSubResource {
+
+        private final String id;
+
+        public ServerSubResource(String id) {
+            this.id = id;
+        }
+
+        @GET
+        public String getId() {
+            return id;
+        }
+
+        @GET
+        @Path("attribute")
+        public String attribute() {
+            return "attribute";
+        }
+
     }
 
     public static class Entity {
