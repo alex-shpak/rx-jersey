@@ -10,7 +10,7 @@ subprojects {
     apply from: "$rootDir/maven-central.gradle"
 
     group 'net.winterly.rxjersey'
-    version 'dev-SNAPSHOT'
+    version version
 
     compileJava {
         setSourceCompatibility JavaVersion.VERSION_1_8
