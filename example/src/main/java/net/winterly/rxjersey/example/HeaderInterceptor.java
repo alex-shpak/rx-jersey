@@ -1,14 +1,14 @@
 package net.winterly.rxjersey.example;
 
 
-import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
-import rx.Observable;
+import io.reactivex.Completable;
+import net.winterly.rxjersey.server.rxjava2.CompletableRequestInterceptor;
 
 import javax.ws.rs.container.ContainerRequestContext;
 
-public class HeaderInterceptor implements ObservableRequestInterceptor<Void> {
+public class HeaderInterceptor implements CompletableRequestInterceptor {
 
-    public Observable<Void> intercept(ContainerRequestContext requestContext) {
-        return Observable.empty();
+    public Completable intercept(ContainerRequestContext requestContext) {
+        return Completable.complete();
     }
 }

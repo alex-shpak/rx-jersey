@@ -1,6 +1,6 @@
 package net.winterly.rxjersey.example;
 
-import rx.Observable;
+import io.reactivex.Single;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,5 +12,5 @@ public interface GithubApi {
 
     @GET
     @Path("/repos/{user}/{repo}")
-    Observable<GithubRepository> getRepository(@PathParam("user") String username, @PathParam("repo") String repo);
+    Single<GithubRepository> getRepository(@PathParam("user") String username, @PathParam("repo") String repo);
 }

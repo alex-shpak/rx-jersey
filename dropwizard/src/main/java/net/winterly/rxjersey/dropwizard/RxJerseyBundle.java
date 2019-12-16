@@ -7,10 +7,11 @@ import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
-import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
-import net.winterly.rxjersey.server.rxjava.RxJerseyServerFeature;
-import org.glassfish.jersey.client.rx.spi.AbstractRxInvoker;
+import net.winterly.rxjersey.client.rxjava2.RxJerseyClientFeature;
+import net.winterly.rxjersey.server.rxjava2.CompletableRequestInterceptor;
+import net.winterly.rxjersey.server.rxjava2.RxJerseyServerFeature;
+import org.glassfish.jersey.client.AbstractRxInvoker;
+import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.ws.rs.client.Client;
@@ -41,7 +42,7 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         JerseyClientConfiguration clientConfiguration = clientConfigurationProvider.apply(configuration);
         Client client = getClient(environment, clientConfiguration);
 
-        rxJerseyClientFeature.register(client);
+        rxJerseyClientFeature.setClient(client);
 
         jersey.register(rxJerseyServerFeature);
         jersey.register(rxJerseyClientFeature);
@@ -65,7 +66,7 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         return this;
     }
 
-    public RxJerseyBundle<T> register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+    public RxJerseyBundle<T> register(Class<? extends CompletableRequestInterceptor> interceptor) {
         rxJerseyServerFeature.register(interceptor);
         return this;
     }
@@ -74,6 +75,6 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         return new JerseyClientBuilder(environment)
                 .using(jerseyClientConfiguration)
                 .using(new GrizzlyConnectorProvider())
-                .buildRx("rxJerseyClient", AbstractRxInvoker.class);
+                .buildRx("rxJerseyClient", RxFlowableInvokerProvider.class);
     }
 }

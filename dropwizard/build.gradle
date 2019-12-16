@@ -4,11 +4,6 @@ dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-client:$dropwizardVersion"
 
-    compile "net.winterly.rxjersey:rxjava-client:0.10.1"
-    compile "net.winterly.rxjersey:rxjava-server:0.10.1"
-
-    /*
-    compile project(":rxjava-server")
-    compile project(":rxjava-client")
-    */
+    compile project(":rxjava2-server")
+    compile project(":rxjava2-client")
 }
