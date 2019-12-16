@@ -12,7 +12,7 @@ public class SubResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContentFromSubResourceWithoutPath() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String subResourceId = resource.getSubResource("someId").getId().blockingGet();
 
         assertEquals("someId", subResourceId);
@@ -20,7 +20,7 @@ public class SubResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContentFromSubResourcePath() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String attribute = resource.getSubResource("someId").getAttribute().blockingGet();
 
         assertEquals("attribute", attribute);
