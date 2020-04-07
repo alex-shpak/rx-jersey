@@ -156,6 +156,14 @@ public final class WebResourceFactory implements InvocationHandler {
             return toString();
         }
 
+        if (args == null && method.getName().equals("hashCode")) {
+            return hashCode();
+        }
+
+        if (args != null && args.length == 1 && method.getName().equals("equals")) {
+            return proxy == args[0];
+        }
+
         // get the interface describing the resource
         final Class<?> proxyIfc = proxy.getClass().getInterfaces()[0];
 
