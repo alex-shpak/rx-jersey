@@ -16,7 +16,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
  * @see Single
  */
 @Singleton
-@Priority(1)
+@Priority(1) //Priority should be higher than JSON providers
 public class RxBodyWriter extends RxGenericBodyWriter {
     public RxBodyWriter() {
         super(Observable.class, Single.class, Completable.class);

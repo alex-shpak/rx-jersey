@@ -17,11 +17,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collections;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory;
+import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.message.internal.*;
+import org.glassfish.jersey.message.internal.MessageBodyFactory.MessageBodyWorkersConfigurator;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerBootstrapBag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,18 +37,28 @@ import io.reactivex.Maybe;
 
 public class RxBodyWriterTest {
 
-    private ServiceLocator serviceLocator;
+    private InjectionManager injectionManager;
 
     @Before
     public void setUp() {
-        serviceLocator = ServiceLocatorUtilities.bind(
-                new MessageBodyFactory.Binder(), new MessagingBinders.MessageBodyProviders(null, null),
-                new AbstractBinder() {
-                    @Override
-                    protected void configure() {
-                        bind(RxBodyWriter.class).to(MessageBodyWriter.class).in(Singleton.class);
-                    }
-                });
+        injectionManager = new Hk2InjectionManagerFactory().create();
+        injectionManager.register(
+                new MessagingBinders.MessageBodyProviders(null, null)
+        );
+        injectionManager.register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(RxBodyWriter.class).to(MessageBodyWriter.class).in(Singleton.class);
+            }
+        });
+
+        BootstrapBag bootstrapBag = new ServerBootstrapBag();
+        bootstrapBag.setConfiguration(new ResourceConfig());
+
+        MessageBodyWorkersConfigurator workerConfig = new MessageBodyWorkersConfigurator();
+        workerConfig.init(injectionManager, bootstrapBag);
+        injectionManager.completeRegistration();
+        workerConfig.postInit(injectionManager, bootstrapBag);
     }
 
     @Test
@@ -65,7 +79,7 @@ public class RxBodyWriterTest {
 
     private OutputStream testWriteTo(String methodName, MediaType mediaType, Object entity, OutputStream outputStream) throws NoSuchMethodException, IOException {
 
-        final MessageBodyFactory messageBodyFactory = serviceLocator.getService(MessageBodyFactory.class);
+        final MessageBodyFactory messageBodyFactory = injectionManager.getInstance(MessageBodyFactory.class);
 
         final Method textMethod = TestResource.class.getMethod(methodName);
         final Type genericReturnType = textMethod.getGenericReturnType();

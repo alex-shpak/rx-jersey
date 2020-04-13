@@ -1,10 +1,10 @@
-package net.winterly.rxjersey.server.rxjava2;
+package net.winterly.rxjersey.server.rxjava;
 
-import io.reactivex.Completable;
 import net.winterly.rxjersey.server.RxRequestInterceptor;
+import rx.Completable;
 
 /**
- * {@link RxRequestInterceptor} returning {@link io.reactivex.Completable}
+ * {@link RxRequestInterceptor} returning {@link rx.Completable}
  */
 public interface CompletableRequestInterceptor extends RxRequestInterceptor<Completable> {
 

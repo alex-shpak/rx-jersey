@@ -1,15 +1,9 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import net.winterly.rxjersey.client.WebResourceFactory;
 import net.winterly.rxjersey.client.rxjava.ObservableClientMethodInvoker;
 import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.rx.RxClient;
-import org.glassfish.jersey.client.rx.RxWebTarget;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -17,6 +11,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
@@ -25,12 +20,12 @@ import javax.ws.rs.core.MediaType;
 public class RxJerseyTest extends JerseyTest {
 
     @Inject
-    private Provider<RxClient> clientProvider;
+    private Provider<Client> clientProvider;
 
     @Override
     protected Application configure() {
         ResourceConfig resourceConfig = new ResourceConfig()
-                .register(LocatorFeature.class)
+                .register(InjectTestFeature.class)
                 .register(JacksonFeature.class)
                 .register(RxJerseyClientFeature.class)
                 .register(ServerResource.class)
@@ -47,37 +42,29 @@ public class RxJerseyTest extends JerseyTest {
     }
 
     protected void configure(ResourceConfig resourceConfig) {
+        //do nothing
+    }
 
+    protected <T> T target(Class<T> resource) {
+        return WebResourceFactory.newResource(resource, target(), new ObservableClientMethodInvoker());
     }
 
     @Override
-    protected void configureClient(ClientConfig config) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
-        jacksonProvider.setMapper(objectMapper);
-        config.register(jacksonProvider);
+    protected Client getClient() {
+        return clientProvider.get();
     }
 
-    protected <T> T resource(Class<T> resource) {
-        return WebResourceFactory.newResource(resource, remote(), new ObservableClientMethodInvoker());
-    }
-
-    protected RxWebTarget remote() {
-        return clientProvider.get().target(getBaseUri());
-    }
-
-    public static class LocatorFeature implements Feature {
+    public static class InjectTestFeature implements Feature {
 
         @Inject
-        private ServiceLocator serviceLocator;
+        private InjectionManager injectionManager;
 
         @Inject
         private JerseyTest jerseyTest;
 
         @Override
         public boolean configure(FeatureContext context) {
-            serviceLocator.inject(jerseyTest);
+            injectionManager.inject(jerseyTest);
             return true;
         }
     }
@@ -113,13 +100,9 @@ public class RxJerseyTest extends JerseyTest {
 
     public static class Entity {
 
-        @JsonProperty
-        public String message;
+        public final String message;
 
-        public Entity() {
-        }
-
-        public Entity(String message) {
+        public Entity(@JsonProperty("message") String message) {
             this.message = message;
         }
     }

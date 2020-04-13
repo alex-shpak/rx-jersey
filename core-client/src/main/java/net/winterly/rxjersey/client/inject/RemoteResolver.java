@@ -2,12 +2,10 @@ package net.winterly.rxjersey.client.inject;
 
 import net.winterly.rxjersey.client.ClientMethodInvoker;
 import net.winterly.rxjersey.client.WebResourceFactory;
-import org.glassfish.hk2.api.Injectee;
-import org.glassfish.hk2.api.InjectionResolver;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.Injectee;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionResolver;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -26,15 +24,15 @@ import static java.lang.String.format;
 @Singleton
 public class RemoteResolver implements InjectionResolver<Remote> {
 
-    @Inject
-    private ServiceLocator serviceLocator;
-
-    @Inject
+    private InjectionManager injectionManager;
     private ClientMethodInvoker clientMethodInvoker;
-
-    @Inject
-    @RxJerseyClient
     private Client client;
+
+    public RemoteResolver(InjectionManager injectionManager, ClientMethodInvoker methodInvoker, Client client) {
+        this.injectionManager = injectionManager;
+        this.clientMethodInvoker = methodInvoker;
+        this.client = client;
+    }
 
     private static URI merge(String value, UriInfo uriInfo) {
         URI target = URI.create(value);
@@ -50,9 +48,9 @@ public class RemoteResolver implements InjectionResolver<Remote> {
      * @throws IllegalStateException if uri is not correct or there is no sufficient injection resolved
      */
     @Override
-    public Object resolve(Injectee injectee, ServiceHandle<?> root) {
+    public Object resolve(Injectee injectee) {
         Remote remote = injectee.getParent().getAnnotation(Remote.class);
-        UriInfo uriInfo = serviceLocator.getService(UriInfo.class);
+        UriInfo uriInfo = injectionManager.getInstance(UriInfo.class);
 
         URI target = merge(remote.value(), uriInfo);
         WebTarget webTarget = client.target(target);
@@ -80,7 +78,11 @@ public class RemoteResolver implements InjectionResolver<Remote> {
 
     @Override
     public boolean isMethodParameterIndicator() {
-        return false;
+        return true;
     }
 
+    @Override
+    public Class<Remote> getAnnotation() {
+        return Remote.class;
+    }
 }

@@ -1,6 +1,6 @@
 package net.winterly.rxjersey.example;
 
-import rx.Single;
+import io.reactivex.Single;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

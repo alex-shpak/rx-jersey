@@ -1,6 +1,6 @@
 package net.winterly.rxjersey.server;
 
-import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
 import javax.inject.Inject;
@@ -22,11 +22,11 @@ import java.util.List;
  * This class will only redirect writing to another {@link MessageBodyWriter} <br>
  * Requires list of supported types <br>
  * <p>
- * Providers implementing {@link RxGenericBodyWriter} must be programmatically registered in {@link ServiceLocator}
+ * Providers implementing {@link RxGenericBodyWriter} must be programmatically registered in {@link InjectionManager}
  */
 public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
-    private final List<Class> allowedTypes;
+    private final List<Class<?>> allowedTypes;
 
     @Inject
     private Provider<MessageBodyWorkers> workers;
@@ -66,7 +66,7 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         if (genericType instanceof ParameterizedType) {
-            Class rawType = raw(genericType);
+            Class<?> rawType = raw(genericType);
 
             final Type actualTypeArgument = actual(genericType);
             final MessageBodyWriter<?> messageBodyWriter
@@ -74,7 +74,7 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
             return allowedTypes.contains(rawType) && messageBodyWriter != null;
         }
-        return false;
+        return allowedTypes.contains(genericType);
     }
 
     @Override

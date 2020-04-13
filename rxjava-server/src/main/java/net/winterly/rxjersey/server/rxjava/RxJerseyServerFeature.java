@@ -1,7 +1,6 @@
 package net.winterly.rxjersey.server.rxjava;
 
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.spi.internal.ResourceMethodDispatcher;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 
 import javax.inject.Singleton;
@@ -15,9 +14,9 @@ import java.util.List;
  */
 public final class RxJerseyServerFeature implements Feature {
 
-    private final List<Class<? extends ObservableRequestInterceptor<?>>> interceptors = new LinkedList<>();
+    private final List<Class<? extends CompletableRequestInterceptor>> interceptors = new LinkedList<>();
 
-    public RxJerseyServerFeature register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
+    public RxJerseyServerFeature register(Class<? extends CompletableRequestInterceptor> interceptor) {
         interceptors.add(interceptor);
         return this;
     }
@@ -37,13 +36,8 @@ public final class RxJerseyServerFeature implements Feature {
                     .to(ResourceMethodInvocationHandlerProvider.class)
                     .in(Singleton.class);
 
-            bind(SingleMethodDispatcher.Provider.class)
-                    .to(ResourceMethodDispatcher.Provider.class)
-                    .in(Singleton.class)
-                    .ranked(1);
-
             interceptors.forEach(interceptor -> bind(interceptor)
-                    .to(ObservableRequestInterceptor.class)
+                    .to(CompletableRequestInterceptor.class)
                     .in(Singleton.class)
             );
         }

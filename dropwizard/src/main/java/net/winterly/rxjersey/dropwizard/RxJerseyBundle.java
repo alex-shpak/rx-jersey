@@ -7,10 +7,10 @@ import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import net.winterly.rxjersey.client.rxjava.RxJerseyClientFeature;
-import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
-import net.winterly.rxjersey.server.rxjava.RxJerseyServerFeature;
-import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
+import net.winterly.rxjersey.client.rxjava2.RxJerseyClientFeature;
+import net.winterly.rxjersey.server.rxjava2.CompletableRequestInterceptor;
+import net.winterly.rxjersey.server.rxjava2.RxJerseyServerFeature;
+import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 
 import javax.ws.rs.client.Client;
@@ -34,16 +34,6 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         });
     }
 
-    public RxJerseyBundle<T> setClientConfigurationProvider(Function<T, JerseyClientConfiguration> provider) {
-        clientConfigurationProvider = provider;
-        return this;
-    }
-
-    public RxJerseyBundle<T> register(Class<? extends ObservableRequestInterceptor<?>> interceptor) {
-        rxJerseyServerFeature.register(interceptor);
-        return this;
-    }
-
     @Override
     public void run(T configuration, Environment environment) throws Exception {
         JerseyEnvironment jersey = environment.jersey();
@@ -51,7 +41,7 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
         JerseyClientConfiguration clientConfiguration = clientConfigurationProvider.apply(configuration);
         Client client = getClient(environment, clientConfiguration);
 
-        rxJerseyClientFeature.register(client);
+        rxJerseyClientFeature.setClient(client);
 
         jersey.register(rxJerseyServerFeature);
         jersey.register(rxJerseyClientFeature);
@@ -62,10 +52,28 @@ public class RxJerseyBundle<T extends Configuration> implements ConfiguredBundle
 
     }
 
+    public RxJerseyClientFeature client() {
+        return rxJerseyClientFeature;
+    }
+
+    public RxJerseyServerFeature server() {
+        return rxJerseyServerFeature;
+    }
+
+    public RxJerseyBundle<T> setClientConfigurationProvider(Function<T, JerseyClientConfiguration> provider) {
+        clientConfigurationProvider = provider;
+        return this;
+    }
+
+    public RxJerseyBundle<T> register(Class<? extends CompletableRequestInterceptor> interceptor) {
+        rxJerseyServerFeature.register(interceptor);
+        return this;
+    }
+
     private Client getClient(Environment environment, JerseyClientConfiguration jerseyClientConfiguration) {
         return new JerseyClientBuilder(environment)
                 .using(jerseyClientConfiguration)
                 .using(new GrizzlyConnectorProvider())
-                .buildRx("rxJerseyClient", RxObservableInvoker.class);
+                .buildRx("rxJerseyClient", RxFlowableInvokerProvider.class);
     }
 }

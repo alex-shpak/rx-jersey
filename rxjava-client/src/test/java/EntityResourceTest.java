@@ -11,7 +11,7 @@ public class EntityResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldParseEntity() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         Entity entity = resource.json("hello").toBlocking().value();
 
         assertEquals(entity.message, "hello");

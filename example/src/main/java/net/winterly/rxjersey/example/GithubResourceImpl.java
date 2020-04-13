@@ -1,7 +1,7 @@
 package net.winterly.rxjersey.example;
 
+import io.reactivex.Single;
 import net.winterly.rxjersey.client.inject.Remote;
-import rx.Single;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,7 +16,7 @@ public class GithubResourceImpl implements GithubResource {
 
     @Override
     public Single<GithubRepository> getRepository() {
-        return githubApi.getRepository("alex-shpak", "rx-jersey").toSingle();
+        return githubApi.getRepository("alex-shpak", "rx-jersey");
     }
 
     @Override

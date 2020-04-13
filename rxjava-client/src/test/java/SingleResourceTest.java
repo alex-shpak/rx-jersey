@@ -1,10 +1,10 @@
 import org.junit.Test;
 import rx.Single;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.ResponseProcessingException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,7 +12,7 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.echo("hello").toBlocking().value();
 
         assertEquals("hello", message);
@@ -20,15 +20,15 @@ public class SingleResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.empty().toBlocking().value();
 
         assertEquals("", message);
     }
 
-    @Test(expected = ResponseProcessingException.class)
+    @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        SingleResource resource = resource(SingleResource.class);
+        SingleResource resource = target(SingleResource.class);
         String message = resource.error().toBlocking().value();
 
         assertEquals("", message);

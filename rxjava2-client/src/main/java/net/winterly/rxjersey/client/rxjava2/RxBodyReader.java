@@ -3,6 +3,8 @@ package net.winterly.rxjersey.client.rxjava2;
 import io.reactivex.*;
 import net.winterly.rxjersey.client.RxGenericBodyReader;
 
+import javax.annotation.Priority;
+
 /**
  * MessageBodyReader accepting rx types and routing to read entity of generic type instead
  *
@@ -12,6 +14,7 @@ import net.winterly.rxjersey.client.RxGenericBodyReader;
  * @see Completable
  * @see Maybe
  */
+@Priority(1) //Priority should be higher than JSON providers
 public class RxBodyReader extends RxGenericBodyReader {
 
     public RxBodyReader() {

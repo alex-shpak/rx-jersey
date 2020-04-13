@@ -2,4 +2,5 @@ apply plugin: 'java'
 
 dependencies {
     compile "org.glassfish.jersey.core:jersey-server:$jerseyVersion"
+    compile "org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion"
 }

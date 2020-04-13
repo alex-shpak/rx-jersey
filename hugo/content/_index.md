@@ -75,4 +75,4 @@ public interface GithubApi {
 ```
 
 ## Licence
-[MIT](LICENSE.txt)
+[MIT](https://github.com/alex-shpak/rx-jersey/blob/master/LICENSE)

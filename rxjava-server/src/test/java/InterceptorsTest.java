@@ -1,11 +1,12 @@
-import net.winterly.rxjersey.server.rxjava.ObservableRequestInterceptor;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import net.winterly.rxjersey.server.rxjava.CompletableRequestInterceptor;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.junit.Test;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -29,7 +30,6 @@ public class InterceptorsTest extends RxJerseyTest {
     public void shouldInterceptRequests() {
         final String message = target("interceptors").path("echo")
                 .request()
-                .header("message", "hello")
                 .get(String.class);
 
         assertEquals("intercepted", message);
@@ -48,8 +48,8 @@ public class InterceptorsTest extends RxJerseyTest {
 
         @GET
         @Path("echo")
-        public Observable<String> echo(@HeaderParam("message") String message) {
-            return Observable.just(message);
+        public Observable<String> echo(@Context ContainerRequestContext request) {
+            return Observable.just(request.getProperty("message").toString());
         }
 
         @GET
@@ -59,35 +59,35 @@ public class InterceptorsTest extends RxJerseyTest {
         }
     }
 
-    public static class Interceptor implements ObservableRequestInterceptor<ContainerRequestContext> {
+    public static class Interceptor implements CompletableRequestInterceptor {
 
         @Context
         private SecurityContext securityContext;
 
         @Override
-        public Observable<ContainerRequestContext> intercept(ContainerRequestContext requestContext) {
-            return Observable.just(requestContext).doOnNext(it -> {
-                it.getHeaders().putSingle("message", "intercepted");
-            });
+        public Completable intercept(ContainerRequestContext requestContext) {
+            return Single.just(requestContext).doOnSuccess(it -> {
+                it.setProperty("message", "intercepted");
+            }).toCompletable();
         }
     }
 
-    public static class ThrowingInterceptor implements ObservableRequestInterceptor<Void> {
+    public static class ThrowingInterceptor implements CompletableRequestInterceptor {
 
         @Override
-        public Observable<Void> intercept(ContainerRequestContext requestContext) {
+        public Completable intercept(ContainerRequestContext requestContext) {
             if (requestContext.getHeaders().containsKey("throw")) {
                 throw new NotAuthorizedException("Surprise!");
             }
-            return Observable.empty();
+            return Completable.complete();
         }
     }
 
-    public static class EmptyInterceptor implements ObservableRequestInterceptor {
+    public static class EmptyInterceptor implements CompletableRequestInterceptor {
 
         @Override
-        public Observable<?> intercept(ContainerRequestContext requestContext) {
-            return Observable.empty();
+        public Completable intercept(ContainerRequestContext requestContext) {
+            return Completable.complete();
         }
     }
 
@@ -97,7 +97,7 @@ public class InterceptorsTest extends RxJerseyTest {
         protected void configure() {
             Stream.of(Interceptor.class, EmptyInterceptor.class, ThrowingInterceptor.class).forEach(interceptor -> {
                 bind(interceptor)
-                        .to(ObservableRequestInterceptor.class)
+                        .to(CompletableRequestInterceptor.class)
                         .in(Singleton.class);
             });
 

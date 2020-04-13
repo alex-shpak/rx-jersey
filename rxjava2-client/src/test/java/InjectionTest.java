@@ -19,7 +19,7 @@ public class InjectionTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        ResourceAPI resource = resource(ResourceAPI.class);
+        ResourceAPI resource = target(ResourceAPI.class);
         String message = resource.inject("hello").blockingFirst();
 
         assertEquals("hello", message);
