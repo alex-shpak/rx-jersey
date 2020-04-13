@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CompletableResourceTest extends RxJerseyTest {
 
@@ -15,7 +16,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         CompletableResource resource = target(CompletableResource.class);
         boolean completed = resource.empty().await(5, TimeUnit.SECONDS);
 
-        assertEquals(completed, true);
+        assertTrue(completed);
     }
 
     @Test(expected = BadRequestException.class)
@@ -23,7 +24,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         CompletableResource resource = target(CompletableResource.class);
         boolean completed = resource.error().await(5, TimeUnit.SECONDS);
 
-        assertEquals(completed, true);
+        assertTrue(completed);
     }
 
     @Path("/endpoint")

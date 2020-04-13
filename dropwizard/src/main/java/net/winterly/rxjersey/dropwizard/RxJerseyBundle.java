@@ -10,7 +10,6 @@ import io.dropwizard.setup.Environment;
 import net.winterly.rxjersey.client.rxjava2.RxJerseyClientFeature;
 import net.winterly.rxjersey.server.rxjava2.CompletableRequestInterceptor;
 import net.winterly.rxjersey.server.rxjava2.RxJerseyServerFeature;
-import org.glassfish.jersey.client.AbstractRxInvoker;
 import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvokerProvider;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 

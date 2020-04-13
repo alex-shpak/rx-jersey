@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class SingleInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private final HashMap<Class, Class<? extends InvocationHandler>> handlers = new HashMap<>();
+    private final HashMap<Class<?>, Class<? extends InvocationHandler>> handlers = new HashMap<>();
 
     @Inject
     private InjectionManager injectionManager;
@@ -30,7 +30,7 @@ public class SingleInvocationHandlerProvider implements ResourceMethodInvocation
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        Class returnType = invocable.getRawResponseType();
+        Class<?> returnType = invocable.getRawResponseType();
         if (handlers.containsKey(returnType)) {
             return injectionManager.createAndInitialize(handlers.get(returnType));
         }
@@ -39,21 +39,21 @@ public class SingleInvocationHandlerProvider implements ResourceMethodInvocation
 
     private static class ObservableHandler extends SingleInvocationHandler<Observable<?>> {
         @Override
-        public Single convert(Observable<?> result) {
+        public Single<?> convert(Observable<?> result) {
             return result.singleOrDefault(null).toSingle();
         }
     }
 
     private static class SingleHandler extends SingleInvocationHandler<Single<?>> {
         @Override
-        public Single convert(Single<?> result) {
+        public Single<?> convert(Single<?> result) {
             return result;
         }
     }
 
     private static class CompletableHandler extends SingleInvocationHandler<Completable> {
         @Override
-        public Single convert(Completable result) {
+        public Single<?> convert(Completable result) {
             return result.andThen(Single.just(null));
         }
     }

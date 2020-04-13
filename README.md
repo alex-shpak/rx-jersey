@@ -74,4 +74,4 @@ public interface GithubApi {
 ```
 
 ## Licence
-[MIT](LICENSE.txt)
+[MIT](LICENSE)

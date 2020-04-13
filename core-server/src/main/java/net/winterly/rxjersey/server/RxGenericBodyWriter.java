@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
 
-    private final List<Class> allowedTypes;
+    private final List<Class<?>> allowedTypes;
 
     @Inject
     private Provider<MessageBodyWorkers> workers;
@@ -66,7 +66,7 @@ public abstract class RxGenericBodyWriter implements MessageBodyWriter<Object> {
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         if (genericType instanceof ParameterizedType) {
-            Class rawType = raw(genericType);
+            Class<?> rawType = raw(genericType);
 
             final Type actualTypeArgument = actual(genericType);
             final MessageBodyWriter<?> messageBodyWriter

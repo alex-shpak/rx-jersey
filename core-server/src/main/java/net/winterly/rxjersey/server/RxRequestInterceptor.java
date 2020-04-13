@@ -4,7 +4,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 
 /**
  * Contract for dispatch request interceptor <br>
- * Interceptors implementing {@link RxRequestInterceptor} should be programmatically registered in {@link ServiceLocator}
+ * Interceptors implementing {@link RxRequestInterceptor} should be programmatically registered in {@link org.glassfish.jersey.internal.inject.InjectionManager}
  *
  * @param <T> return type of interceptor (Supposed to be Observable or Future)
  */

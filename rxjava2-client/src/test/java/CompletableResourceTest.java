@@ -8,6 +8,7 @@ import javax.ws.rs.QueryParam;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CompletableResourceTest extends RxJerseyTest {
 
@@ -16,7 +17,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         ObservableResource resource = target(ObservableResource.class);
         boolean completed = resource.echo("hello").blockingAwait(5, TimeUnit.SECONDS);
 
-        assertEquals(completed, true);
+        assertTrue(completed);
     }
 
     @Test
@@ -24,7 +25,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         ObservableResource resource = target(ObservableResource.class);
         boolean completed = resource.empty().blockingAwait(5, TimeUnit.SECONDS);
 
-        assertEquals(completed, true);
+        assertTrue(completed);
     }
 
     @Test(expected = BadRequestException.class)
@@ -32,7 +33,7 @@ public class CompletableResourceTest extends RxJerseyTest {
         ObservableResource resource = target(ObservableResource.class);
         boolean completed = resource.error().blockingAwait(5, TimeUnit.SECONDS);
 
-        assertEquals(completed, true);
+        assertTrue(completed);
     }
 
     @Path("/endpoint")

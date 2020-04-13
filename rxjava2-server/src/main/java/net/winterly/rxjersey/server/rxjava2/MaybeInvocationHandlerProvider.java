@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private final HashMap<Class, Class<? extends InvocationHandler>> handlers = new HashMap<>();
+    private final HashMap<Class<?>, Class<? extends InvocationHandler>> handlers = new HashMap<>();
 
     @Inject
     private InjectionManager injectionManager;
@@ -30,7 +30,7 @@ public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationH
 
     @Override
     public InvocationHandler create(Invocable invocable) {
-        Class returnType = invocable.getRawResponseType();
+        Class<?> returnType = invocable.getRawResponseType();
         if (handlers.containsKey(returnType)) {
             return injectionManager.createAndInitialize(handlers.get(returnType));
         }
@@ -39,35 +39,35 @@ public class MaybeInvocationHandlerProvider implements ResourceMethodInvocationH
 
     private static class FlowableHandler extends MaybeInvocationHandler<Flowable<?>> {
         @Override
-        public Maybe convert(Flowable<?> result) {
+        public Maybe<?> convert(Flowable<?> result) {
             return result.singleElement();
         }
     }
 
     private static class ObservableHandler extends MaybeInvocationHandler<Observable<?>> {
         @Override
-        public Maybe convert(Observable<?> result) {
+        public Maybe<?> convert(Observable<?> result) {
             return result.singleElement();
         }
     }
 
     private static class SingleHandler extends MaybeInvocationHandler<Single<?>> {
         @Override
-        public Maybe convert(Single<?> result) {
+        public Maybe<?> convert(Single<?> result) {
             return result.toMaybe();
         }
     }
 
     private static class CompletableHandler extends MaybeInvocationHandler<Completable> {
         @Override
-        public Maybe convert(Completable result) {
+        public Maybe<?> convert(Completable result) {
             return result.toMaybe();
         }
     }
 
     private static class MaybeHandler extends MaybeInvocationHandler<Maybe<?>> {
         @Override
-        public Maybe convert(Maybe<?> result) {
+        public Maybe<?> convert(Maybe<?> result) {
             return result;
         }
     }
