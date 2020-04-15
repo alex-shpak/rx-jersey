@@ -1,4 +1,5 @@
 import io.reactivex.Completable;
+import net.winterly.rxjersey.client.WebResourceFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,8 +15,8 @@ public class ProxiedResourceTest extends RxJerseyTest {
 
     @Before
     public void setup() {
-        testResource1 = resource(TestResource.class);
-        testResource2 = resource(TestResource.class);
+        testResource1 = WebResourceFactory.newResource(TestResource.class, target(), null);
+        testResource2 =  WebResourceFactory.newResource(TestResource.class, target(), null);
     }
 
     @Test
