@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * Provides {@link InvocationHandler} for resources returning {@code io.reactivex.*} instances
  * and converts them to {@link Maybe}
  */
-public abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Maybe<?>, Completable, R> {
+abstract class MaybeInvocationHandler<R> extends RxInvocationHandler<Maybe<?>, Completable, R> {
 
     @Inject
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
