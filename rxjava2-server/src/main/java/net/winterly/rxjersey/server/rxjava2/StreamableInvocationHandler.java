@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import net.winterly.rxjersey.server.RxInvocationHandler;
 import org.glassfish.hk2.api.IterableProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides {@link InvocationHandler} for resources returning {@code io.reactivex.*} instances
@@ -18,25 +20,15 @@ import org.glassfish.hk2.api.IterableProvider;
  */
 class StreamableInvocationHandler<I, O> extends RxInvocationHandler<Flowable<I>, Completable, Flowable<I>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreamableInvocationHandler.class);
+
     @Inject
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
 
     private StreamWriter<I, O> output;
-    private Consumer<String> infoLogger = System.out::println;
-    private Consumer<Throwable> errorLogger = Throwable::printStackTrace;
 
     StreamableInvocationHandler<I, O> setOutput(StreamWriter<I, O> output) {
         this.output = output;
-        return this;
-    }
-
-    StreamableInvocationHandler<I, O> setErrorLogger(Consumer<Throwable> errorLogger) {
-        this.errorLogger = errorLogger;
-        return this;
-    }
-
-    StreamableInvocationHandler<I, O> setInfoLogger(Consumer<String> infoLogger) {
-        this.infoLogger = infoLogger;
         return this;
     }
 
@@ -45,33 +37,33 @@ class StreamableInvocationHandler<I, O> extends RxInvocationHandler<Flowable<I>,
       throw new UnsupportedOperationException();
     }
 
-  @Override
+    @Override
     @SuppressWarnings("unchecked")
     public Object invoke(Object proxy, Method method, Object[] args) {
-        infoLogger.accept("Setting up async request");
+        LOGGER.debug("Setting up async request");
         org.glassfish.jersey.server.AsyncContext asyncContext = suspend();
         final ContainerRequestContext requestContext = requestContextProvider.get();
         Flowable.fromIterable(requestInterceptors)
             .flatMapCompletable(interceptor -> interceptor.intercept(requestContext))
             .subscribeOn(Schedulers.computation())
             .subscribe(() -> {
-                infoLogger.accept("Processed interceptors");
+                LOGGER.debug("Processed interceptors");
                 Flowable<I> flowable = (Flowable<I>) method.invoke(proxy, args);
                 flowable.subscribe(
                     output::write,
                     e -> {
-                        errorLogger.accept(e);
+                        LOGGER.error("Error during stream", e);
                         output.error(e);
                         output.close();
                     },
                     output::close);
                 output.resumeFor(asyncContext);
-                infoLogger.accept("Handed off for chunked processing");
+                LOGGER.debug("Handed off for chunked processing");
             }, e -> {
-                errorLogger.accept(new RuntimeException("Error streaming data", e));
+                LOGGER.error("Error streaming data", e);
                 asyncContext.resume(e);
             });
-        infoLogger.accept("Work submitted");
+        LOGGER.debug("Work submitted");
         return null; //async methods return nulls
     }
 

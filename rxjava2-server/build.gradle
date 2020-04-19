@@ -3,6 +3,7 @@ apply plugin: 'java'
 dependencies {
     compile project(":core-server")
     compile "io.reactivex.rxjava2:rxjava:$rxJava2Version"
+    compile "org.slf4j:slf4j-api:1.7.30"
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.glassfish.jersey.media:jersey-media-json-jackson:$jerseyVersion"
