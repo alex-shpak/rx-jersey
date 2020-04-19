@@ -70,22 +70,22 @@ public abstract class StreamWriter<I, O> implements AutoCloseable {
     }
 
     /**
-     * Converts from the stream type to the chunk type.
+     * Invoked to write a {@code streamType} object. Should transform the output to the
+     * {@code chunkType} and call {@link #writeChunk(Object)}, plus any other additional
+     * chunks as required.
      *
      * @param input The stream object.
-     * @return The chunk object.
-     */
-    protected abstract O transform(I input);
-
-    /**
-     * Invoked to write the chunk out to the client. Can be overriden to insert additional
-     * processing before and after. By default the chunk is just passed directly.
-     *
-     * @param output The chunk object.
      * @param first True if this is the first chunk.
      * @throws IOException On exceptions writing out the chunk.
      */
-    protected void writeChunk(O output, boolean first) throws IOException {
+    protected abstract void writeObject(I input, boolean first) throws IOException;
+
+    /**
+     * Writes the chunk. Call from
+     * @param output
+     * @throws IOException
+     */
+    protected final void writeChunk(O output) throws IOException {
         chunkedOutput.write(output);
     }
 
@@ -110,7 +110,6 @@ public abstract class StreamWriter<I, O> implements AutoCloseable {
     }
 
     final void write(I input) throws IOException {
-        O output = transform(input);
         boolean firstNow = first;
         if (first) {
             synchronized (this) {
@@ -120,7 +119,7 @@ public abstract class StreamWriter<I, O> implements AutoCloseable {
                 }
             }
         }
-        writeChunk(output, firstNow);
+        writeObject(input, firstNow);
     }
 
     void resumeFor(AsyncContext asyncContext) {

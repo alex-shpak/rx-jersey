@@ -1,5 +1,7 @@
 package net.winterly.rxjersey.server.rxjava2;
 
+import java.io.IOException;
+
 final class PassthroughWriter extends StreamWriter<Object, Object> {
 
     PassthroughWriter() {
@@ -7,7 +9,7 @@ final class PassthroughWriter extends StreamWriter<Object, Object> {
     }
 
     @Override
-    protected Object transform(Object input) {
-        return input;
+    protected void writeObject(Object input, boolean first) throws IOException {
+        writeChunk(input);
     }
 }

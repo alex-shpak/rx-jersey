@@ -131,26 +131,25 @@ public class FlowableResourceTest extends RxJerseyTest {
             super(Tuple.class, String.class, "");
         }
 
-        @Override
-        protected String transform(Tuple input) {
+        private String transform(Tuple input) {
             return String.format("{foo:'%s',bar:'%s'}", input.getFoo(), input.getBar());
         }
 
         @Override
-        protected void writeChunk(String output, boolean first) throws IOException {
+        protected void writeObject(Tuple input, boolean first) throws IOException {
             if (first) {
-                super.writeChunk("[" + output, true);
+                super.writeChunk("[" + transform(input));
             } else {
-                super.writeChunk("," + output, false);
+                super.writeChunk("," + transform(input));
             }
         }
 
         @Override
         public void beforeClose(boolean empty) throws IOException {
             if (empty) {
-                super.writeChunk("[]", true);
+                super.writeChunk("[]");
             } else {
-                super.writeChunk("]", false);
+                super.writeChunk("]");
             }
         }
     }
