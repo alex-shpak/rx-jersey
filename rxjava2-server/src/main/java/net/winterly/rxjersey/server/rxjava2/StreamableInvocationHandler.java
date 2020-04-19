@@ -6,7 +6,6 @@ import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import net.winterly.rxjersey.server.RxInvocationHandler;
