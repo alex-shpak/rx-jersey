@@ -54,10 +54,9 @@ class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerP
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private <U> InvocationHandler createFlowableHandler(Streamable streamable) {
-        StreamWriter<U, ?> output = (StreamWriter<U, ?>) injectionManager
-            .createAndInitialize(streamable.writer());
         return injectionManager.createAndInitialize(StreamableInvocationHandler.class)
-            .setOutput(output);
+            .setStreamWriterSupplier(() ->
+                injectionManager.createAndInitialize(streamable.writer()));
     }
 
     private static Type actual(Type genericType) {

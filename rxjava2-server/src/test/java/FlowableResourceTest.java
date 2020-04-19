@@ -71,7 +71,14 @@ public class FlowableResourceTest extends RxJerseyTest {
         String result = target("flowable").path("objectStream")
             .request()
             .get(String.class);
+        assertEquals(
+            "[" + IntStream.range(1, 50).mapToObj(i -> String.format("{foo:'foo%d',bar:'bar%d'}", i, i)).collect(joining(",")) + "]",
+            result);
 
+        // Do it twice to make sure we're not holding onto state
+        result = target("flowable").path("objectStream")
+            .request()
+            .get(String.class);
         assertEquals(
             "[" + IntStream.range(1, 50).mapToObj(i -> String.format("{foo:'foo%d',bar:'bar%d'}", i, i)).collect(joining(",")) + "]",
             result);

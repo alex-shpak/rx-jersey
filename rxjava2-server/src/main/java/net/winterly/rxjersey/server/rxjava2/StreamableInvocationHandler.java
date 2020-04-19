@@ -6,6 +6,7 @@ import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import net.winterly.rxjersey.server.RxInvocationHandler;
@@ -24,10 +25,10 @@ class StreamableInvocationHandler<I, O> extends RxInvocationHandler<Flowable<I>,
     @Inject
     private IterableProvider<CompletableRequestInterceptor> requestInterceptors;
 
-    private StreamWriter<I, O> output;
+    private Supplier<StreamWriter<I, O>> outputSupplier;
 
-    StreamableInvocationHandler<I, O> setOutput(StreamWriter<I, O> output) {
-        this.output = output;
+    StreamableInvocationHandler<I, O> setStreamWriterSupplier(Supplier<StreamWriter<I, O>> outputSupplier) {
+        this.outputSupplier = outputSupplier;
         return this;
     }
 
@@ -40,7 +41,8 @@ class StreamableInvocationHandler<I, O> extends RxInvocationHandler<Flowable<I>,
     @SuppressWarnings("unchecked")
     public Object invoke(Object proxy, Method method, Object[] args) {
         LOGGER.debug("Setting up async request");
-        org.glassfish.jersey.server.AsyncContext asyncContext = suspend();
+      StreamWriter<I, O> output = outputSupplier.get();
+      org.glassfish.jersey.server.AsyncContext asyncContext = suspend();
         final ContainerRequestContext requestContext = requestContextProvider.get();
         Flowable.fromIterable(requestInterceptors)
             .flatMapCompletable(interceptor -> interceptor.intercept(requestContext))
