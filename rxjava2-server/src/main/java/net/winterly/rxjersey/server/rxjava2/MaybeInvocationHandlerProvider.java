@@ -20,17 +20,17 @@ import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerP
  */
 class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerProvider {
 
-    private final HashMap<Class<?>, Class<? extends MaybeInvocationHandler<?>>> singleHandlers = new HashMap<>();
+    private final HashMap<Class<?>, Class<? extends MaybeInvocationHandler<?>>> handlers = new HashMap<>();
 
     @Inject
     private InjectionManager injectionManager;
 
     public MaybeInvocationHandlerProvider() {
-        singleHandlers.put(Flowable.class, FlowableHandler.class);
-        singleHandlers.put(Observable.class, ObservableHandler.class);
-        singleHandlers.put(Single.class, SingleHandler.class);
-        singleHandlers.put(Completable.class, CompletableHandler.class);
-        singleHandlers.put(Maybe.class, MaybeHandler.class);
+        handlers.put(Flowable.class, FlowableHandler.class);
+        handlers.put(Observable.class, ObservableHandler.class);
+        handlers.put(Single.class, SingleHandler.class);
+        handlers.put(Completable.class, CompletableHandler.class);
+        handlers.put(Maybe.class, MaybeHandler.class);
     }
 
     @Override
@@ -41,8 +41,8 @@ class MaybeInvocationHandlerProvider implements ResourceMethodInvocationHandlerP
     private <T, U> InvocationHandler createInner(Invocable invocable, Class<T> returnType, Class<U> innerType) {
         Streamable streamable = invocable.getHandlingMethod().getAnnotation(Streamable.class);
         if (streamable == null) {
-            if (singleHandlers.containsKey(returnType)) {
-                return injectionManager.createAndInitialize(singleHandlers.get(returnType));
+            if (handlers.containsKey(returnType)) {
+                return injectionManager.createAndInitialize(handlers.get(returnType));
             }
         } else {
             if (returnType.equals(Flowable.class)) {
