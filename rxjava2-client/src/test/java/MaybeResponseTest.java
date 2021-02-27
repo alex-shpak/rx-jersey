@@ -1,6 +1,7 @@
 import io.reactivex.Maybe;
 import org.junit.Test;
 
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -34,6 +35,22 @@ public class MaybeResponseTest extends RxJerseyTest {
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
+    @Test(expected = NotSupportedException.class)
+    public void shouldThrowSensibleErrorForNonRxType() {
+        Resource resource = target(Resource.class);
+        Response response = resource.string();
+
+        assertEquals(response.readEntity(String.class), "");
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void shouldThrowSensibleErrorForNonRxTypeWithParam() {
+        Resource resource = target(Resource.class);
+        Response response = resource.echo("message");
+
+        assertEquals(response.readEntity(String.class), "");
+    }
+
     @Path("/endpoint")
     public interface Resource {
 
@@ -48,5 +65,14 @@ public class MaybeResponseTest extends RxJerseyTest {
         @GET
         @Path("error")
         Maybe<Response> error();
+
+        @GET
+        @Path("string")
+        Response string();
+
+        @GET
+        @Path("echo")
+        Response echo(@QueryParam("message") String message);
+
     }
 }
