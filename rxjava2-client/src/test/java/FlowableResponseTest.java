@@ -34,6 +34,22 @@ public class FlowableResponseTest extends RxJerseyTest {
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
+    @Test
+    public void shouldReturnContentForNonRxTypes() {
+        Resource resource = target(Resource.class);
+        Response response = resource.string();
+
+        assertEquals("string", response.readEntity(String.class));
+    }
+
+    @Test
+    public void shouldReturnContentForNonRxTypesWithParam() {
+        Resource resource = target(Resource.class);
+        Response response = resource.echo("message");
+
+        assertEquals("message", response.readEntity(String.class));
+    }
+
     @Path("/endpoint")
     public interface Resource {
 
@@ -48,5 +64,13 @@ public class FlowableResponseTest extends RxJerseyTest {
         @GET
         @Path("error")
         Flowable<Response> error();
+
+        @GET
+        @Path("string")
+        Response string();
+
+        @GET
+        @Path("echo")
+        Response echo(@QueryParam("message") String message);
     }
 }

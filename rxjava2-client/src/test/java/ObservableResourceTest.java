@@ -34,6 +34,22 @@ public class ObservableResourceTest extends RxJerseyTest {
         assertEquals("", message);
     }
 
+    @Test
+    public void shouldReturnContentForNonRxTypes() {
+        Resource resource = target(Resource.class);
+        String message = resource.string();
+
+        assertEquals("string", message);
+    }
+
+    @Test
+    public void shouldReturnContentForNonRxTypesWithParam() {
+        Resource resource = target(Resource.class);
+        Entity entity = resource.json("message");
+
+        assertEquals("message", entity.message);
+    }
+
     @Path("/endpoint")
     public interface Resource {
 
@@ -48,5 +64,13 @@ public class ObservableResourceTest extends RxJerseyTest {
         @GET
         @Path("error")
         Observable<String> error();
+
+        @GET
+        @Path("string")
+        String string();
+
+        @GET
+        @Path("json")
+        Entity json(@QueryParam("message") String message);
     }
 }

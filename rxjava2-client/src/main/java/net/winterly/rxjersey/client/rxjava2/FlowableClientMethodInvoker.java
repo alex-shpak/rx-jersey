@@ -25,6 +25,9 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, GenericType<T> responseType) {
+        if (!isConvertibleType(responseType)) {
+            return builder.method(name, responseType);
+        }
         GenericType<?> responseValueType = getValueTypeIfPossible(responseType);
         Flowable<?> flowable = builder.rx(RxFlowableInvoker.class).method(name, responseValueType);
         return convert(flowable, responseType);
@@ -32,6 +35,9 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
 
     @Override
     public <T> Object method(Invocation.Builder builder, String name, Entity<?> entity, GenericType<T> responseType) {
+        if (!isConvertibleType(responseType)) {
+            return builder.method(name, entity, responseType);
+        }
         GenericType<?> responseValueType = getValueTypeIfPossible(responseType);
         Flowable<?> flowable = builder.rx(RxFlowableInvoker.class).method(name, entity, responseValueType);
         return convert(flowable, responseType);
@@ -57,7 +63,11 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
     }
 
     private <T> boolean isConvertibleParameterizedType(GenericType<T> type) {
-        return converters.containsKey(type.getRawType()) && type.getType() instanceof ParameterizedType;
+        return isConvertibleType(type) && type.getType() instanceof ParameterizedType;
+    }
+
+    private <T> boolean isConvertibleType(GenericType<T> type) {
+        return converters.containsKey(type.getRawType());
     }
 
     private GenericType getContainedType(ParameterizedType type) {

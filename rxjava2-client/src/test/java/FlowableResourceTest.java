@@ -12,7 +12,7 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnContent() {
-        ObservableResource resource = target(ObservableResource.class);
+        Resource resource = target(Resource.class);
         String message = resource.echo("hello").blockingFirst();
 
         assertEquals("hello", message);
@@ -20,7 +20,7 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test
     public void shouldReturnNoContentOnNull() {
-        ObservableResource resource = target(ObservableResource.class);
+        Resource resource = target(Resource.class);
         String message = resource.empty().blockingFirst();
 
         assertEquals("", message);
@@ -28,14 +28,30 @@ public class FlowableResourceTest extends RxJerseyTest {
 
     @Test(expected = BadRequestException.class)
     public void shouldHandleError() {
-        ObservableResource resource = target(ObservableResource.class);
+        Resource resource = target(Resource.class);
         String message = resource.error().blockingFirst();
 
         assertEquals("", message);
     }
 
+    @Test
+    public void shouldReturnContentForNonRxTypes() {
+        Resource resource = target(Resource.class);
+        String message = resource.string();
+
+        assertEquals("string", message);
+    }
+
+    @Test
+    public void shouldReturnContentForNonRxTypesWithParam() {
+        Resource resource = target(Resource.class);
+        Entity entity = resource.json("message");
+
+        assertEquals("message", entity.message);
+    }
+
     @Path("/endpoint")
-    public interface ObservableResource {
+    public interface Resource {
 
         @GET
         @Path("echo")
@@ -48,5 +64,13 @@ public class FlowableResourceTest extends RxJerseyTest {
         @GET
         @Path("error")
         Flowable<String> error();
+
+        @GET
+        @Path("string")
+        String string();
+
+        @GET
+        @Path("json")
+        Entity json(@QueryParam("message") String message);
     }
 }
