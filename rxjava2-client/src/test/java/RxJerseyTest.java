@@ -97,6 +97,12 @@ public class RxJerseyTest extends JerseyTest {
             throw new BadRequestException();
         }
 
+        @GET
+        @Path("string")
+        public String string() {
+            return "string";
+        }
+
         @Path("subresource/{id}")
         public ServerSubResource subResource(@PathParam("id") String id) {
             return new ServerSubResource(id);

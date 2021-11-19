@@ -2,6 +2,7 @@ import io.reactivex.Single;
 import org.junit.Test;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -34,6 +35,22 @@ public class SingleResourceTest extends RxJerseyTest {
         assertEquals("", message);
     }
 
+    @Test(expected = NotSupportedException.class)
+    public void shouldThrowSensibleErrorForNonRxType() {
+        Resource resource = target(Resource.class);
+        String message = resource.string();
+
+        assertEquals("", message);
+    }
+
+    @Test(expected = NotSupportedException.class)
+    public void shouldThrowSensibleErrorForNonRxTypeWithParam() {
+        Resource resource = target(Resource.class);
+        Entity entity = resource.json("message");
+
+        assertEquals("", entity.message);
+    }
+
     @Path("/endpoint")
     public interface Resource {
 
@@ -48,5 +65,13 @@ public class SingleResourceTest extends RxJerseyTest {
         @GET
         @Path("error")
         Single<String> error();
+
+        @GET
+        @Path("string")
+        String string();
+
+        @GET
+        @Path("json")
+        Entity json(@QueryParam("message") String message);
     }
 }

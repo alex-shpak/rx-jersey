@@ -4,16 +4,19 @@ import io.reactivex.*;
 import net.winterly.rxjersey.client.ClientMethodInvoker;
 import org.glassfish.jersey.client.rx.rxjava2.RxFlowableInvoker;
 
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> {
 
-    private final HashMap<Class, Function<Flowable, ?>> converters = new HashMap<>();
+    private final HashMap<Class<?>, Function<Flowable<?>, ?>> converters = new HashMap<>();
 
     public FlowableClientMethodInvoker() {
         converters.put(Flowable.class, flowable -> flowable);
@@ -21,6 +24,10 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
         converters.put(Single.class, Flowable::singleOrError);
         converters.put(Maybe.class, Flowable::singleElement);
         converters.put(Completable.class, Flowable::ignoreElements);
+    }
+
+    public Set<Class<?>> supportedTypes() {
+        return converters.keySet();
     }
 
     @Override
@@ -38,7 +45,16 @@ public class FlowableClientMethodInvoker implements ClientMethodInvoker<Object> 
     }
 
     private <T> Object convert(Flowable<?> flowable, GenericType<T> responseType) {
-        Function<Flowable, ?> converter = converters.get(responseType.getRawType());
+        final Function<Flowable<?>, ?> converter = converters.get(responseType.getRawType());
+        if (converter == null) {
+            throw new NotSupportedException(
+                    String.format(
+                            "FlowableClientMethodInvoker does not support type %s. Supported types are %s.",
+                            responseType.getRawType(),
+                            supportedTypes().stream().map(Class::getName).collect(Collectors.joining(","))
+                    )
+            );
+        }
         return converter.apply(flowable);
     }
 
