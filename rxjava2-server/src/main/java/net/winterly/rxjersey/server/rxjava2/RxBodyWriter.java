@@ -17,7 +17,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 @Priority(1) //Priority should be higher than JSON providers
-public class RxBodyWriter extends RxGenericBodyWriter {
+class RxBodyWriter extends RxGenericBodyWriter {
     public RxBodyWriter() {
         super(Flowable.class, Observable.class, Single.class, Completable.class, Maybe.class);
     }
